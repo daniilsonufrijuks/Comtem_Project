@@ -4,25 +4,25 @@
         <div class="product-card">
             <img src="https://mdbootstrap.com/img/new/standard/city/041.webp" alt="Product 1">
             <p>Best quality product at an affordable price.</p>
-            <button onclick="location.href='../../html/goods/goodcard.html'">Buy</button>
+            <button onclick="location.href='/product'">Buy</button>
         </div>
 
         <div class="product-card">
             <img src="https://mdbootstrap.com/img/new/standard/city/041.webp" alt="Product 2">
             <p>Limited time offer, hurry up!</p>
-            <button onclick="location.href='../../html/goods/goodcard.html'">Buy</button>
+            <button onclick="location.href='/product'">Buy</button>
         </div>
 
         <div class="product-card">
             <img src="https://mdbootstrap.com/img/new/standard/city/041.webp" alt="Product 3">
             <p>Top choice among customers this month.</p>
-            <button onclick="location.href='../../html/goods/goodcard.html'">Buy</button>
+            <button onclick="location.href='/product'">Buy</button>
         </div>
 
         <div class="product-card">
             <img src="https://mdbootstrap.com/img/new/standard/city/041.webp" alt="Product 4">
             <p>Special discount for a limited period.</p>
-            <button onclick="location.href='../../html/goods/goodcard.html'">Buy</button>
+            <button onclick="location.href='/product'">Buy</button>
         </div>
     </div>
 
@@ -30,25 +30,25 @@
         <div class="product-card">
             <img src="https://mdbootstrap.com/img/new/standard/city/041.webp" alt="Product 1">
             <p>Best quality product at an affordable price.</p>
-            <button onclick="location.href='../../html/goods/goodcard.html'">Buy</button>
+            <button onclick="location.href='/product'">Buy</button>
         </div>
 
         <div class="product-card">
             <img src="https://mdbootstrap.com/img/new/standard/city/041.webp" alt="Product 2">
             <p>Limited time offer, hurry up!</p>
-            <button onclick="location.href='../../html/goods/goodcard.html'">Buy</button>
+            <button onclick="location.href='/product'">Buy</button>
         </div>
 
         <div class="product-card">
             <img src="https://mdbootstrap.com/img/new/standard/city/041.webp" alt="Product 3">
             <p>Top choice among customers this month.</p>
-            <button onclick="location.href='../../html/goods/goodcard.html'">Buy</button>
+            <button onclick="location.href='/product'">Buy</button>
         </div>
 
         <div class="product-card">
             <img src="https://mdbootstrap.com/img/new/standard/city/041.webp" alt="Product 4">
             <p>Special discount for a limited period.</p>
-            <button onclick="location.href='../../html/goods/goodcard.html'">Buy</button>
+            <button onclick="location.href='/product'">Buy</button>
         </div>
     </div>
 </template>

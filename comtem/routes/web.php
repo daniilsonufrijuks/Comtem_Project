@@ -51,6 +51,11 @@ Route::get('/registration', function () {
     return Inertia::render('Auth/Registration');
 })->name('registration');
 
+Route::get('/product', function () {
+    return Inertia::render('Product');
+})->name('product');
+
+
 
 
 Route::post('/contact', ContactController::class)->name('contact');
