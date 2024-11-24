@@ -49,13 +49,20 @@ const logout = async () => {
             <li v-if="isLoggedIn">
                 <!-- User is logged in: show user avatar -->
                 <i class="fa fa-user icon"
-                   :title="user?.name || 'User'" ></i>
+                   :style="{ color: 'white' }"
+                   :title="user?.name || 'User'"
+                ></i>
             </li>
             <li v-else>
                 <!-- User is not logged in: show login icon -->
-                <i class="fa fa-user-circle icon"></i> <!-- FontAwesome icon -->
+                <i class="fa fa-user-circle icon"
+                   :style="{ color: 'white' }"
+                ></i> <!-- FontAwesome icon -->
             </li>
-            <li @click="logout" style="color:white">Logout</li>
+<!--            <li @click="logout" style="color:white">Logout</li>-->
+            <li @click="logout" style="cursor: pointer;">
+                <i class="fa fa-sign-out icon" style="color: white;" title="Logout"></i>
+            </li>
         </ul>
         <!-- Hamburger Menu -->
         <div class="hamburger" @click="toggleNav">
@@ -82,7 +89,7 @@ const logout = async () => {
 <style scoped>
 nav {
     background-color: #420d65;
-    padding: 5px 5%;
+    padding: 5px 2%;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -113,7 +120,7 @@ nav ul {
     display: flex;
 }
 nav ul li {
-    margin-left: 1.5rem;
+    margin-left: 0.5rem;
 }
 nav ul li a {
     text-decoration: none;
