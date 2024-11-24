@@ -4,6 +4,9 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+//use Illuminate\Database\Query\Builder;
+//use Illuminate\Database\Schema\Builder;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\RedirectResponse;
@@ -14,6 +17,12 @@ use Illuminate\Validation\Rules;
 use Inertia\Inertia;
 use Inertia\Response;
 use Psy\Readline\Hoa\Console;
+/**
+ * Post
+ *
+ * @mixin Builder
+ * @mixin \Illuminate\Database\Eloquent\Builder
+ */
 
 class RegisteredUserController extends Controller
 {
@@ -39,8 +48,11 @@ class RegisteredUserController extends Controller
         ]);
         //dd('User created successfully!');
         //dump("Start");
+
+        // Extract the name from the email (everything before the '@')
+        $name = strstr($request->email, '@', true);
         User::create([
-//            'name' => $request->name,
+            'name' => $name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
         ]);

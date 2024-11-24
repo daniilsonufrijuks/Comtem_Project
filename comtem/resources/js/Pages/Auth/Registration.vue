@@ -11,16 +11,17 @@ const form = useForm({
 
 const submit = () => {
     form.post(route('registration'), {
+        onError: (errors) => console.log(errors),
         onFinish: () => form.reset('password', 'password_confirmation'),
     });
 };
 
-defineProps({
-    routes: {
-        type: Object,
-        required: true,
-    },
-});
+// defineProps({
+//     routes: {
+//         type: Object,
+//         required: true,
+//     },
+// });
 </script>
 
 <template>

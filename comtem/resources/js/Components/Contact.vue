@@ -1,3 +1,25 @@
+
+<script setup>
+import { ref } from 'vue';
+import axios from 'axios';
+import {route} from "ziggy-js";
+import { Head, Link, useForm } from '@inertiajs/vue3';
+
+const form = useForm({
+    name: '',
+    email: '',
+    //subject: '',
+    body: '',
+});
+
+const submit = () => {
+    form.post(route('contact'), {
+
+    });
+};
+</script>
+
+
 <template>
 
     <!-- contact section -->
@@ -12,23 +34,21 @@
                     </div>
                 </div>
                 <div class="col-md-6 col-lg-5 px-0">
-                    <form action="" method="POST">
+                    <form @submit.prevent="submit">
                         <div>
-                            <input type="text" name="name" placeholder="Name" />
+                            <input v-model="form.name" type="text" name="name" placeholder="Name" required />
                         </div>
                         <div>
-                            <input type="email" name="email" placeholder="Email" />
+                            <input v-model="form.email" type="email" name="email" placeholder="Email" required />
                         </div>
+<!--                        <div>-->
+<!--                            <input v-model="form.subject" type="text" name="subject" placeholder="Phone" required />-->
+<!--                        </div>-->
                         <div>
-                            <input type="text" name="subject" placeholder="Phone" />
+                            <textarea v-model="form.body" name="message" class="message-box" placeholder="Message" required ></textarea>
                         </div>
-                        <div>
-                            <input type="text" name="message" class="message-box" placeholder="Message" />
-                        </div>
-                        <div class="d-flex ">
-                            <button type="submit">
-                                SEND
-                            </button>
+                        <div class="d-flex">
+                            <button type="submit">SEND</button>
                         </div>
                     </form>
                 </div>

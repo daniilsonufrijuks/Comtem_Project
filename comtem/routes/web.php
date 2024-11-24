@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
+use App\Http\Controllers\ContactController;
 use App\Http\Controllers\PageController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Foundation\Application;
@@ -32,22 +33,41 @@ Route::get('/', function () {
 
 Route::get('/about', function () {
     return Inertia::render('About');
-});
+})->name('about');
 
 Route::get('/contact', function () {
     return Inertia::render('Contact');
-});
+})->name('contact');
 
 Route::get('/market', function () {
     return Inertia::render('Market');
-});
+})->name('market');
 
 Route::get('/login', function () {
     return Inertia::render('Auth/Login');
-});
+})->name('login');
 
 Route::get('/registration', function () {
     return Inertia::render('Auth/Registration');
+})->name('registration');
+
+
+
+Route::post('/contact', ContactController::class)->name('contact');
+
+
+Route::get('/api/is-logged-in', function () {
+    return response()->json([
+        'isLoggedIn' => auth()->check(),
+    ]);
+});
+
+// For web-based authentication (sessions)
+Route::post('/logout', function () {
+    auth()->logout();  // Log the user out
+    session()->invalidate();  // Invalidate the session
+    session()->regenerateToken();  // Regenerate CSRF token
+    return response()->json(['message' => 'Logged out successfully']);
 });
 //Route::get('/home', [PageController::class, 'home'])->name('home');
 //Route::get('/about', [PageController::class, 'about'])->name('about');

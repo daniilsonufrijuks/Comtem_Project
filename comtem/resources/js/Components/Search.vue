@@ -1,11 +1,48 @@
+<script>
+// import { Inertia } from '@inertiajs/inertia';
+// import {route} from "ziggy-js";
+import {Inertia} from "@inertiajs/inertia";
+import {route} from "ziggy-js";
+
+export default {
+    data() {
+        return {
+            query: '',
+            filteredQueries: [],
+        };
+    },
+    methods: {
+        // Handles the search logic and navigates using Vue Router
+        handleSearch() {
+            console.log("search works");
+            //console.log(route('about')); // Should log the correct URL, e.g., '/about'
+
+            const query = this.query.toLowerCase();
+
+            if (['about us', 'aboutus', 'about'].includes(query)) {
+                Inertia.visit('/about');
+            } else if (query === 'home') {
+                Inertia.visit('/');
+            } else if (['contacts', 'contact'].includes(query)) {
+                Inertia.visit('/contact');
+            } else if  (['market', 'markets', 'shop'].includes(query)) {
+                Inertia.visit('/market');
+            } else {
+                alert('Page not found');
+            }
+        },
+    },
+};
+</script>
+
 <template>
     <div class="container_search">
         <div class="row height d-flex justify-content-center align-items-center">
             <div class="col-md-8">
                 <div class="search">
                     <i class="fa fa-search"></i>
-                    <form id="searchForm" class="form-inline form">
-                        <input type="text" id="searchInput" class="form-control" placeholder="Searching...">
+                    <form @submit.prevent="handleSearch" id="searchForm" class="form-inline form">
+                        <input type="text" id="searchInput" class="form-control" placeholder="Searching..." v-model="query">
                         <button type="submit" class="btn btn-primary">Search</button>
                     </form>
                     <ul id="suggestions" class="suggestions-list"></ul>

@@ -1,19 +1,37 @@
 <script setup>
 import { ref } from 'vue';
-import {route} from "ziggy-js";
+import { useUser } from '../Composables/useUser';
+import axios from 'axios';
+import { useRouter } from 'vue-router';  // For navigation after logout
 
+const { isLoggedIn, user } = useUser(); // Use your custom composable to check login status
 const isMenuActive = ref(false);
+const router = useRouter();  // For redirecting after logout
 
+console.log('User Data:', user.value);
+// Toggle navigation menu state
 const toggleNav = () => {
     isMenuActive.value = !isMenuActive.value;
 };
 
-// defineProps({
-//     routes: {
-//         type: Object,
-//         required: true,
-//     },
-// });
+// Logout function
+const logout = async () => {
+    try {
+        // Send a POST request to the Laravel logout route
+        await axios.post('/logout');
+
+        // After successful logout, update the login state
+        if (isLoggedIn?.value !== undefined) isLoggedIn.value = false;
+        //user.value = null; // Clear user data
+
+        // Optionally redirect to the login page or homepage
+        //await router.push('/login');  // Or use '/home' or another route
+    } catch (error) {
+        console.error('Error logging out:', error);
+    }
+};
+
+
 </script>
 
 
@@ -28,6 +46,16 @@ const toggleNav = () => {
             <li><a href="/contact">Contacts</a></li>
             <li><a href="/market">Market</a></li>
             <li><a href="/login">Login</a></li>
+            <li v-if="isLoggedIn">
+                <!-- User is logged in: show user avatar -->
+                <i class="fa fa-user icon"
+                   :title="user?.name || 'User'" ></i>
+            </li>
+            <li v-else>
+                <!-- User is not logged in: show login icon -->
+                <i class="fa fa-user-circle icon"></i> <!-- FontAwesome icon -->
+            </li>
+            <li @click="logout" style="color:white">Logout</li>
         </ul>
         <!-- Hamburger Menu -->
         <div class="hamburger" @click="toggleNav">

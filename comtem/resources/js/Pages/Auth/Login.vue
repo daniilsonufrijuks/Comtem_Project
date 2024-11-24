@@ -13,12 +13,12 @@ const submit = () => {
     });
 };
 
-defineProps({
-    routes: {
-        type: Object,
-        required: true,
-    },
-});
+// defineProps({
+//     routes: {
+//         type: Object,
+//         required: true,
+//     },
+// });
 </script>
 
 <template>

@@ -6,6 +6,8 @@ import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
 import { createApp, h } from 'vue';
 import { ZiggyVue } from 'ziggy-js';
 import DefaultLayout from "@/Layouts/DefaultLayout.vue";
+import 'font-awesome/css/font-awesome.css';
+
 
 const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
 
