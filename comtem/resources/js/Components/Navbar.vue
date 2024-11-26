@@ -108,7 +108,7 @@ nav .logo img {
     margin-right: 10px;
 }
 nav .logo h1 {
-    font-size: 1.1rem;
+    font-size: 1.5rem;
     background: linear-gradient(to right, #b927fc 0%, #2c64fc 100%);
     -webkit-background-clip: text;
     background-clip: text;

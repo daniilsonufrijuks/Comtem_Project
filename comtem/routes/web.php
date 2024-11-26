@@ -3,6 +3,7 @@
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\PageController;
+use App\Http\Controllers\ProductsController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
@@ -93,6 +94,13 @@ Route::post('/logout', function () {
     session()->regenerateToken();  // Regenerate CSRF token
     return response()->json(['message' => 'Logged out successfully']);
 });
+
+
+
+
+Route::get('/products/components', [ProductsController::class, 'getComponentsProducts']);
+Route::get('/products/laptops', [ProductsController::class, 'getLaptopsProducts']);
+Route::get('/products/pcs', [ProductsController::class, 'getPcsProducts']);
 //Route::get('/home', [PageController::class, 'home'])->name('home');
 //Route::get('/about', [PageController::class, 'about'])->name('about');
 //Route::get('/contacts', [PageController::class, 'contacts'])->name('contacts');

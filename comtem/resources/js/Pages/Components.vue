@@ -1,12 +1,12 @@
 <template>
-    <!--    <Navbar :routes="routes" />-->
-    <Navbar :routes="routes"/>
+    <Navbar :routes="routes" />
     <Search />
-    <Slider/>
+    <Slider />
     <div class="main-container">
         <Visitit />
-<!--        <Productsintro />-->
-<!--        <Testimonial />-->
+        <div class="products">
+            <ProductCardDB v-for="product in products" :key="product.id" :product="product" />
+        </div>
         <Contact />
     </div>
     <Footer />
@@ -15,31 +15,50 @@
 <script>
 import Visitit from '../Components/Visitit.vue';
 import Slider from '../Components/Slider.vue';
-import Productsintro from "../Components/Productsintro.vue";
-import Contact from "../Components/Contact.vue";
-import Search from "../Components/Search.vue";
-import Testimonial from "../Components/Testimonial.vue";
-import AboutUsText from "../Components/AboutUsText.vue";
+import Contact from '../Components/Contact.vue';
+import Search from '../Components/Search.vue';
 import Navbar from "@/Components/Navbar.vue";
 import Footer from "@/Components/Footer.vue";
+import ProductCard from "@/Components/ProductCard.vue";
+import ProductCardDB from "@/Components/ProductCardDB.vue";
 
 export default {
-    name: 'Home',
+    name: 'ComponentsPage',
     components: {
+        ProductCardDB,
+        ProductCard,
         Navbar,
         Visitit,
         Slider,
-        Productsintro,
         Contact,
         Search,
-        Testimonial,
-        AboutUsText,
-        Footer
+        Footer,
     },
     props: {
-        routes: Object
-    }
-}
+        routes: Object,
+    },
+    data() {
+        return {
+            products: [], // Store products fetched from API
+        };
+    },
+    mounted() {
+        this.fetchProducts();
+    },
+    methods: {
+        fetchProducts() {
+            fetch('/products/components') // Adjust API endpoint if necessary
+                .then((response) => response.json())
+                .then((data) => {
+                    console.log('Fetched products:', data);
+                    this.products = data;
+                })
+                .catch((error) => {
+                    console.error('Error fetching products:', error);
+                });
+        },
+    },
+};
 </script>
 
 <style scoped>
@@ -47,5 +66,11 @@ export default {
     display: flex;
     flex-direction: column;
     gap: 70px; /* Adjust as needed */
+}
+.products {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px; /* Adjust spacing between product cards */
+    justify-content: center; /* Center product cards */
 }
 </style>
