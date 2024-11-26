@@ -51,6 +51,25 @@ Route::get('/registration', function () {
     return Inertia::render('Auth/Registration');
 })->name('registration');
 
+Route::get('/laptops', function () {
+    return Inertia::render('Laptops');
+})->name('laptops');
+
+Route::get('/pcs', function () {
+    return Inertia::render('Pcs');
+})->name('pcs');
+
+Route::get('/components', function () {
+    return Inertia::render('Components');
+})->name('components');
+
+//Route::get('/auction', function () {
+//    return Inertia::render('Auction');
+//})->name('auction');
+
+
+
+// for dinamic product displaying
 Route::get('/product', function () {
     return Inertia::render('Product');
 })->name('product');

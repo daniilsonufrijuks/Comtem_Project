@@ -4,19 +4,19 @@
         <div class="product-card">
             <img src="/images/front/asuslaptop.png" alt="Product 1">
             <p>LAPTOPS</p>
-            <button onclick="location.href=''">VISIT</button>
+            <button onclick="location.href='/laptops'">VISIT</button>
         </div>
 
         <div class="product-card">
             <img src="/images/front/pc.png" alt="Product 2">
             <p>PC</p>
-            <button onclick="location.href=''">VISIT</button>
+            <button onclick="location.href='/pcs'">VISIT</button>
         </div>
 
         <div class="product-card">
             <img src="/images/front/inteli5.png" alt="Product 3">
             <p>COMPONENTS</p>
-            <button onclick="location.href=''">VISIT</button>
+            <button onclick="location.href='/components'">VISIT</button>
         </div>
 
         <div class="product-card">
