@@ -4,6 +4,21 @@
     <Slider />
     <div class="main-container">
         <Visitit />
+        <!-- Filter Inputs -->
+        <div class="filters">
+            <input
+                v-model.number="filters.price_min"
+                type="number"
+                placeholder="Min Price"
+                @input="fetchProducts"
+            />
+            <input
+                v-model.number="filters.price_max"
+                type="number"
+                placeholder="Max Price"
+                @input="fetchProducts"
+            />
+        </div>
         <div class="products">
             <ProductCardDB v-for="product in products" :key="product.id" :product="product" />
         </div>
@@ -40,21 +55,46 @@ export default {
     data() {
         return {
             products: [], // Store products fetched from API
+            filters: {
+                price_min: 0,
+                price_max: 100000,
+            },
         };
     },
     mounted() {
         this.fetchProducts();
     },
     methods: {
+        // fetchProducts() {
+        //     fetch('/products/pcs') // Adjust API endpoint if necessary
+        //         .then((response) => response.json())
+        //         .then((data) => {
+        //             console.log('Fetched products:', data);
+        //             this.products = data;
+        //         })
+        //         .catch((error) => {
+        //             console.error('Error fetching products:', error);
+        //         });
+        // },
         fetchProducts() {
-            fetch('/products/pcs') // Adjust API endpoint if necessary
-                .then((response) => response.json())
+            const params = new URLSearchParams({
+                price_min: this.filters.price_min ?? 0,
+                price_max: this.filters.price_max ?? 100000,
+            }).toString();
+
+            fetch(`/products/pcs?${params}`)
+                .then((response) => {
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! Status: ${response.status}`);
+                    }
+                    return response.json();
+                })
                 .then((data) => {
-                    console.log('Fetched products:', data);
+                    console.log("Fetched products:", data);
                     this.products = data;
                 })
                 .catch((error) => {
-                    console.error('Error fetching products:', error);
+                    console.error("Error fetching products:", error);
                 });
         },
     },
@@ -73,5 +113,12 @@ export default {
     flex-wrap: wrap;
     gap: 20px; /* Adjust spacing between product cards */
     justify-content: center; /* Center product cards */
+}
+
+.filters {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
 }
 </style>
