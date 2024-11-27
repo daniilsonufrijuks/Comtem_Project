@@ -63,6 +63,12 @@ const logout = async () => {
             <li @click="logout" style="cursor: pointer;">
                 <i class="fa fa-sign-out icon" style="color: white;" title="Logout"></i>
             </li>
+            <li>
+                <a href="/cart" style="position: relative;">
+                    <i class="fa fa-shopping-cart icon" style="color: white;"></i>
+                    <span v-if="cartCount > 0" class="cart-badge">{{ cartCount }}</span>
+                </a>
+            </li>
         </ul>
         <!-- Hamburger Menu -->
         <div class="hamburger" @click="toggleNav">

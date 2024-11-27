@@ -64,6 +64,11 @@ Route::get('/components', function () {
     return Inertia::render('Components');
 })->name('components');
 
+Route::get('/cart', function () {
+    return Inertia::render('Cart');
+})->name('cart');
+
+
 //Route::get('/auction', function () {
 //    return Inertia::render('Auction');
 //})->name('auction');
