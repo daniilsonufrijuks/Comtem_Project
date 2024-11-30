@@ -26,6 +26,7 @@ import Footer from "@/Components/Footer.vue";
 import ProductCard from "@/Components/ProductCard.vue";
 //import {useRoute} from "ziggy-js";
 import { useRoute } from 'vue-router';
+import productCardDB from "@/Components/ProductCardDB.vue";
 export default {
     name: 'Home',
     components: {
@@ -55,11 +56,11 @@ export default {
     },
     mounted() {
         // const productId = this.product.id;
-        //const productId = this.product.id;
+        const productId = this.product.id; // does not work: app-CT79SxUy.js:94 TypeError: Cannot read properties of undefined (reading 'id')
         //this.fetchProductDetails(productId);  // Example: fetch the product details for product ID = 1
         const route = useRoute();
         //const productId = route.query.id ; // Get the 'id' from the query params
-        this.fetchProductDetails(1); // need to write productId variable, but it does not work???
+        this.fetchProductDetails(productId); // need to write productId variable, but it does not work??? (for example e can write 1, fetch works nice)
         // if (productId) {
         //     this.fetchProductDetails(productId);
         // } else {
