@@ -1,26 +1,30 @@
+<script>
+export default {
+    props: {
+        product: {
+            type: Object,
+            required: true,
+        },
+    },
+}
+
+
+</script>
+
 <template>
-    <section id="productdetails" class="section-p1">
+    <section id="productdetails" v-if="product">
         <div class="single-pro-image">
-            <img src="/images/front/inteli5.png" width="50%" id="MainImg" alt="">
+            <img :src="product.image || ''" width="50%" id="MainImg" alt="">
             <div class="small-image-group">
-                <div class="small-img-col">
-                    <img src="/images/front/inteli5.png" width="100%" class="small-img" alt="">
-                </div>
-                <div class="small-img-col">
-                    <img src="/images/front/inteli5.png" width="100%" class="small-img" alt="">
-                </div>
-                <div class="small-img-col">
-                    <img src="/images/front/inteli5.png" width="100%" class="small-img" alt="">
-                </div>
-                <div class="small-img-col">
-                    <img src="/images/front/inteli5.png" width="100%" class="small-img" alt="">
+                <div class="small-img-col" v-for="i in 4" :key="i">
+                    <img :src="product.image || '' " width="100%" class="small-img" alt="">
                 </div>
             </div>
         </div>
         <div class="single-pro-details">
-            <h6>CPU</h6>
-            <h4>Intel Core i5 12 GEN</h4>
-            <h2>$220.00</h2>
+            <h6>{{ product.category }}</h6>
+            <h4>{{ product.name }}</h4>
+            <h2>${{ product.price }}</h2>
             <select>
                 <option>Select option</option>
                 <option>Box</option>
@@ -29,13 +33,12 @@
             <input type="number" value="1">
             <button class="normal">Add to Cart</button>
             <h4>Product Details</h4>
-            <span class="gcardt">Advancing Performance Hybrid Architecture
-        Intel® Core™ 14th gen processors advances performance hybrid architecture1 with up to
-        eight Performance-cores (P-core) and up to 16 Efficient-cores (E-core),
-        combined with workloads intelligently routed by Intel® Thread Director2.</span>
+            <span class="gcardt">{{ product.description }}.</span>
         </div>
     </section>
+    <p v-else>Loading product details...</p>
 </template>
+
 
 <style scoped>
 /* product */

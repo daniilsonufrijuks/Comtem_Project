@@ -80,6 +80,11 @@ Route::get('/product', function () {
     return Inertia::render('Product');
 })->name('product');
 
+//Route::get('/product/{id}', function ($id) {
+//    return Inertia::render('Product', [
+//        'productId' => $id,  // Pass the product ID to the frontend
+//    ]);
+//})->name('product');
 
 
 
@@ -106,6 +111,11 @@ Route::post('/logout', function () {
 Route::get('/products/components', [ProductsController::class, 'getComponentsProducts']);
 Route::get('/products/laptops', [ProductsController::class, 'getLaptopsProducts']);
 Route::get('/products/pcs', [ProductsController::class, 'getPcsProducts']);
+
+
+
+Route::get('/products/{id}', [ProductsController::class, 'show']);
+
 //Route::get('/home', [PageController::class, 'home'])->name('home');
 //Route::get('/about', [PageController::class, 'about'])->name('about');
 //Route::get('/contacts', [PageController::class, 'contacts'])->name('contacts');

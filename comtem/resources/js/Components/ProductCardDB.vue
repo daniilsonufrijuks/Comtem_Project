@@ -8,24 +8,60 @@
 
     <div class="product-cards">
         <div class="product-card">
-            <img :src="product.img" alt="Product 4">
+            <img :src="product.image" alt="Product 4">
             <h5>{{ product.name }}</h5>
             <p>{{ product.description }}.</p>
             <p><strong>Price:</strong> {{ product.price }}</p>
-            <button onclick="location.href='/product'">Buy</button>
+            <button  @click="goToProductPage(product.id)">Buy</button>
         </div>
     </div>
 
 </template>
 
 <script>
+import { useRouter } from 'vue-router';
+import {Inertia} from "@inertiajs/inertia";
+
 export default {
     props: {
         product: {
             type: Object,
-            required: true
-        }
-    }
+            required: true,
+        },
+    },
+    methods: {
+        // console.log(productId);
+        // goToProductPage(productId) {
+        //     console.log('t',productId);
+        //     window.location.href = `/product?id=${productId}`;
+        goToProductPage(productId) {
+            // Use Inertia to navigate to the product page with the productId as a query param
+            // Inertia.visit(`/product`, {
+            //     method: 'get',
+            //     query: { id: productId }, // Pass productId as a query parameter
+            // });
+            //Inertia.visit(`/product/${productId}`);
+            window.location.href = `/product?id=${productId}`;
+        },
+    },
+
+    // setup() {
+    //     const router = useRouter();
+    //
+    //     const goToProductPage = (product) => {
+    //         router.push({
+    //             path: '/product',
+    //             query: {
+    //                 name: product.name,
+    //                 description: product.description,
+    //                 price: product.price,
+    //                 img: product.img,
+    //             },
+    //         });
+    //     };
+    //
+    //     return { goToProductPage };
+    // },
 };
 </script>
 

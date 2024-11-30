@@ -6,7 +6,7 @@
     <div class="main-container">
         <Visitit />
 <!--        <Productsintro />-->
-        <ProductCard />
+        <ProductCard :product="selectedProduct"/>
         <Testimonial />
         <Contact />
     </div>
@@ -24,7 +24,8 @@ import AboutUsText from "../Components/AboutUsText.vue";
 import Navbar from "@/Components/Navbar.vue";
 import Footer from "@/Components/Footer.vue";
 import ProductCard from "@/Components/ProductCard.vue";
-
+//import {useRoute} from "ziggy-js";
+import { useRoute } from 'vue-router';
 export default {
     name: 'Home',
     components: {
@@ -40,8 +41,83 @@ export default {
         ProductCard
     },
     props: {
-        routes: Object
+        routes: Object,
+        product: {
+            type: Object,
+            required: true
+        }
+    },
+    data() {
+        return {
+            selectedProduct: null, // Store the selected product data here
+            // routes: {}  // Assuming you have some routing data
+        };
+    },
+    mounted() {
+        // const productId = this.product.id;
+        //const productId = this.product.id;
+        //this.fetchProductDetails(productId);  // Example: fetch the product details for product ID = 1
+        const route = useRoute();
+        //const productId = route.query.id ; // Get the 'id' from the query params
+        this.fetchProductDetails(1); // need to write productId variable, but it does not work???
+        // if (productId) {
+        //     this.fetchProductDetails(productId);
+        // } else {
+        //     console.error('Product ID not found in query parameters.');
+        // }
+    },
+    methods: {
+        fetchProductDetails(productId) {
+            // Fetch product details from an API endpoint
+            fetch(`/products/${productId}`)  // Adjust the API endpoint
+                .then((response) => response.json())
+                .then((data) => {
+                    this.selectedProduct = data;
+                    console.log('Fetched product:', this.selectedProduct);
+                })
+                .catch((error) => {
+                    console.error('Error fetching product details:', error);
+                });
+        }
     }
+    // data() {
+    //     return {
+    //         products: [] // The array of products
+    //     };
+    // },
+    // mounted() {
+    //     this.fetchProducts();
+    // },
+    // methods: {
+    //     fetchProducts() {
+    //         fetch('/products/${this.productId}') // Or the appropriate endpoint
+    //             .then((response) => response.json())
+    //             .then((data) => {
+    //                 this.products = data;
+    //                 console.log('Fetched products:', this.products);  // Log the products array
+    //             })
+    //             .catch((error) => console.error('Error fetching products:', error));
+    //     }
+    // }
+    // mounted() {
+    //     this.fetchProducts();
+    // },
+    // methods: {
+    //     fetchProducts() {
+    //         fetch('/products/{id}') // Or the appropriate endpoint
+    //             .then((response) => response.json())
+    //             .then((data) => {
+    //                 this.products = data;
+    //                 console.log('Fetched products:', this.products);  // Log the products array
+    //             })
+    //             .catch((error) => console.error('Error fetching products:', error));
+    //     }
+    // },
+    // data() {
+    //     return {
+    //         products: [] // The array of products
+    //     };
+    // },
 }
 </script>
 

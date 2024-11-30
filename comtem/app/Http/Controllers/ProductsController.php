@@ -31,7 +31,7 @@ class ProductsController extends Controller
         }
 
         // Fetch the filtered results
-        $products = $query->get(['name', 'price', 'description', 'image']);
+        $products = $query->get(['id', 'name', 'price', 'description', 'image']);
 
         return response()->json($products);
     }
@@ -59,7 +59,7 @@ class ProductsController extends Controller
         }
 
         // Fetch the filtered results
-        $products = $query->get(['name', 'price', 'description', 'image']);
+        $products = $query->get(['id', 'name', 'price', 'description', 'image']);
 
         return response()->json($products);
     }
@@ -86,9 +86,29 @@ class ProductsController extends Controller
         }
 
         // Fetch the filtered results
-        $products = $query->get(['name', 'price', 'description', 'image']);
+        $products = $query->get(['id', 'name', 'price', 'description', 'image']);
 
         return response()->json($products);
 
     }
+
+
+    public function show($id): \Illuminate\Http\JsonResponse
+    {
+//        $query = Products::find($id);
+//        // Fetch the filtered results
+//        $product = $query->get(['name', 'price', 'description', 'image', 'category']);
+//        return response()->json($product);
+
+
+
+        $products = Products::find($id, ['name', 'price', 'description', 'image', 'category']);
+
+        if (!$products) {
+            return response()->json(['error' => 'Product not found'], 404);
+        }
+
+        return response()->json($products);
+    }
+
 }
