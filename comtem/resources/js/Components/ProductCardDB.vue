@@ -12,7 +12,7 @@
             <h5>{{ product.name }}</h5>
             <p>{{ product.description }}.</p>
             <p><strong>Price:</strong> {{ product.price }}</p>
-            <button  @click="goToProductPage(product.id)">Buy</button>
+            <button  @click="goToProductPage(this.product.id)">Buy</button>
         </div>
     </div>
 
@@ -41,11 +41,15 @@ export default {
             //     query: { id: productId }, // Pass productId as a query parameter
             // });
             // Inertia.visit(`/product/${productId}`);
+            if (!productId) {
+                console.error('Product ID is missing!');
+                return;
+            }
             console.log(productId);
             console.log(`/product?id=${productId}`);
             //Inertia.visit(`/product/${productId}`);
-            Inertia.visit(`/product?id=${productId}`);
-            //window.location.href = `/product?id=${productId}`;
+            //Inertia.visit(`/product?id=${productId}`);
+            window.location.href = `/product?id=${productId}`;
             //this.$router.push({ path: '/product', query: { id: productId } });
         },
     },
