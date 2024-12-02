@@ -6,6 +6,7 @@ use App\Http\Controllers\PageController;
 use App\Http\Controllers\ProductsController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Foundation\Application;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -76,15 +77,30 @@ Route::get('/cart', function () {
 
 
 // for dinamic product displaying
-Route::get('/product', function () {
-    return Inertia::render('Product');
-})->name('product');
+//Route::get('/product', function () {
+//    return Inertia::render('Product');
+//})->name('product');
 
 //Route::get('/product/{id}', function ($id) {
 //    return Inertia::render('Product', [
 //        'productId' => $id,  // Pass the product ID to the frontend
 //    ]);
 //})->name('product');
+
+Route::get('/product', function (Request $request) {
+//    return Inertia::render('Product', [
+//        'productId' => $request->query('id'), // Pass the query parameter to the frontend
+//    ]);
+    $productId = $request->query('id'); // Extract 'id' from query parameters
+    if (!$productId) {
+        abort(400, 'Product ID is required');
+    }
+    return Inertia::render('Product', [
+        'productId' => $productId, // Pass it to the Vue page
+    ]);
+})->name('product');
+
+
 
 
 

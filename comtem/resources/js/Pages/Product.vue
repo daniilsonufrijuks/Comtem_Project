@@ -27,6 +27,7 @@ import ProductCard from "@/Components/ProductCard.vue";
 //import {useRoute} from "ziggy-js";
 import { useRoute } from 'vue-router';
 import productCardDB from "@/Components/ProductCardDB.vue";
+import {usePage} from "@inertiajs/vue3";
 export default {
     name: 'Home',
     components: {
@@ -46,6 +47,10 @@ export default {
         product: {
             type: Object,
             required: true
+        },
+        productId: {
+            type: [String, Number],
+            required: true
         }
     },
     data() {
@@ -56,11 +61,31 @@ export default {
     },
     mounted() {
         // const productId = this.product.id;
-        const productId = this.product.id; // does not work: app-CT79SxUy.js:94 TypeError: Cannot read properties of undefined (reading 'id')
+        //const productId = this.product.id; // does not work: app-CT79SxUy.js:94 TypeError: Cannot read properties of undefined (reading 'id')
         //this.fetchProductDetails(productId);  // Example: fetch the product details for product ID = 1
-        const route = useRoute();
+        //const route = useRoute();
         //const productId = route.query.id ; // Get the 'id' from the query params
-        this.fetchProductDetails(productId); // need to write productId variable, but it does not work??? (for example e can write 1, fetch works nice)
+        //this.fetchProductDetails(productId); // need to write productId variable, but it does not work??? (for example e can write 1, fetch works nice)
+        //const { productId } = usePage().props.value; // Retrieve productId from server-side props
+        //const { productId = null } = this.$props?.value || {};
+        //console.log("Query Parameters:", this.$route.query);
+        //const productId = this.$route.query.productId;
+        // const route = useRoute();
+        // const productId = route.query.productId;
+        // console.log('Props received:', usePage().props.value);
+        // //const { productId } = usePage().props.value;
+        //const props = usePage().props.value || {};
+        //console.log('Props received from Inertia:', props);
+
+        const productId = this.$props.productId || null;
+        console.log('Product ID:', productId);
+        //const productId = 1;
+
+        if (productId) {
+            this.fetchProductDetails(productId);
+        } else {
+            console.error('Product ID not found in query parameters.');
+        }
         // if (productId) {
         //     this.fetchProductDetails(productId);
         // } else {

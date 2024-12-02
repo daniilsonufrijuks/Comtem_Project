@@ -40,8 +40,13 @@ export default {
             //     method: 'get',
             //     query: { id: productId }, // Pass productId as a query parameter
             // });
+            // Inertia.visit(`/product/${productId}`);
+            console.log(productId);
+            console.log(`/product?id=${productId}`);
             //Inertia.visit(`/product/${productId}`);
-            window.location.href = `/product?id=${productId}`;
+            Inertia.visit(`/product?id=${productId}`);
+            //window.location.href = `/product?id=${productId}`;
+            //this.$router.push({ path: '/product', query: { id: productId } });
         },
     },
 
