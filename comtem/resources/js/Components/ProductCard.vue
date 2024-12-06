@@ -1,15 +1,3 @@
-<script>
-export default {
-    props: {
-        product: {
-            type: Object,
-            required: true,
-        },
-    },
-}
-
-
-</script>
 
 <template>
     <section id="productdetails" v-if="product">
@@ -31,13 +19,47 @@ export default {
                 <option>Single</option>
             </select>
             <input type="number" value="1">
-            <button class="normal">Add to Cart</button>
+            <button class="normal" @click="addToCart">Add to Cart</button>
             <h4>Product Details</h4>
             <span class="gcardt">{{ product.description }}.</span>
         </div>
     </section>
     <p v-else>Loading product details...</p>
 </template>
+
+
+<script>
+export default {
+    props: {
+        product: {
+            type: Object,
+            required: true,
+        },
+        // cartItems: {
+        //     type: Array,
+        //     required: true,
+        // },
+    },
+    data() {
+        return {
+            quantity: 1,
+            //cartItems: JSON.parse(localStorage.getItem('cartItems')) || [],
+        };
+    },
+    methods: {
+        addToCart() {
+            //console.log(this.cartItems);
+            this.$emit('add-to-cart', {
+                ...this.product,
+                quantity: this.quantity,
+            });
+            console.log("added");
+        },
+    },
+}
+
+
+</script>
 
 
 <style scoped>

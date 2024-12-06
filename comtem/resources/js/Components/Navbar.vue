@@ -49,7 +49,7 @@ const logout = async () => {
             <li v-if="isLoggedIn">
                 <!-- User is logged in: show user avatar -->
                 <i class="fa fa-user icon"
-                   :style="{ color: 'white' }"
+                   :style="{color: 'white'}"
                    :title="user?.name || 'User'"
                 ></i>
             </li>
@@ -212,6 +212,10 @@ nav ul li a:hover {
     font-weight: 400;
     padding: 5px 10px;
     border-radius: 5px;
+}
+
+.icon {
+    font-size: 1.2rem;
 }
 
 .menubar ul li a:hover {

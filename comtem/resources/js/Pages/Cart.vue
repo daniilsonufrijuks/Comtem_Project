@@ -32,6 +32,32 @@
 <!--                </div>-->
 <!--            </div>-->
 <!--        </div>-->
+        <div class="cart-container">
+            <h2>Your Cart</h2>
+            <div v-if="cartItems.length === 0">
+                <p>Your cart is empty.</p>
+            </div>
+            <div v-else class="cart-grid">
+                <div v-for="(item, index) in cartItems" :key="item.id + item.option" class="cart-card">
+                    <img :src="item.image" alt="Product image" class="cart-card-img">
+                    <div class="cart-card-details">
+                        <h3>{{ item.name }}</h3>
+                        <p>Category: {{ item.category }}</p>
+                        <p>Option: {{ item.option }}</p>
+                        <p>Quantity: {{ item.quantity }}</p>
+                        <p>Price: ${{ item.price }}</p>
+                        <p>Total: ${{ item.price * item.quantity }}</p>
+                        <button @click="removeItem(index)">Remove</button>
+                    </div>
+                </div>
+            </div>
+            <div class="cart-total" v-if="cartItems.length">
+                <p>Total Price: ${{ totalPrice }}</p>
+                <button @click="checkout">Proceed to Checkout</button>
+            </div>
+        </div>
+        <!-- Product Card used inside Cart.vue, emits add-to-cart event -->
+        <ProductCard v-for="product in products" :key="product.id" :product="product" @add-to-cart="addToCart" />
         <Contact />
     </div>
     <Footer />
@@ -47,10 +73,12 @@ import Testimonial from "../Components/Testimonial.vue";
 import AboutUsText from "../Components/AboutUsText.vue";
 import Navbar from "@/Components/Navbar.vue";
 import Footer from "@/Components/Footer.vue";
+import ProductCard from "@/Components/ProductCard.vue";
 
 export default {
     name: 'Cart',
     components: {
+        ProductCard,
         Navbar,
         Visitit,
         Slider,
@@ -62,7 +90,85 @@ export default {
         Footer
     },
     props: {
-        routes: Object
+        routes: Object,
+        cartItems: {
+            type: Array,
+            required: true,
+        },
+        products: {
+            type: Object,
+            required: true,
+        },
+    },
+    data() {
+        // return {
+        //     routes: {}, // Pass routes if necessary
+        //     selectedProduct: null, // The product to display
+        //     //cartItems: [], // Array to hold cart items
+        //     cartItems: JSON.parse(localStorage.getItem('cartItems')) || [],
+        //
+        // };
+        const storedCart = JSON.parse(localStorage.getItem('cartItems'));
+        console.log('Loaded cart from localStorage:', storedCart);
+        return {
+            cartItems: storedCart || [],
+        };
+    },
+    computed: {
+        // totalPrice() {
+        //     return this.cartItems.reduce((total, item) => total + item.price * item.quantity, 0);
+        // },
+        totalPrice() {
+            return this.cartItems.reduce((total, item) => total + item.price * item.quantity, 0);
+        },
+    },
+    methods: {
+        handleAddToCart(product) {
+            // const existingItem = this.cartItems.find((item) => item.id === product.id);
+            // if (existingItem) {
+            //     existingItem.quantity += product.quantity;
+            // } else {
+            //     this.cartItems.push(product);
+            // }
+            //this.cartItems.push(product);
+            this.$emit('add-to-cart', product);
+        },
+        // removeItem(index) {
+        //     this.cartItems.splice(index, 1);
+        // },
+        // checkout() {
+        //     alert("Proceeding to checkout!");
+        // },
+        // removeItem(index) {
+        //     this.$emit("remove-item", index);
+        // },
+        // checkout() {
+        //     alert("Proceeding to checkout!");
+        // },
+        addToCart(product) {
+            console.log("---")
+            console.log('Product added:', product);
+            console.log(this.cartItems);
+            const existingItem = this.cartItems.find(item => item.id === product.id);
+            if (existingItem) {
+                existingItem.quantity += product.quantity;  // Increase quantity if item already in cart
+            } else {
+                this.cartItems.push(product);  // Add new item to cart
+            }
+
+            // this.cartItems = [...this.cartItems];  // Create a new array to force reactivity
+            localStorage.setItem('cartItems', JSON.stringify(this.cartItems));  // Save updated cart to localStorage
+            console.log('Cart items after add:', this.cartItems);  // Ensure the cart is updated correctly
+        },
+        // Remove item from cart and update localStorage
+        removeItem(index) {
+            this.cartItems.splice(index, 1);
+            localStorage.setItem('cartItems', JSON.stringify(this.cartItems));  // Save to localStorage
+        },
+        // Checkout action (you can customize this further)
+        checkout() {
+            alert("Proceeding to checkout!");
+        },
     },
     // data() {
     //     return {
