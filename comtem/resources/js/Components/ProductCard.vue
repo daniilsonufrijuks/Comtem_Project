@@ -18,8 +18,8 @@
                 <option>Box</option>
                 <option>Single</option>
             </select>
-            <input type="number" value="1">
-            <button class="normal" @click="addToCart">Add to Cart</button>
+            <input type="number" v-model="quantity" value="1">
+            <button class="normal" @click="addToCart(this.product)">Add to Cart</button>
             <h4>Product Details</h4>
             <span class="gcardt">{{ product.description }}.</span>
         </div>
@@ -29,34 +29,63 @@
 
 
 <script>
+import { useStore } from 'vuex';
+import {ref} from "vue";
+
 export default {
-    props: {
-        product: {
-            type: Object,
-            required: true,
-        },
-        // cartItems: {
-        //     type: Array,
-        //     required: true,
-        // },
-    },
-    data() {
-        return {
-            quantity: 1,
-            //cartItems: JSON.parse(localStorage.getItem('cartItems')) || [],
+    props: ['product'], // Make sure to pass `product` as a prop
+    setup(props) {
+        const store = useStore();
+
+        // Initialize quantity with default value 1
+        const quantity = ref(1);
+
+        const addToCart = (product) => {
+            store.commit('ADD_TO_CART', { ...product, quantity: quantity.value });
+            console.log("added", product);
         };
+        // const addToCart = (product) => {
+        //     if (!product) {
+        //         console.error('Product data is missing!');
+        //         return;
+        //     }
+        //     store.commit('ADD_TO_CART', { ...product, quantity: 1 });
+        //     console.log("added", product);
+        //};
+
+        return { quantity, addToCart };
     },
-    methods: {
-        addToCart() {
-            //console.log(this.cartItems);
-            this.$emit('add-to-cart', {
-                ...this.product,
-                quantity: this.quantity,
-            });
-            console.log("added");
-        },
-    },
-}
+};
+// export default {
+//     props: {
+//         product: {
+//             type: Object,
+//             required: true,
+//         },
+//         // cartItems: {
+//         //     type: Array,
+//         //     required: true,
+//         // },
+//     },
+//     // data() {
+//     //     return {
+//     //         quantity: 1,
+//     //         //cartItems: JSON.parse(localStorage.getItem('cartItems')) || [],
+//     //     };
+//     // },
+//     // methods: {
+//     //     addToCart(product) {
+//     //         //console.log(this.cartItems);
+//     //         console.log('Adding product to cart:', product);
+//     //         this.$emit('add-to-cart', {
+//     //             ...this.product,
+//     //             quantity: this.quantity || 1,
+//     //         });
+//     //         console.log("added");
+//     //     },
+//     // },
+//
+// }
 
 
 </script>

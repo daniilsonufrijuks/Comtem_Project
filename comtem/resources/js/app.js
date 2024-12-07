@@ -8,6 +8,8 @@ import { createApp, h } from 'vue';
 import { ZiggyVue } from 'ziggy-js';
 import DefaultLayout from "@/Layouts/DefaultLayout.vue";
 import 'font-awesome/css/font-awesome.css';
+import store from "@/Cart/cart.js";
+
 
 const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
 
@@ -28,6 +30,7 @@ createInertiaApp({
             .use(plugin)
             .use(ZiggyVue)
             //.use(router)
+            .use(store)
             .mount(el);
     },
     progress: {
