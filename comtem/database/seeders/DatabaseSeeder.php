@@ -31,17 +31,18 @@ class DatabaseSeeder extends Seeder
 //        ]);
 
         Products::create([
-            'name' => 'Intel Core i5',
-            'price' => 100,
-            'description' => 'Intel Core i5 processor, 5 Ghz',
-            'category' => 'Componenets'
+            'name' => 'Intel Core i5F',
+            'price' => 105,
+            'description' => 'Intel Core i5 processor, 6 Ghz',
+            'image' => 'images/front/inteli5.png',
+            'category' => 'Component'
         ]);
 
-        Products::create([
-            'name' => 'Intel Core i7',
-            'price' => 300,
-            'description' => 'Intel Core i7 processor, 7 Ghz',
-            'category' => 'Componenets'
-        ]);
+//        Products::create([
+//            'name' => 'Intel Core i7',
+//            'price' => 300,
+//            'description' => 'Intel Core i7 processor, 7 Ghz',
+//            'category' => 'Componenets'
+//        ]);
     }
 }

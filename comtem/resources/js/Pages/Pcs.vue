@@ -113,6 +113,7 @@ export default {
     flex-wrap: wrap;
     gap: 20px; /* Adjust spacing between product cards */
     justify-content: center; /* Center product cards */
+    align-items: center;
 }
 
 .filters {

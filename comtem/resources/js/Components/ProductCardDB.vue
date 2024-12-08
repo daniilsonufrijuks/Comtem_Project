@@ -8,7 +8,7 @@
 
     <div class="product-cards">
         <div class="product-card">
-            <img :src="product.image" alt="Product 4">
+            <img :src="product.image" style="justify-content: center; align-items: center" class="product-img" alt="Product 4">
             <h5>{{ product.name }}</h5>
             <p>{{ product.description }}.</p>
             <p><strong>Price:</strong> {{ product.price }}</p>
@@ -100,10 +100,13 @@ export default {
     border-radius: 15px;
     width: 23%;
     text-align: center;
+    align-items: center;
+    justify-content: center;
     padding: 15px;
     transition: transform 0.2s ease, box-shadow 0.2s ease;
     flex: 1 1 calc(50% - 10px); /* Каждая карточка занимает 50% ширины с небольшим отступом */
     margin-bottom: 50px; /* Отступ между карточками */
+    flex-direction: column; /* Ensures the image and text stack */
 }
 
 .product-card:hover {
@@ -115,8 +118,15 @@ export default {
     max-width: 100%;
     height: fit-content;
     border-radius: 10px;
+
+    /* Center the image */
+    display: block;
+    margin: 0 auto; /* Horizontally centers the image */
 }
 
+.product-img {
+    align-self: center;
+}
 
 .product-card p {
     font-size: 0.9em;
