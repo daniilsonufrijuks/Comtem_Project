@@ -12,7 +12,7 @@ class Orders extends Model
     /**
      * The attributes that are mass assignable.
      */
-    protected $fillable = ['user_id', 'status', 'total', 'ordered_at'];
+    protected $fillable = ['user_id', 'items', 'status', 'total', 'ordered_at'];
 
     /**
      * Define the relationship to the User model.

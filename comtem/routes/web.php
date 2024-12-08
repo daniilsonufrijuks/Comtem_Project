@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\ContactController;
+use App\Http\Controllers\OrderController;
 use App\Http\Controllers\PageController;
 use App\Http\Controllers\ProductsController;
 use App\Http\Controllers\ProfileController;
@@ -131,6 +132,27 @@ Route::get('/products/pcs', [ProductsController::class, 'getPcsProducts']);
 
 
 Route::get('/products/{id}', [ProductsController::class, 'show']);
+
+
+
+
+
+// Check if user is logged in
+Route::get('/auth/user', function () {
+    return response()->json([
+        'loggedIn' => auth()->check(),
+        'id' => auth()->id(),
+    ]);
+});
+
+// Proceed to checkout (with session-based authentication)
+Route::post('/checkout', [OrderController::class, 'store'])->middleware('auth');
+
+
+
+
+
+
 
 //Route::get('/home', [PageController::class, 'home'])->name('home');
 //Route::get('/about', [PageController::class, 'about'])->name('about');

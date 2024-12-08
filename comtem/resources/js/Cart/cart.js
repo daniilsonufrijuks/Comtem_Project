@@ -20,8 +20,8 @@ const store = createStore({
     mutations: {
         ADD_TO_CART(state, product) {
             // Check if the product already exists in the cart
-            const existingProduct = state.cart.find((item) => item.id === product.id);
-
+            // const existingProduct = state.cart.find((item) => item.id === product.id);
+            //
             // if (existingProduct) {
             //     // If product exists, just update the quantity
             //     existingProduct.quantity += product.quantity;

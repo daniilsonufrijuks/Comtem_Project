@@ -71,11 +71,15 @@
                     </div>
                 </div>
                 <div class="cart-total">
-                    <span>Total: ${{ cartTotal }}</span>
+<!--                    <span>Total: ${{ cartTotal }}</span>-->
                     <button @click="clearCart">Clear Cart</button>
                 </div>
             </div>
             <p v-else>Your cart is empty.</p>
+            <div class="cart-total">
+                <span>Total: ${{ cartTotal }}</span>
+                <button @click="proceedToCheckout">Proceed to Checkout</button>
+            </div>
         </div>
         <Contact />
     </div>
@@ -136,12 +140,75 @@ export default {
             store.commit('CLEAR_CART');
         };
 
+        // Proceed to checkout
+        const proceedToCheckout = async () => {
+            try {
+                // Log the cart data before sending it
+                console.log('Cart items before checkout:', store.state.cart);
+
+                // // Check if the user is logged in
+                // const response = await axios.get('/auth/user');
+                // if (!response.data.loggedIn) {
+                //     // If not logged in, redirect to login page
+                //     window.location.href = `/login`;
+                //     console.log("first log in")
+                // } else {
+                //     // If logged in, proceed with checkout
+                //     console.log("!!!");
+                //     const orderResponse = await axios.post('/checkout', {
+                //         items: store.state.cart, // Ensure this is an array
+                //     });
+                //
+                //     console.log('Order Response:', orderResponse.data);
+                //
+                //     // Optionally, clear the cart after successful checkout
+                //     store.commit('CLEAR_CART');
+                //
+                //     window.location.href = `/home`;
+                // }
+                // Ensure cart is an array and sanitize data
+                if (Array.isArray(store.state.cart) && store.state.cart.length > 0) {
+                    const sanitizedCart = store.state.cart.map(item => ({
+                        id: item.id,
+                        name: item.name,
+                        price: item.price,
+                        quantity: item.quantity,
+                    }));
+
+                    const response = await axios.get('/auth/user');
+                    if (!response.data.loggedIn) {
+                        // If user is not logged in, redirect to login
+                        window.location.href = `/login`;
+                        console.log("Please log in first.");
+                    } else {
+                        // Send sanitized cart data to the backend
+                        const orderResponse = await axios.post('/checkout', {
+                            items: sanitizedCart,
+                            total: store.state.cart.reduce((sum, item) => sum + item.price * item.quantity, 0),
+                        });
+
+                        console.log('Order Response:', orderResponse.data);
+
+                        // Optionally clear cart after successful checkout
+                        store.commit('CLEAR_CART');
+
+                        // Redirect to home page
+                        window.location.href = `/`;
+                    }
+                }
+            } catch (error) {
+                console.error("Error during checkout:", error);
+            }
+        };
+
         return {
             cartItems,
             cartTotal,
             // removeFromCart,
             clearCart,
+            proceedToCheckout,
         };
+
     },
 }
 </script>
