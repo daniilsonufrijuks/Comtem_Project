@@ -168,6 +168,33 @@ class DatabaseSeeder extends Seeder
             'category' => 'Laptop'
         ]);
 
+        Products::create([
+            'name' => 'Gigabyte Laptop',
+            'price' => 900,
+            'description' => 'Gigabyte Laptop:
+                                Intel Core i9 processor, 7 Ghz, 12 cores, 24 threads
+                                RAM Fury 32 Gb 3200 Mhz
+                                SSD 1 TB',
+            'image' => 'images/front/giglp.jpg',
+            'category' => 'Laptop'
+        ]);
+
+        Products::create([
+            'name' => 'MSI Gaming Station',
+            'price' => 700,
+            'description' => 'MSI Gaming Station:
+                                MSI Gaming Station:
+                                Intel Core i5 processor, 5 Ghz
+                                NVIDIA RTX 3060 8 Gb
+                                RAM Fury 32 Gb 3200 Mhz
+                                SSD 1 TB
+                                HDD 2 TB
+                                Power Supply Be quiet 700 W',
+            'image' => 'images/front/pc.png',
+            'category' => 'Pc'
+        ]);
+
+
 //        Products::create([
 //            'name' => 'Intel Core i7',
 //            'price' => 300,
