@@ -65,6 +65,7 @@
     flex-wrap: wrap;
     justify-content: space-between;
     position: relative;
+    margin-bottom: 70px;
 }
 
 .product-card{

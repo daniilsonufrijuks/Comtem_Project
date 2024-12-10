@@ -25,9 +25,12 @@
     background: #420d65;
     padding: 20px 50px;
     text-align: center;
-    margin-top: auto; /* Позволяет футеру оставаться внизу страницы */
-    position: relative;
-    z-index: 1;
+    position: relative; /* Fix the footer to the bottom of the page */
+    bottom: 0; /* Position the footer at the bottom */
+    left: 0;
+    width: 100%; /* Make sure it spans the entire width */
+    z-index: 1000; /* Keep it above other content */
+    margin: 0;
 }
 
 .social-icon,
