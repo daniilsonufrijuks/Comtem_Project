@@ -6,6 +6,7 @@ use App\Http\Controllers\OrderController;
 use App\Http\Controllers\PageController;
 use App\Http\Controllers\ProductsController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\UserController;
 use Illuminate\Foundation\Application;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -149,6 +150,7 @@ Route::get('/auth/user', function () {
 Route::post('/checkout', [OrderController::class, 'store'])->middleware('auth');
 
 
+Route::get('/user', [UserController::class, 'userProfile'])->name('user');
 
 
 

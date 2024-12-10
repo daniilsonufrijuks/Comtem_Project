@@ -31,6 +31,10 @@ const logout = async () => {
     }
 };
 
+const goToUserPage = () => {
+    window.location.href = "/user";
+};
+
 
 </script>
 
@@ -51,6 +55,7 @@ const logout = async () => {
                 <i class="fa fa-user icon"
                    :style="{color: 'white'}"
                    :title="user?.name || 'User'"
+                   @click="goToUserPage"
                 ></i>
             </li>
             <li v-else>
