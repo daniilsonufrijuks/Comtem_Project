@@ -53,7 +53,7 @@ const goToUserPage = () => {
             <li v-if="isLoggedIn">
                 <!-- User is logged in: show user avatar -->
                 <i class="fa fa-user icon"
-                   :style="{color: 'white'}"
+                   :style="{color: 'white', cursor: 'pointer'}"
                    :title="user?.name || 'User'"
                    @click="goToUserPage"
                 ></i>
