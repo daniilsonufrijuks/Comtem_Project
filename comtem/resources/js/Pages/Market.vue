@@ -5,7 +5,10 @@
     <div class="main-container">
         <Visitit />
         <Categories />
-        <Productsintro />
+<!--        <Productsintro />-->
+        <div class="products">
+            <ProductCardDB v-for="product in products" :key="product.id" :product="product" />
+        </div>
         <Contact />
     </div>
     <Footer />
@@ -20,10 +23,12 @@ import Search from "../Components/Search.vue";
 import Categories from "../Components/Categories.vue";
 import Navbar from "@/Components/Navbar.vue";
 import Footer from "@/Components/Footer.vue";
+import ProductCardDB from "@/Components/ProductCardDB.vue";
 
 export default {
-    name: 'Home',
+    name: 'Market',
     components: {
+        ProductCardDB,
         Navbar,
         Visitit,
         Slider,
@@ -35,8 +40,59 @@ export default {
     },
     props: {
         routes: Object
-    }
-}
+    },
+    data() {
+        return {
+            products: [], // Store products fetched from API
+            filters: {
+                price_min: 0,
+                price_max: 100000,
+            },
+        };
+    },
+    mounted() {
+        this.fetchProducts();
+    },
+    methods: {
+        // fetchProducts() {
+        //     fetch('/products/laptops') // Adjust API endpoint if necessary
+        //         .then((response) => response.json())
+        //         .then((data) => {
+        //             console.log('Fetched products:', data);
+        //             this.products = data;
+        //         })
+        //         .catch((error) => {
+        //             console.error('Error fetching products:', error);
+        //         });
+        // },
+        fetchProducts() {
+            const params = new URLSearchParams({
+                price_min: this.filters.price_min ?? 0,
+                price_max: this.filters.price_max ?? 100000,
+            }).toString();
+
+            // Fetch both PCs and Laptops in parallel
+            Promise.all([
+                fetch(`/products/pcs?${params}`),
+                fetch(`/products/laptops?${params}`)
+            ])
+                .then(([pcsResponse, laptopsResponse]) => {
+                    if (!pcsResponse.ok || !laptopsResponse.ok) {
+                        throw new Error('Error fetching products');
+                    }
+                    return Promise.all([pcsResponse.json(), laptopsResponse.json()]);
+                })
+                .then(([pcs, laptops]) => {
+                    console.log('Fetched PCs:', pcs);
+                    console.log('Fetched Laptops:', laptops);
+                    this.products = [...pcs, ...laptops]; // Combine the results
+                })
+                .catch((error) => {
+                    console.error('Error fetching products:', error);
+                });
+        },
+    },
+};
 </script>
 
 <style scoped>

@@ -3,7 +3,7 @@
         <h1 class="aboutus">Contacts</h1>
         <div class="contact-container">
             <div class="contact-box">
-                <img src="" alt="Online Store Icon">
+                <img src="/images/front/online_store_icon.png" alt="Online Store Icon">
                 <h3>Online Store</h3>
                 <p><a href="">www.comtem.com</a></p>
                 <p>Phone: <a href="tel:+37166778899">+371 66778899</a></p>
@@ -13,7 +13,7 @@
                 <p>Sunday: Closed</p>
             </div>
             <div class="contact-box">
-                <img src="" alt="Customer Service Icon">
+                <img src="/images/front/customer_service_icon.png" alt="Customer Service Icon">
                 <h3>Customer Service</h3>
                 <p>Support and Warranty Cases</p>
                 <p>Phone: <a href="tel:+37166165555">+371 66165555</a></p>
@@ -23,7 +23,7 @@
                 <p>Sunday: Closed</p>
             </div>
             <div class="contact-box">
-                <img src="" alt="Company Icon">
+                <img src="/images/front/company_icon.png" alt="Company Icon">
                 <h3>SIA "MK Trade"</h3>
                 <p>Registration Info</p>
                 <p>Office Address: RVT, Riga</p>
@@ -31,7 +31,7 @@
                 <p>VAT: LV40103299000</p>
             </div>
             <div class="contact-box">
-                <img src="" alt="Procurement Icon">
+                <img src="/images/front/procurement_icon.png" alt="Procurement Icon">
                 <h3>Procurement</h3>
                 <p>For purchases, tenders, price inquiries</p>
                 <p>Email: <a href="mailto:comtem@gmail.com">comtem@gmail.com</a></p>

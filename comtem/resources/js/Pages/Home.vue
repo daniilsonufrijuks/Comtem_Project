@@ -5,7 +5,10 @@
     <Slider/>
     <div class="main-container">
         <Visitit />
-        <Productsintro />
+        <div class="products">
+            <ProductCardDB v-for="product in products" :key="product.id" :product="product" />
+        </div>
+<!--        <Productsintro />-->
         <Testimonial />
         <Contact />
     </div>
@@ -22,10 +25,12 @@ import Testimonial from "../Components/Testimonial.vue";
 import AboutUsText from "../Components/AboutUsText.vue";
 import Navbar from "@/Components/Navbar.vue";
 import Footer from "@/Components/Footer.vue";
+import ProductCardDB from "@/Components/ProductCardDB.vue";
 
 export default {
     name: 'Home',
     components: {
+        ProductCardDB,
         Navbar,
         Visitit,
         Slider,
@@ -38,8 +43,54 @@ export default {
     },
     props: {
         routes: Object
-    }
-}
+    },
+    data() {
+        return {
+            products: [], // Store products fetched from API
+            filters: {
+                price_min: 0,
+                price_max: 100000,
+            },
+        };
+    },
+    mounted() {
+        this.fetchProducts();
+    },
+    methods: {
+        // fetchProducts() {
+        //     fetch('/products/laptops') // Adjust API endpoint if necessary
+        //         .then((response) => response.json())
+        //         .then((data) => {
+        //             console.log('Fetched products:', data);
+        //             this.products = data;
+        //         })
+        //         .catch((error) => {
+        //             console.error('Error fetching products:', error);
+        //         });
+        // },
+        fetchProducts() {
+            const params = new URLSearchParams({
+                price_min: this.filters.price_min ?? 0,
+                price_max: this.filters.price_max ?? 100000,
+            }).toString();
+
+            fetch(`/products/laptops?${params}`)
+                .then((response) => {
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! Status: ${response.status}`);
+                    }
+                    return response.json();
+                })
+                .then((data) => {
+                    console.log("Fetched products:", data);
+                    this.products = data;
+                })
+                .catch((error) => {
+                    console.error("Error fetching products:", error);
+                });
+        },
+    },
+};
 </script>
 
 <style scoped>
