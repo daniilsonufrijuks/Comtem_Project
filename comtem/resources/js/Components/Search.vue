@@ -20,13 +20,19 @@ export default {
             const query = this.query.toLowerCase();
 
             if (['about us', 'aboutus', 'about'].includes(query)) {
-                Inertia.visit('/about');
+                window.location.href = "/about";
             } else if (query === 'home') {
-                Inertia.visit('/');
+                window.location.href = "/";
             } else if (['contacts', 'contact'].includes(query)) {
-                Inertia.visit('/contact');
+                window.location.href = "/contact";
             } else if  (['market', 'markets', 'shop'].includes(query)) {
-                Inertia.visit('/market');
+                window.location.href = "/market";
+            } else if  (['laptop', 'laptops', 'notebook'].includes(query)) {
+                window.location.href = "/laptops";
+            } else if  (['pc', 'PC', 'pcs', 'computer'].includes(query)) {
+                window.location.href = "/pcs";
+            } else if  (['components', 'videocards', 'cpu', 'ram', 'ssd', 'gpu', 'processor'].includes(query)) {
+                window.location.href = "/components";
             } else {
                 alert('Page not found');
             }
