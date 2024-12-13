@@ -112,6 +112,7 @@ Route::post('/contact', ContactController::class)->name('contact');
 Route::get('/api/is-logged-in', function () {
     return response()->json([
         'isLoggedIn' => auth()->check(),
+        'user' => auth()->user(), // Include the authenticated user
     ]);
 });
 

@@ -8,7 +8,7 @@ const { isLoggedIn, user } = useUser(); // Use your custom composable to check l
 const isMenuActive = ref(false);
 const router = useRouter();  // For redirecting after logout
 
-console.log('User Data:', user.value);
+//console.log('User Data:', user.value);
 // Toggle navigation menu state
 const toggleNav = () => {
     isMenuActive.value = !isMenuActive.value;
