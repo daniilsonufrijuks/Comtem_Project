@@ -91,6 +91,30 @@ const goToUserPage = () => {
             <li><a href="/market">Market</a></li>
             <li><a href="/login">Login</a></li>
 <!--            <li><a :href="routes.login">Login</a></li>-->
+            <li v-if="isLoggedIn">
+                <!-- User is logged in: show user avatar -->
+                <i class="fa fa-user icon"
+                   :style="{color: 'black', cursor: 'pointer'}"
+                   :title="user?.name || 'User'"
+                   @click="goToUserPage"
+                ></i>
+            </li>
+            <li v-else>
+                <!-- User is not logged in: show login icon -->
+                <i class="fa fa-user-circle icon"
+                   :style="{ color: 'black' }"
+                ></i> <!-- FontAwesome icon -->
+            </li>
+            <!--            <li @click="logout" style="color:white">Logout</li>-->
+            <li @click="logout" style="cursor: pointer;">
+                <i class="fa fa-sign-out icon" style="color: black;" title="Logout"></i>
+            </li>
+            <li>
+                <a href="/cart" style="position: relative;">
+                    <i class="fa fa-shopping-cart icon" style="color: black;"></i>
+                    <span v-if="cartCount > 0" class="cart-badge">{{ cartCount }}</span>
+                </a>
+            </li>
         </ul>
     </div>
 </template>
@@ -98,6 +122,26 @@ const goToUserPage = () => {
 
 
 <style scoped>
+.menubar ul {
+    list-style-type: none; /* Remove bullet points */
+    padding: 0;
+    margin: 0;
+    display: flex; /* Use flexbox for layout */
+    flex-direction: column; /* Stack items vertically */
+    align-items: center; /* Center items horizontally */
+    justify-content: center; /* Center items vertically */
+}
+
+.menubar li {
+    margin: 10px 0; /* Add some spacing between menu items */
+}
+
+.menubar i.icon {
+    font-size: 24px; /* Adjust icon size */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
 nav {
     background-color: #420d65;
     padding: 5px 2%;
