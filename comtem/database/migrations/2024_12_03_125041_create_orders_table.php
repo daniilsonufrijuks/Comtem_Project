@@ -19,6 +19,9 @@ return new class extends Migration
             $table->decimal('total', 10, 2)->default(0);
             $table->timestamp('ordered_at')->nullable();
             $table->timestamps();
+
+            // Add foreign key constraint
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
         });
     }
 
