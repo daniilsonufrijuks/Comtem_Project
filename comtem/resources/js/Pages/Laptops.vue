@@ -18,9 +18,14 @@
                 placeholder="Max Price"
                 @input="fetchProducts"
             />
+            <!-- Sorting Dropdown -->
+            <select v-model="sortOrder" @change="sortProducts">
+                <option value="asc">Lowest Price First</option>
+                <option value="desc">Highest Price First</option>
+            </select>
         </div>
         <div class="products">
-            <ProductCardDB v-for="product in products" :key="product.id" :product="product" />
+            <ProductCardDB v-for="product in sortedProducts" :key="product.id" :product="product" />
         </div>
         <Contact />
     </div>
@@ -59,10 +64,24 @@ export default {
                 price_min: 0,
                 price_max: 100000,
             },
+            sortOrder: "asc", // Default sorting order
         };
     },
     mounted() {
         this.fetchProducts();
+
+    },
+    computed: {
+        // Sort products based on the selected order
+        sortedProducts() {
+            return [...this.products].sort((a, b) => {
+                if (this.sortOrder === "asc") {
+                    return a.price - b.price;
+                } else {
+                    return b.price - a.price;
+                }
+            });
+        },
     },
     methods: {
         // fetchProducts() {
@@ -80,6 +99,7 @@ export default {
             const params = new URLSearchParams({
                 price_min: this.filters.price_min ?? 0,
                 price_max: this.filters.price_max ?? 100000,
+                // sort_order: this.sortOrder,
             }).toString();
 
             fetch(`/products/laptops?${params}`)
