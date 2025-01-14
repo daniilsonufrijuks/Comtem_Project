@@ -10,6 +10,7 @@
         </div>
 <!--        <Productsintro />-->
         <Testimonial />
+<!--        <chatwithai />-->
         <Contact />
     </div>
     <Footer />
@@ -26,6 +27,7 @@ import AboutUsText from "../Components/AboutUsText.vue";
 import Navbar from "@/Components/Navbar.vue";
 import Footer from "@/Components/Footer.vue";
 import ProductCardDB from "@/Components/ProductCardDB.vue";
+import chatwithai from "@/Components/chatwithai.vue";
 
 export default {
     name: 'Home',
@@ -39,7 +41,8 @@ export default {
         Search,
         Testimonial,
         AboutUsText,
-        Footer
+        Footer,
+        chatwithai,
     },
     props: {
         routes: Object

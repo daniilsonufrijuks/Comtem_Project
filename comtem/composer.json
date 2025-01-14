@@ -10,6 +10,8 @@
         "laravel/framework": "^11.9",
         "laravel/sanctum": "^4.0",
         "laravel/tinker": "^2.9",
+        "openai-php/client": "^0.10.3",
+        "openai/openai": "dev-main",
         "tightenco/ziggy": "^2.0"
     },
     "require-dev": {
@@ -69,6 +71,6 @@
             "php-http/discovery": true
         }
     },
-    "minimum-stability": "stable",
+    "minimum-stability": "dev",
     "prefer-stable": true
 }

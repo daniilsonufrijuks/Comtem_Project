@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\ContactController;
+use App\Http\Controllers\OpenAIController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\PageController;
 use App\Http\Controllers\ProductsController;
@@ -9,6 +10,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\UserController;
 use Illuminate\Foundation\Application;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -70,6 +72,17 @@ Route::get('/components', function () {
 Route::get('/cart', function () {
     return Inertia::render('Cart');
 })->name('cart');
+
+Route::get('/tutor', function () {
+    return Inertia::render('Tutorials');
+})->name('tutor');
+
+
+
+
+
+
+
 
 
 //Route::get('/auction', function () {
@@ -150,12 +163,115 @@ Route::get('/auth/user', function () {
 // Proceed to checkout (with session-based authentication)
 Route::post('/checkout', [OrderController::class, 'store'])->middleware('auth');
 
-
+// to get user page about user
 Route::get('/user', [UserController::class, 'userProfile'])->name('user');
 
 
 
 
+
+
+
+use OpenAI\Client;
+use OpenAI\Transporters\HttpTransporter;
+
+//Route::post('/chatai', function (\Illuminate\Http\Request $request) {
+//    $message = $request->input('message');
+//
+//    // Example using OpenAI's GPT
+//    $client = new Client(['api_key' => env('OPENAI_API_KEY')]);
+//
+//    $response = $client->chat()->create([
+//        'model' => 'gpt-4',
+//        'messages' => [
+//            ['role' => 'system', 'content' => 'You are an expert in PC components.'],
+//            ['role' => 'user', 'content' => $message],
+//        ],
+//    ]);
+//
+//    return response()->json([
+//        'reply' => $response['choices'][0]['message']['content'],
+//    ]);
+//});
+
+
+
+//
+//use GuzzleHttp\Client as GuzzleClient;
+//
+//Route::post('/chatai', function (\Illuminate\Http\Request $request) {
+//    $message = $request->input('message');
+//
+//    try {
+//        // Set up the necessary configuration for HttpTransporter
+//        $config = [
+//            'baseUri' => 'https://api.openai.com',  // API base URL
+//            'headers' => [
+//                'Authorization' => 'Bearer ' . env('OPENAI_API_KEY'),
+//                'Content-Type' => 'application/json',
+//            ],
+//            'queryParams' => [],  // Optional query parameters
+//            'streamHandler' => null,  // Set to null if not using streaming
+//        ];
+//
+//        // Initialize HttpTransporter with the config
+//        $transporter = new HttpTransporter(
+//            $config['baseUri'],
+//            $config['headers'],
+//            $config['queryParams'],
+//            $config['streamHandler']
+//        );
+//
+//        // Create the OpenAI Client with the transporter
+//        $client = new Client($transporter);
+//
+//        // Call the OpenAI chat method with the message
+//        $response = $client->chat()->create([
+//            'model' => 'gpt-4',
+//            'messages' => [
+//                ['role' => 'system', 'content' => 'You are an expert in PC components.'],
+//                ['role' => 'user', 'content' => $message],
+//            ],
+//        ]);
+//
+//        return response()->json([
+//            'reply' => $response['choices'][0]['message']['content'],
+//        ]);
+//    } catch (\Exception $e) {
+//        \Log::error('OpenAI API Error:', ['error' => $e->getMessage()]);
+//        return response()->json(['error' => 'Sorry, something went wrong. Please try again later.'], 500);
+//    }
+//});
+//
+
+
+//Route::post('/chatai', function (\Illuminate\Http\Request $request) {
+//    $message = $request->input('message');
+//
+//    // Example using OpenAI's GPT
+//    try {
+//        $client = new \OpenAI\Client(['api_key' => env('OPENAI_API_KEY')]);
+//
+//        $response = $client->chat()->create([
+//            'model' => 'gpt-4',
+//            'messages' => [
+//                ['role' => 'system', 'content' => 'You are an expert in PC components.'],
+//                ['role' => 'user', 'content' => $message],
+//            ],
+//        ]);
+//
+//        Log::info('OpenAI Response:', ['response' => $response]);
+//
+//        return response()->json([
+//            'reply' => $response['choices'][0]['message']['content'],
+//        ]);
+//    } catch (\Exception $e) {
+//        Log::error('OpenAI API Error:', ['error' => $e->getMessage()]);
+//        return response()->json(['error' => 'Sorry, something went wrong. Please try again later.'], 500);
+//    }
+//});
+
+Route::post('/chatai', [OpenAIController::class, 'generate']);
 
 //Route::get('/home', [PageController::class, 'home'])->name('home');
 //Route::get('/about', [PageController::class, 'about'])->name('about');

@@ -48,6 +48,7 @@ const goToUserPage = () => {
             <li><a href="/">Home</a></li>
             <li><a href="/about">About</a></li>
             <li><a href="/contact">Contacts</a></li>
+            <li><a href="/tutor">Tutorials</a></li>
             <li><a href="/market">Market</a></li>
             <li><a href="/login">Login</a></li>
             <li v-if="isLoggedIn">
@@ -88,6 +89,7 @@ const goToUserPage = () => {
             <li><a href="/">Home</a></li>
             <li><a href="/about">About</a></li>
             <li><a href="/contact">Contacts</a></li>
+            <li><a href="/tutor">Tutorials</a></li>
             <li><a href="/market">Market</a></li>
             <li><a href="/login">Login</a></li>
 <!--            <li><a :href="routes.login">Login</a></li>-->

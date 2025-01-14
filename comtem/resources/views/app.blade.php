@@ -9,6 +9,7 @@
     <title >COMTEM</title>
 
     <link rel="icon" type="image/png" href="{{ asset('m.png') }}">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
 
 
     <!-- Fonts -->
