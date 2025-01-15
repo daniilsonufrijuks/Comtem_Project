@@ -14,7 +14,7 @@
             <li class="menu__item"><a class="menu__link" href="#">Team</a></li>
             <li class="menu__item"><a class="menu__link" href="">Contact</a></li>
         </ul>
-        <p>&copy;2024 COMTEM | All Rights Reserved</p>
+        <p>&copy;2025 COMTEM | MADE BY DAN | All Rights Reserved</p>
     </footer>
     <!-- Footer -->
 </template>

@@ -5,6 +5,7 @@
     <div class="main-container">
         <Visitit />
         <Categories />
+        <PCCalc />
 <!--        <Productsintro />-->
         <div class="products">
             <ProductCardDB v-for="product in products" :key="product.id" :product="product" />
@@ -24,6 +25,7 @@ import Categories from "../Components/Categories.vue";
 import Navbar from "@/Components/Navbar.vue";
 import Footer from "@/Components/Footer.vue";
 import ProductCardDB from "@/Components/ProductCardDB.vue";
+import PCCalc from "@/Components/PCCalc.vue";
 
 export default {
     name: 'Market',
@@ -36,7 +38,8 @@ export default {
         Contact,
         Search,
         Categories,
-        Footer
+        Footer,
+        PCCalc,
     },
     props: {
         routes: Object
