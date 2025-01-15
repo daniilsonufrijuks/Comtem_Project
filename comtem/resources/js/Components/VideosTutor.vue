@@ -61,4 +61,21 @@ iframe {
     border-radius: 10px;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
+
+/* Responsive styles for smaller screens */
+@media (max-width: 768px) {
+    .video-section h2 {
+        font-size: 20px; /* Adjust heading size for smaller screens */
+    }
+
+    .videos {
+        gap: 10px; /* Reduce the gap between videos */
+    }
+
+    iframe {
+        width: 100%;
+        max-width: 100%; /* Make sure iframe doesn't exceed container size */
+        height: 180px; /* Adjust height for smaller screens */
+    }
+}
 </style>
