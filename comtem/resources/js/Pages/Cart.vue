@@ -210,6 +210,66 @@ export default {
         };
 
     },
+//     setup() {
+//         const store = useStore();
+//
+//         const cartItems = computed(() => store.getters.cartItems);
+//         const cartTotal = computed(() =>
+//             store.state.cart.reduce((sum, item) => sum + item.price * item.quantity, 0)
+//         );
+//
+//         const clearCart = () => {
+//             store.commit("CLEAR_CART");
+//         };
+//
+//         const proceedToCheckout = async () => {
+//             try {
+//                 console.log("Cart items before checkout:", store.state.cart);
+//
+//                 if (Array.isArray(store.state.cart) && store.state.cart.length > 0) {
+//                     const sanitizedCart = store.state.cart.map((item) => ({
+//                         id: item.id, // Ensure the item has an id
+//                         name: item.name,
+//                         price: item.price,
+//                         quantity: item.quantity,
+//                     }));
+//
+// // Log the sanitized cart to ensure it has 'id' for each item
+//                     console.log("Sanitized Cart:", sanitizedCart);
+//
+// // Proceed with checkout request if cart is valid
+//                     const response = await axios.get("/auth/user");
+//                     if (!response.data.loggedIn) {
+//                         window.location.href = `/login`;
+//                     } else {
+//                         try {
+//                             const orderResponse = await axios.post('/checkout', {
+//                                 items: sanitizedCart,  // Send sanitizedCart here
+//                                 total: cartTotal.value, // Send the total as well
+//                             });
+//                             console.log("Order Response:", orderResponse.data);
+//                         } catch (error) {
+//                             console.error("Error during checkout:", error.response ? error.response.data : error.message);
+//                         }
+//
+//                         store.commit("CLEAR_CART");
+//                         window.location.href = `/`;
+//                     }
+//                 } else {
+//                     console.log("No items in the cart.");
+//                 }
+//             } catch (error) {
+//                 console.error("Error during checkout:", error);
+//             }
+//         };
+//
+//         return {
+//             cartItems,
+//             cartTotal,
+//             clearCart,
+//             proceedToCheckout,
+//         };
+//     },
 }
 </script>
 
