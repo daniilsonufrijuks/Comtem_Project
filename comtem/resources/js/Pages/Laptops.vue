@@ -139,4 +139,17 @@ export default {
     gap: 1rem;
     margin-bottom: 1rem;
 }
+@media screen and (max-width: 768px) {
+    .filters {
+        flex-direction: column; /* Stack filters vertically */
+        align-items: center;   /* Center the filters horizontally */
+        gap: 0.5rem;           /* Adjust spacing between inputs */
+    }
+
+    .filters input,
+    .filters select {
+        width: 100%;          /* Make inputs and select dropdown full-width */
+        max-width: 300px;     /* Optionally limit the maximum width */
+    }
+}
 </style>
