@@ -1,0 +1,75 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Http\Controllers\Controller;
+use App\Models\Orders;
+use App\Models\Products;
+use Illuminate\Http\Request;
+use Inertia\Inertia;
+
+class AdminController extends Controller
+{
+    public function dashboard(): \Inertia\Response
+    {
+        $orders = Orders::with('user')->get(); // Include user data if needed
+        return Inertia::render('Admin', ['orders' => $orders]);
+    }
+    public function showOrders(Request $request): \Illuminate\Http\JsonResponse
+    {
+//        $orders = Orders::all(); // Fetch all orders
+//        return Inertia::render('AdminOrders', ['orders' => $orders]);
+        //global $request;
+
+        // Fetch the filtered results
+        $orders = Orders::select(['id', 'user_id', 'items', 'status', 'total', 'created_at'])->get();
+
+        return response()->json($orders);
+    }
+
+    public function showProducts(Request $request): \Illuminate\Http\JsonResponse
+    {
+        $products = Products::select(['name', 'price', 'description', 'image', 'category'])->get();
+        return response()->json($products);
+    }
+
+    public function storeProduct(Request $request): \Illuminate\Http\RedirectResponse
+    {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'price' => 'required|numeric',
+            'description' => 'required|string',
+            'image' => 'required|image|mimes:jpeg,png,jpg|max:2048',
+            'category' => 'required|string|max:255',
+        ]);
+
+        if (!$request->hasFile('image')) {
+            return redirect()->back()->withErrors(['image' => 'Image is required']);
+        }
+
+        $imagePath = $request->file('image')->store('products', 'public');
+
+//        Products::create([
+//            'name' => $request->name,
+//            'price' => $request->price,
+//            'description' => $request->description,
+//            'image' => $imagePath,
+//            'category' => $request->category,
+//        ]);
+        try {
+            Products::create([
+                'name' => $request->name,
+                'price' => $request->price,
+                'description' => $request->description,
+                'image' => $imagePath,
+                'category' => $request->category,
+            ]);
+        } catch (\Exception $e) {
+            \Log::error('Error adding product: ' . $e->getMessage());
+        }
+
+
+        // Redirect to the products page
+        return redirect()->route('admin.dashboard')->with('success', 'Product added successfully!');
+    }
+}

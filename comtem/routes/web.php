@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AdminController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\OpenAIController;
@@ -102,6 +103,7 @@ Route::get('/tutor', function () {
 //    ]);
 //})->name('product');
 
+
 Route::get('/product', function (Request $request) {
 //    return Inertia::render('Product', [
 //        'productId' => $request->query('id'), // Pass the query parameter to the frontend
@@ -143,10 +145,10 @@ Route::post('/logout', function () {
 Route::get('/products/components', [ProductsController::class, 'getComponentsProducts']);
 Route::get('/products/laptops', [ProductsController::class, 'getLaptopsProducts']);
 Route::get('/products/pcs', [ProductsController::class, 'getPcsProducts']);
-
-
-
 Route::get('/products/{id}', [ProductsController::class, 'show']);
+
+
+
 
 
 
@@ -163,6 +165,12 @@ Route::get('/auth/user', function () {
 // Proceed to checkout (with session-based authentication)
 Route::post('/checkout', [OrderController::class, 'store'])->middleware('auth');
 
+
+
+
+
+
+
 // to get user page about user
 Route::get('/user', [UserController::class, 'userProfile'])->name('user');
 
@@ -172,8 +180,30 @@ Route::get('/user', [UserController::class, 'userProfile'])->name('user');
 
 
 
-use OpenAI\Client;
-use OpenAI\Transporters\HttpTransporter;
+
+
+
+
+// admin page and get/post
+Route::get('/admin/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
+
+Route::get('/admin/orders', [AdminController::class, 'showOrders'])->name('admin.orders');
+Route::get('/admin/products', [AdminController::class, 'showProducts'])->name('admin.products');
+Route::post('/admin/products', [AdminController::class, 'storeProduct'])->name('admin.products.add');
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 //Route::post('/chatai', function (\Illuminate\Http\Request $request) {
 //    $message = $request->input('message');

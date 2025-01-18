@@ -12,13 +12,6 @@ const submit = () => {
         onFinish: () => form.reset('password'),
     });
 };
-
-// defineProps({
-//     routes: {
-//         type: Object,
-//         required: true,
-//     },
-// });
 </script>
 
 <template>
