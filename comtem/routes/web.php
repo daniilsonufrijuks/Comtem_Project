@@ -104,6 +104,7 @@ Route::get('/tutor', function () {
 //})->name('product');
 
 
+// sends products id from ProductCardDB to Product page
 Route::get('/product', function (Request $request) {
 //    return Inertia::render('Product', [
 //        'productId' => $request->query('id'), // Pass the query parameter to the frontend

@@ -25,9 +25,6 @@ import Navbar from "@/Components/Navbar.vue";
 import Footer from "@/Components/Footer.vue";
 import ProductCard from "@/Components/ProductCard.vue";
 //import {useRoute} from "ziggy-js";
-import { useRoute } from 'vue-router';
-import productCardDB from "@/Components/ProductCardDB.vue";
-import {usePage} from "@inertiajs/vue3";
 export default {
     name: 'Home',
     components: {
