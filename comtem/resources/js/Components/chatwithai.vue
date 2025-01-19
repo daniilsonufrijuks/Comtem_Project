@@ -1,10 +1,11 @@
 <template>
     <div class="chat-container">
         <h2>Chat with AI</h2>
-        <div class="chat-box">
+        <div class="chat-box" ref="chatBox">
             <div v-for="(message, index) in chatMessages" :key="index" :class="['chat-message', message.sender]">
                 <p>{{ message.text }}</p>
             </div>
+            <p v-if="isLoading" class="loading-message">AI is typing...</p>
         </div>
         <form @submit.prevent="sendMessage" class="chat-input">
             <input
@@ -12,8 +13,9 @@
                 v-model="userInput"
                 placeholder="Ask about PC components..."
                 required
+                aria-label="Chat input"
             />
-            <button type="submit">Send</button>
+            <button type="submit" :disabled="isLoading" aria-label="Send message">Send</button>
         </form>
     </div>
 </template>
@@ -27,6 +29,7 @@ export default {
             chatMessages: [
                 { sender: "ai", text: "Hello! Ask me anything about PC components." },
             ],
+            isLoading: false,
         };
     },
     methods: {
@@ -40,6 +43,12 @@ export default {
             const input = this.userInput;
             this.userInput = ""; // Clear input field
 
+            // Scroll chat box to the bottom
+            this.scrollToBottom();
+
+            // Set loading state
+            this.isLoading = true;
+
             // Retrieve CSRF token from the meta tag
             const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute("content");
 
@@ -49,37 +58,47 @@ export default {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",
-                        "X-CSRF-TOKEN": csrfToken, // Add CSRF token here
+                        "X-CSRF-TOKEN": csrfToken,
                     },
-                    body: JSON.stringify({ prompt: input }),
+                    body: JSON.stringify({ message: input }),
                 });
 
-                if (!response.ok) {
-                    throw new Error(`HTTP error! Status: ${response.status}`);
+                // Check if the response is JSON
+                const contentType = response.headers.get('Content-Type');
+                if (!contentType || !contentType.includes('application/json')) {
+                    throw new Error('Expected JSON response, but got ' + contentType);
                 }
 
                 const data = await response.json();
-
-                if (!data.generated_text) {
-                    throw new Error("No AI response returned.");
-                }
-
-                // Add AI response to chat
-                this.chatMessages.push({ sender: "ai", text: data.generated_text });
+                this.chatMessages.push({
+                    sender: "ai",
+                    text: data.reply || "I couldn't process your request. Try again.",
+                });
             } catch (error) {
                 console.error("Error fetching AI response:", error);
-
-                // Add a fallback message for the user
                 this.chatMessages.push({
                     sender: "ai",
                     text: "Sorry, something went wrong. Please try again later.",
                 });
+            } finally {
+                // Remove loading state
+                this.isLoading = false;
+
+                // Scroll chat box to the bottom
+                this.scrollToBottom();
             }
+        },
+        scrollToBottom() {
+            this.$nextTick(() => {
+                const chatBox = this.$refs.chatBox;
+                if (chatBox) {
+                    chatBox.scrollTop = chatBox.scrollHeight;
+                }
+            });
         },
     },
 };
 </script>
-
 <style scoped>
 .chat-container {
     max-width: 500px;

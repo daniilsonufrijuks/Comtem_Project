@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
+use App\Http\Controllers\ChatController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\OpenAIController;
 use App\Http\Controllers\OrderController;
@@ -201,6 +202,8 @@ Route::post('/admin/products', [AdminController::class, 'storeProduct'])->name('
 
 
 
+// ai
+Route::post('/chatai', [ChatController::class, 'chat'])->name('chatai');
 
 
 
