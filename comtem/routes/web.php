@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\AuctionController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\ChatController;
 use App\Http\Controllers\ContactController;
@@ -79,6 +80,9 @@ Route::get('/tutor', function () {
     return Inertia::render('Tutorials');
 })->name('tutor');
 
+Route::get('/auction', function () {
+    return Inertia::render('Auction');
+})->name('auction');
 
 
 
@@ -87,9 +91,10 @@ Route::get('/tutor', function () {
 
 
 
-//Route::get('/auction', function () {
-//    return Inertia::render('Auction');
-//})->name('auction');
+
+
+
+
 
 
 
@@ -207,6 +212,8 @@ Route::post('/chatai', [ChatController::class, 'chat'])->name('chatai');
 
 
 
+
+Route::get('/auction-items', [AuctionController::class, 'showAuction']);
 
 
 //Route::post('/chatai', function (\Illuminate\Http\Request $request) {

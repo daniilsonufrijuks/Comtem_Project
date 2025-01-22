@@ -22,7 +22,7 @@
         <div class="product-card">
             <img src="/images/front/auction.png" alt="Product 4">
             <p>AUCTION</p>
-            <button onclick="location.href=''">VISIT</button>
+            <button onclick="location.href='/auction'">VISIT</button>
         </div>
     </div>
     <!-- Categories -->

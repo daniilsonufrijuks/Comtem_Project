@@ -42,7 +42,7 @@ const goToUserPage = () => {
 <template>
     <nav>
         <div class="logo">
-            <h1>COMTEM</h1>
+            <h1><a href="/">COMTEM</a></h1>
         </div>
         <ul>
             <li><a href="/">Home</a></li>
