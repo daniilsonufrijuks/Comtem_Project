@@ -66,6 +66,13 @@ export default {
     align-items: center;
 }
 
+.search i.fa {
+    width: 60px; /* Increase this to make the icon area larger */
+    display: inline-block;
+    text-align: center; /* Center the icon inside the box */
+    padding-left: 10px; /* Adjust padding to align the icon nicely */
+}
+
 .container_search {
     padding: 30px !important;
 }
