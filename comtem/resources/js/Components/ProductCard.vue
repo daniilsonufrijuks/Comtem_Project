@@ -13,11 +13,11 @@
             <h6>{{ product.category }}</h6>
             <h4>{{ product.name }}</h4>
             <h2>${{ product.price }}</h2>
-            <select>
-                <option>Select option</option>
-                <option>Box</option>
-                <option>Single</option>
-            </select>
+<!--            <select>-->
+<!--                <option>Select option</option>-->
+<!--                <option>Box</option>-->
+<!--                <option>Single</option>-->
+<!--            </select>-->
             <input type="number" v-model="quantity" value="1">
             <button class="normal" @click="addToCart(this.product)">Add to Cart</button>
             <h4>Product Details</h4>
@@ -25,6 +25,13 @@
         </div>
     </section>
     <p v-else>Loading product details...</p>
+
+    <!-- Notification Slider -->
+    <transition name="slide">
+        <div v-if="showNotification" class="notification">
+            Item added to cart!
+        </div>
+    </transition>
 </template>
 
 
@@ -39,10 +46,16 @@ export default {
 
         // Initialize quantity with default value 1
         const quantity = ref(1);
+        const showNotification = ref(false);
 
         const addToCart = (product) => {
             store.commit('ADD_TO_CART', { ...product, quantity: quantity.value });
             console.log("added", product);
+            showNotification.value = true;
+            // Hide the notification after 3 seconds
+            setTimeout(() => {
+                showNotification.value = false;
+            }, 3000);
         };
         // const addToCart = (product) => {
         //     if (!product) {
@@ -53,7 +66,7 @@ export default {
         //     console.log("added", product);
         //};
 
-        return { quantity, addToCart };
+        return { quantity, addToCart, showNotification };
     },
 };
 // export default {
@@ -92,6 +105,34 @@ export default {
 
 
 <style scoped>
+
+/* Sliding notification styles */
+.notification {
+    position: fixed;
+    bottom: 100px;
+    right: 20px;
+    background-color: #7a3a7b;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-size: 16px;
+    z-index: 1000;
+    transform: translateX(10%);
+    transition: transform 0.5s ease-in-out;
+}
+
+.notification-enter-active, .notification-leave-active {
+    transition: transform 0.5s ease-in-out;
+}
+
+.notification-enter, .notification-leave-to {
+    transform: translateX(100%);
+}
+
+.notification-enter-to, .notification-leave {
+    transform: translateX(0);
+}
+
 /* product */
 #productdetails {
     display: flex;

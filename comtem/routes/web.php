@@ -5,7 +5,7 @@ use App\Http\Controllers\AuctionController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\ChatController;
 use App\Http\Controllers\ContactController;
-use App\Http\Controllers\OpenAIController;
+//use App\Http\Controllers\OpenAIController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\PageController;
 use App\Http\Controllers\ProductsController;
@@ -208,7 +208,8 @@ Route::post('/admin/products', [AdminController::class, 'storeProduct'])->name('
 
 
 // ai
-Route::post('/chatai', [ChatController::class, 'chat'])->name('chatai');
+//Route::post('/chatai', [ChatController::class, 'chat'])->name('chatai');
+Route::post('chatai', [ChatController::class, 'chat'])->name('chatai');
 
 
 
@@ -312,7 +313,7 @@ Route::get('/auction-items', [AuctionController::class, 'showAuction']);
 //    }
 //});
 
-Route::post('/chatai', [OpenAIController::class, 'generate']);
+//Route::post('/chatai', [OpenAIController::class, 'generate']);
 
 //Route::get('/home', [PageController::class, 'home'])->name('home');
 //Route::get('/about', [PageController::class, 'about'])->name('about');

@@ -34,25 +34,26 @@ export default {
     },
     methods: {
         async sendMessage() {
-            if (!this.userInput.trim()) return;
+            if (!this.userInput.trim()) {
+                alert("Please enter a message.");
+                return;
+            }
+
+            if (this.userInput.length > 500) {
+                alert("Message is too long. Please limit your input to 500 characters.");
+                return;
+            }
 
             // Add user message to chat
             this.chatMessages.push({ sender: "user", text: this.userInput });
 
-            // Store the input to send to the backend
             const input = this.userInput;
             this.userInput = ""; // Clear input field
-
-            // Scroll chat box to the bottom
             this.scrollToBottom();
-
-            // Set loading state
             this.isLoading = true;
 
-            // Retrieve CSRF token from the meta tag
             const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute("content");
 
-            // Call backend API for AI response
             try {
                 const response = await fetch("/chatai", {
                     method: "POST",
@@ -62,14 +63,17 @@ export default {
                     },
                     body: JSON.stringify({ message: input }),
                 });
+                console.log("Raw response:", response);
 
-                // Check if the response is JSON
-                const contentType = response.headers.get('Content-Type');
-                if (!contentType || !contentType.includes('application/json')) {
-                    throw new Error('Expected JSON response, but got ' + contentType);
+
+                const contentType = response.headers.get("Content-Type");
+                if (!contentType || !contentType.includes("application/json")) {
+                    throw new Error("Invalid response format.");
                 }
 
                 const data = await response.json();
+                console.log("Parsed response:", data);
+
                 this.chatMessages.push({
                     sender: "ai",
                     text: data.reply || "I couldn't process your request. Try again.",
@@ -78,13 +82,10 @@ export default {
                 console.error("Error fetching AI response:", error);
                 this.chatMessages.push({
                     sender: "ai",
-                    text: "Sorry, something went wrong. Please try again later.",
+                    text: "Sorry, I'm having trouble connecting to the server. Please try again later.",
                 });
             } finally {
-                // Remove loading state
                 this.isLoading = false;
-
-                // Scroll chat box to the bottom
                 this.scrollToBottom();
             }
         },
