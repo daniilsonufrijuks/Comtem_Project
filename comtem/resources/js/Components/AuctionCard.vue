@@ -5,14 +5,14 @@
             <img :src="item.img || ''" width="50%" id="MainImg" alt="">
         </div>
         <div class="single-pro-details">
-            <h4>{{ item.name }}</h4>
+            <h2>{{ item.name }}</h2>
             <input type="number" v-model="quantity" value="1">
 <!--            <button class="normal" @click="addToCart(this.item)">Add to Cart</button>-->
             <h4>Product Details</h4>
-            <span class="gcardt">{{ item.description }}.</span>
             <p><strong>Starting Bid: $</strong> {{ item.starting_bid }}</p>
             <p><strong>Start date: {{ item.start_time}}</strong></p>
             <p><strong>End date: {{ item.end_time}}</strong></p>
+            <span class="gcardt">{{ item.description }}.</span>
         </div>
     </section>
     <p v-else>Loading product details...</p>
