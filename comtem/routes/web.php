@@ -214,7 +214,37 @@ Route::post('chatai', [ChatController::class, 'chat'])->name('chatai');
 
 
 
-Route::get('/auction-items', [AuctionController::class, 'showAuction']);
+
+
+
+
+
+// show auction items and send auction item id to inspect exactly one spicific product form auction list
+Route::get('/auction/items', [AuctionController::class, 'getitems']);
+
+// to send item id form auction to auctionitem when need to open description...
+Route::get('/auctionitem', function (Request $request) {
+
+    $productId = $request->query('id'); // Extract 'id' from query parameters
+    if (!$productId) {
+        abort(400, 'Product ID is required');
+    }
+    return Inertia::render('AuctionItem', [
+        'productId' => $productId, // Pass it to the Vue page
+    ]);
+})->name('auctionitem');
+
+// to get spicific item info from table auction by id
+Route::get('/auctionitems/{id}', [AuctionController::class, 'show']);
+
+
+
+
+
+
+
+
+
 
 
 //Route::post('/chatai', function (\Illuminate\Http\Request $request) {

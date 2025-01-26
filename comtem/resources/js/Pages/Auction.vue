@@ -1,22 +1,35 @@
 <template>
-    <div class="auction-page">
-        <h1>Auction Listings</h1>
+    <Navbar/>
+    <Search />
+    <Slider />
 
-        <!-- Auction items list -->
-        <div class="auction-list">
-            <div v-for="item in auctionItems" :key="item.id" class="auction-item">
-                <img :src="`/images/auction/${item.img}`" alt="auction item" />
-                <h3>{{ item.name }}</h3>
-                <p>{{ item.description }}</p>
-                <p>Starting Bid: ${{ item.starting_bid }}</p>
-                <button @click="placeBid(item.id)">Place Bid</button>
+    <div class="main-container">
+        <Visitit />
+        <div class="auction-page">
+<!--            <h1>Auction Listings</h1>-->
+
+            <!-- Auction items list -->
+            <div class="auction-list">
+                <AuctionCardDB v-for="item in auctionItems" :key="item.id" :item="item"/>
             </div>
         </div>
+        <Contact />
     </div>
+    <Footer/>
 </template>
 
 <script>
+import ProductCardDB from "@/Components/ProductCardDB.vue";
+import Navbar from "@/Components/Navbar.vue";
+import Footer from "@/Components/Footer.vue";
+import Slider from "@/Components/Slider.vue";
+import Search from "@/Components/Search.vue";
+import Visitit from "@/Components/Visitit.vue";
+import Contact from "@/Components/Contact.vue";
+import AuctionCardDB from "@/Components/AuctionCardDB.vue";
+
 export default {
+    components: {AuctionCardDB, Contact, Visitit, Search, Slider, Footer, Navbar, ProductCardDB},
     data() {
         return {
             auctionItems: [], // This will hold the auction items
@@ -26,13 +39,29 @@ export default {
         this.fetchAuctionItems();
     },
     methods: {
-        async fetchAuctionItems() {
-            try {
-                const response = await axios.get('/auction-items');
-                this.auctionItems = response.data;
-            } catch (error) {
-                console.error('Error fetching auction items:', error);
-            }
+        // async fetchAuctionItems() {
+        //     try {
+        //         const response = await axios.get('/auctionitems');
+        //         this.auctionItems = response.data;
+        //     } catch (error) {
+        //         console.error('Error fetching auction items:', error);
+        //     }
+        // },
+        fetchAuctionItems() {
+            fetch(`/auction/items`)
+                .then((response) => {
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! Status: ${response.status}`);
+                    }
+                    return response.json();
+                })
+                .then((data) => {
+                    console.log("Fetched products:", data);
+                    this.auctionItems = data;
+                })
+                .catch((error) => {
+                    console.error("Error fetching products:", error);
+                });
         },
         placeBid(itemId) {
             // Handle the placing bid logic (You may want to handle this with a modal or a form)
@@ -43,6 +72,12 @@ export default {
 </script>
 
 <style scoped>
+.main-container {
+    display: flex;
+    flex-direction: column;
+    gap: 70px; /* Adjust as needed */
+}
+
 .auction-page {
     padding: 20px;
 }

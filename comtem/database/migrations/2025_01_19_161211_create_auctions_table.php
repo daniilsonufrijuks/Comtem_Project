@@ -17,9 +17,9 @@ return new class extends Migration
             $table->text('description');
             $table->decimal('starting_bid', 8, 2);
             $table->string('img'); // Make sure to store the image filename in the database
-            $table->date('start_time');
-            $table->date('end_time');
-            $table->unsignedBigInteger('user_id');
+            $table->date('start_time')->nullable();
+            $table->date('end_time')->nullable();
+            $table->unsignedBigInteger('user_id')->nullable();
             $table->timestamps();
 
             // Add foreign key constraint
