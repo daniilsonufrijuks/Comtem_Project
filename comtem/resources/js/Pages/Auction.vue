@@ -7,6 +7,10 @@
         <Visitit />
         <div class="auction-page">
 <!--            <h1>Auction Listings</h1>-->
+            <!-- Add Auction Button -->
+            <div class="add-auction-container">
+                <button @click="goToAddAuction" class="add-auction-btn">+</button>
+            </div>
 
             <!-- Auction items list -->
             <div class="auction-list">
@@ -63,6 +67,9 @@ export default {
                     console.error("Error fetching products:", error);
                 });
         },
+        goToAddAuction() {
+            window.location.href = `/auction/add`; // Redirect to the add auction page
+        },
         placeBid(itemId) {
             // Handle the placing bid logic (You may want to handle this with a modal or a form)
             console.log(`Placing a bid on item ${itemId}`);
@@ -96,4 +103,40 @@ export default {
 .auction-item button {
     margin-top: 10px;
 }
+
+.add-auction-btn {
+    align-items: center;
+    appearance: none;
+    border-radius: 4px;
+    border-style: none;
+    box-shadow: rgba(0, 0, 0, .2) 0 3px 1px -2px,rgba(0, 0, 0, .14) 0 2px 2px 0,rgba(0, 0, 0, .12) 0 1px 5px 0;
+    box-sizing: border-box;
+    color: #fff;
+    background-color: #6a0dad;
+    cursor: pointer;
+    display: inline-flex;
+    font-family: Roboto,sans-serif;
+    font-size: .875rem;
+    font-weight: 500;
+    height: 36px;
+    justify-content: center;
+    letter-spacing: .0892857em;
+    line-height: normal;
+    min-width: 64px;
+    outline: none;
+    overflow: visible;
+    padding: 0 16px;
+    position: relative;
+    text-align: center;
+    text-decoration: none;
+    text-transform: uppercase;
+    transition: box-shadow 280ms cubic-bezier(.4, 0, .2, 1);
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
+    vertical-align: middle;
+    will-change: transform,opacity;
+}
+
+
 </style>

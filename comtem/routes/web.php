@@ -84,7 +84,9 @@ Route::get('/auction', function () {
     return Inertia::render('Auction');
 })->name('auction');
 
-
+//Route::get('/auction/add', function () {
+//    return Inertia::render('AddAItem');
+//})->name('addaitem');
 
 
 
@@ -162,12 +164,12 @@ Route::get('/products/{id}', [ProductsController::class, 'show']);
 
 
 // Check if user is logged in
-Route::get('/auth/user', function () {
-    return response()->json([
-        'loggedIn' => auth()->check(),
-        'id' => auth()->id(),
-    ]);
-});
+//Route::get('/auth/user', function () {
+//    return response()->json([
+//        'loggedIn' => auth()->check(),
+//        'id' => auth()->id(),
+//    ]);
+//});
 
 // Proceed to checkout (with session-based authentication)
 Route::post('/checkout', [OrderController::class, 'store'])->middleware('auth');
@@ -236,6 +238,10 @@ Route::get('/auctionitem', function (Request $request) {
 
 // to get spicific item info from table auction by id
 Route::get('/auctionitems/{id}', [AuctionController::class, 'show']);
+// to add new item opens new page for adding
+Route::get('/auction/add', [AuctionController::class, 'create']);
+// to create new auction item
+Route::post('/auction/store', [AuctionController::class, 'store'])->middleware('auth');
 
 
 

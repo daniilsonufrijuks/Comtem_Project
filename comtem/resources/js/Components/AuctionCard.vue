@@ -6,9 +6,10 @@
         </div>
         <div class="single-pro-details">
             <h2>{{ item.name }}</h2>
+            <h3>Place bid</h3>
             <input type="number" v-model="quantity" value="1">
 <!--            <button class="normal" @click="addToCart(this.item)">Add to Cart</button>-->
-            <h4>Product Details</h4>
+            <h3>Product Details</h3>
             <p><strong>Starting Bid: $</strong> {{ item.starting_bid }}</p>
             <p><strong>Start date: {{ item.start_time}}</strong></p>
             <p><strong>End date: {{ item.end_time}}</strong></p>
@@ -28,33 +29,6 @@ export default {
 
 
 <style scoped>
-
-/* Sliding notification styles */
-.notification {
-    position: fixed;
-    bottom: 100px;
-    right: 20px;
-    background-color: #7a3a7b;
-    color: white;
-    padding: 10px 20px;
-    border-radius: 5px;
-    font-size: 16px;
-    z-index: 1000;
-    transform: translateX(10%);
-    transition: transform 0.5s ease-in-out;
-}
-
-.notification-enter-active, .notification-leave-active {
-    transition: transform 0.5s ease-in-out;
-}
-
-.notification-enter, .notification-leave-to {
-    transform: translateX(100%);
-}
-
-.notification-enter-to, .notification-leave {
-    transform: translateX(0);
-}
 
 /* product */
 #productdetails {
@@ -80,16 +54,6 @@ export default {
 #productdetails .single-pro-image{
     width: 40%;
     margin-right: 50px;
-}
-
-.small-image-group {
-    display: flex;
-    justify-content: space-between;
-}
-
-.small-img-col {
-    flex-basis: 24%;
-    cursor: pointer;
 }
 
 #productdetails .single-pro-details {
