@@ -88,9 +88,7 @@ export default {
     margin: 20px auto;
     width: 900px;
     gap: 20px;
-    display: flex;
     flex-wrap: wrap;
-    justify-content: space-between;
     position: relative;
 }
 
@@ -149,10 +147,20 @@ export default {
 
 
 /* Media query for screens 500px or less */
-@media (max-width: 500px) {
+@media (max-width: 950px) {
     .product-card {
         flex: 1 1 calc(50% - 5px);
         margin-bottom: 15px;
+    }
+
+    .product-cards {
+        display: flex;
+        justify-content: space-between;
+        margin: 20px auto;
+        width: auto;
+        gap: 20px;
+        flex-wrap: wrap;
+        position: relative;
     }
 }
 
@@ -163,9 +171,7 @@ export default {
         margin: 20px auto;
         width: 500px;
         gap: 20px;
-        display: flex;
         flex-wrap: wrap;
-        justify-content: space-between;
         position: relative;
     }
 }

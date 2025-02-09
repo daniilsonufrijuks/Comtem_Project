@@ -85,4 +85,5 @@ onUnmounted(() => {
     display: block;
     object-fit: cover;
 }
+
 </style>

@@ -166,7 +166,7 @@ nav .logo img {
 }
 nav .logo h1 {
     font-size: 1.5rem;
-    background: linear-gradient(to right, #b927fc 0%, #2c64fc 100%);
+    background: linear-gradient(to right, #c593dc 0%, #e0cae4 100%);
     -webkit-background-clip: text;
     background-clip: text;
     -webkit-text-fill-color: transparent;
