@@ -171,6 +171,13 @@ Route::get('/products/{id}', [ProductsController::class, 'show']);
 //    ]);
 //});
 
+
+
+
+
+
+
+
 // Proceed to checkout (with session-based authentication)
 Route::post('/checkout', [OrderController::class, 'store'])->middleware('auth');
 

@@ -164,6 +164,9 @@ export default {
                         quantity: item.quantity,
                     }));
 
+                    // const response = await axios.get('/auth/user');-->
+                // <!--                // if (!response.data.loggedIn) {-->
+
                     if (!isAuthenticated.value) {
                         // If user is not logged in, redirect to login
                         window.location.href = `/login`;

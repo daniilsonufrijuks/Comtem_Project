@@ -86,7 +86,7 @@ export default {
     display: flex;
     justify-content: space-between;
     margin: 20px auto;
-    max-width: 1200px;
+    width: 900px;
     gap: 20px;
     display: flex;
     flex-wrap: wrap;
@@ -151,8 +151,22 @@ export default {
 /* Media query for screens 500px or less */
 @media (max-width: 500px) {
     .product-card {
-        flex: 1 1 calc(50% - 5px); /* Для экранов меньше 500px, делаем карточки немного уже */
+        flex: 1 1 calc(50% - 5px);
         margin-bottom: 15px;
+    }
+}
+
+@media (min-width: 1090px) {
+    .product-cards {
+        display: flex;
+        justify-content: space-between;
+        margin: 20px auto;
+        width: 500px;
+        gap: 20px;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        position: relative;
     }
 }
 /* Cards near footer */

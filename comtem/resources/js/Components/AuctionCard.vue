@@ -7,7 +7,7 @@
         <div class="single-pro-details">
             <h2>{{ item.name }}</h2>
             <h3>Place bid</h3>
-            <input type="number" v-model="quantity" value="1">
+            <input class="input1" type="number" v-model="quantity" value="1">
 <!--            <button class="normal" @click="addToCart(this.item)">Add to Cart</button>-->
             <h3>Product Details</h3>
             <p><strong>Starting Bid: $</strong> {{ item.starting_bid }}</p>
@@ -54,6 +54,16 @@ export default {
 #productdetails .single-pro-image{
     width: 40%;
     margin-right: 50px;
+}
+
+.small-image-group {
+    display: flex;
+    justify-content: space-between;
+}
+
+.small-img-col {
+    flex-basis: 24%;
+    cursor: pointer;
 }
 
 #productdetails .single-pro-details {
@@ -137,6 +147,6 @@ export default {
         width: 100%;
     }
 }
-
 /* product */
+
 </style>

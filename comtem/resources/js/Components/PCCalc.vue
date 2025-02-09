@@ -52,9 +52,11 @@ export default {
                     { name: 'Intel i9-12400', score: 1400 },
                     { name: 'AMD Ryzen 5 5600X', score: 600 },
                     { name: 'AMD Ryzen 7 6600X3D', score: 1000 },
+                    { name: 'AMD Ryzen 9 7600X3D', score: 1600 },
                 ],
                 gpus: [
                     { name: 'NVIDIA GTX 1660', score: 300 },
+                    { name: 'NVIDIA GTX 1080', score: 500 },
                     { name: 'NVIDIA RTX 2070', score: 600 },
                     { name: 'NVIDIA RTX 3060', score: 600 },
                     { name: 'NVIDIA RTX 3080', score: 800 },
@@ -64,7 +66,9 @@ export default {
                 ],
                 rams: [
                     { name: '8GB DDR4', score: 100 },
+                    { name: '8GB DDR5', score: 300 },
                     { name: '16GB DDR4', score: 200 },
+                    { name: '16GB DDR5', score: 400 },
                     { name: '32GB DDR4', score: 300 },
                     { name: '64GB DDR4', score: 400 },
                     { name: '32GB DDR5', score: 600 },
