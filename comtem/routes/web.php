@@ -250,7 +250,7 @@ Route::get('/auctionitems/{id}', [AuctionController::class, 'show']);
 Route::get('/auction/add', [AuctionController::class, 'create']);
 // to create new auction item
 Route::post('/auction/store', [AuctionController::class, 'store'])->middleware('auth');
-
+// for auction to place bids on auction items
 Route::post('/place-bid/{item}', [BidController::class, 'placeBid'])->middleware('auth');
 // delete auction items after end date
 Route::delete('/delete-expired-auctions', [AuctionController::class, 'destroy']);
