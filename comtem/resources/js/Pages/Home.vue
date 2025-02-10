@@ -1,5 +1,6 @@
 <template>
 <!--    <Navbar :routes="routes" />-->
+    <Banner/>
     <Navbar :routes="routes"/>
     <Search />
     <Slider/>
@@ -28,6 +29,7 @@ import Navbar from "@/Components/Navbar.vue";
 import Footer from "@/Components/Footer.vue";
 import ProductCardDB from "@/Components/ProductCardDB.vue";
 import chatwithai from "@/Components/chatwithai.vue";
+import Banner from "@/Components/Banner.vue";
 
 export default {
     name: 'Home',
@@ -43,6 +45,7 @@ export default {
         AboutUsText,
         Footer,
         chatwithai,
+        Banner
     },
     props: {
         routes: Object
