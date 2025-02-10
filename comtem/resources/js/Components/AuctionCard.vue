@@ -6,8 +6,9 @@
         </div>
         <div class="single-pro-details">
             <h2>{{ item.name }}</h2>
-            <h3>Place bid</h3>
+            <h2>Place bid</h2>
             <input class="input1" type="number" v-model="quantity" value="1">
+            <button class="normal" @click="placeBid(this.item.id)">Place Bid</button>
 <!--            <button class="normal" @click="addToCart(this.item)">Add to Cart</button>-->
             <h3>Product Details</h3>
             <p><strong>Starting Bid: $</strong> {{ item.starting_bid }}</p>
@@ -22,7 +23,39 @@
 
 <script>
 export default {
-    props: ['item'], // Make sure to pass `product` as a prop
+    // props: ['item'], // Make sure to pass `product` as a prop
+    props: {
+        item: {
+            type: Object,
+            required: true,
+        },
+    },
+    data() {
+        return {
+            bidAmount: 1, // Default bid amount
+        };
+    },
+    methods: {
+        async placeBid(itemId) {
+            console.log("Full item object:", this.item); // Debugging
+            console.log("Placing bid for item ID:", itemId);
+            try {
+                const response = await axios.post(`/place-bid/${itemId}`, {
+                    bid_amount: this.bidAmount,
+                    itemId: itemId,
+                });
+                // alert('Bid placed successfully');
+                console.log('Bid Response:', response.data);
+            } catch (error) {
+                if (error.response && error.response.status === 401) {
+                    alert('You must be logged in to place a bid');
+                    console.log('You must be logged in to place a bid');
+                } else {
+                    console.log('Error placing bid');
+                }
+            }
+        }
+    }
 };
 
 </script>

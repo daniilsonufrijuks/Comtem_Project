@@ -25,7 +25,7 @@ class AuctionController extends Controller
 
     public function show($id): \Illuminate\Http\JsonResponse
     {
-        $auctionItems = Auction::find($id, ['name', 'description', 'img', 'starting_bid', 'start_time', 'end_time']);
+        $auctionItems = Auction::find($id, ['id', 'name', 'description', 'img', 'starting_bid', 'start_time', 'end_time']);
 
         if (!$auctionItems) {
             return response()->json(['error' => 'Item not found'], 404);
@@ -75,5 +75,16 @@ class AuctionController extends Controller
         ]);
 
         return redirect('/auction')->with('success', 'Auction item added successfully!');
+    }
+
+    public function destroy()
+    {
+        $today = now()->toDateString(); // Get today's date
+
+        $deleted = Auction::whereDate('end_time', $today)->delete();
+
+        return response()->json([
+            'message' => $deleted > 0 ? "$deleted expired auctions deleted." : "No expired auctions found."
+        ]);
     }
 }

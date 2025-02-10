@@ -3,6 +3,7 @@
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AuctionController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
+use App\Http\Controllers\BidController;
 use App\Http\Controllers\ChatController;
 use App\Http\Controllers\ContactController;
 //use App\Http\Controllers\OpenAIController;
@@ -250,8 +251,9 @@ Route::get('/auction/add', [AuctionController::class, 'create']);
 // to create new auction item
 Route::post('/auction/store', [AuctionController::class, 'store'])->middleware('auth');
 
-
-
+Route::post('/place-bid/{item}', [BidController::class, 'placeBid'])->middleware('auth');
+// delete auction items after end date
+Route::delete('/delete-expired-auctions', [AuctionController::class, 'destroy']);
 
 
 
