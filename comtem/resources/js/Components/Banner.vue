@@ -50,7 +50,8 @@ export default {
     bottom: 0;
     left: 0;
     width: 100%;
-    background: red;
+    /*background: red;*/
+    background: linear-gradient(135deg, #ed5f7f, #9a1b06); /* Gradient from red to a lighter shade */
     color: white;
     text-align: center;
     padding: 10px;
