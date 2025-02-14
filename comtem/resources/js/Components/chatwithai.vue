@@ -1,6 +1,6 @@
 <template>
     <div class="chat-container">
-        <h2>Chat with AI</h2>
+        <h2>Chat with COMTEM AI</h2>
         <div class="chat-box" ref="chatBox">
             <div v-for="(message, index) in chatMessages" :key="index" :class="['chat-message', message.sender]">
                 <p>{{ message.text }}</p>
@@ -102,7 +102,8 @@ export default {
 </script>
 <style scoped>
 .chat-container {
-    max-width: 500px;
+    width: 1000px;
+    min-width: 200px;
     margin: 0 auto;
     padding: 1rem;
     border: 1px solid #ddd;
@@ -166,5 +167,31 @@ h2 {
 
 .chat-input button:hover {
     background: #0056b3;
+}
+
+/* Media query for screens 500px or less */
+@media (max-width: 1100px) {
+    .chat-container {
+        width: 500px;
+        min-width: 150px;
+        margin: 0 auto;
+        padding: 1rem;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        background: #f9f9f9;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+}
+
+@media (max-width: 520px) {
+    .chat-container {
+        width: 300px;
+        margin: 0 auto;
+        padding: 1rem;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        background: #f9f9f9;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
 }
 </style>
