@@ -43,6 +43,7 @@ const goToUserPage = () => {
     <nav>
         <div class="logo">
             <h1><a href="/">COMTEM</a></h1>
+            <img class="imglogo" src="/m.png"/>
         </div>
         <ul>
             <li><a href="/">Home</a></li>
@@ -271,6 +272,10 @@ nav ul li a:hover {
 
 .menubar ul li a:hover {
     background-color: #ac60bf;
+}
+
+.imglogo {
+    margin-left: 10px;
 }
 
 /* Media Query for Mobile */

@@ -23,6 +23,8 @@ const photos = [
     "../images/front/slbg1.png",
     "../images/front/slbg2.png",
     "../images/front/slbg3.png",
+    "../images/front/slbg4.jpg",
+    "../images/front/slbg5.jpg",
 ];
 
 const currentIndex = ref(0);
