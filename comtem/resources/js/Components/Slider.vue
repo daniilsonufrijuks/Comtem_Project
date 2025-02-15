@@ -88,4 +88,11 @@ onUnmounted(() => {
     object-fit: cover;
 }
 
+
+/*@media screen and (max-width: 768px) {
+    .slider {
+        height: 550px;
+    }
+}
+*/
 </style>
