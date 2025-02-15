@@ -1,7 +1,6 @@
-# Use official PHP image as a base
 FROM php:8.1-fpm
 
-# Install PHP extensions and dependencies
+# Install dependencies
 RUN apt-get update && apt-get install -y \
     libpng-dev \
     libjpeg-dev \
@@ -18,22 +17,15 @@ RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local
 # Set working directory
 WORKDIR /var/www
 
-# Copy the existing application directory to the container
+# Copy the code into the container
 COPY . .
 
-# Install PHP dependencies
+# Install dependencies
 RUN composer install
-
-# Install Node.js and npm
-RUN apt-get install -y nodejs npm
-
-# Install npm dependencies
 RUN npm install
-
-# Build the frontend assets
 RUN npm run build
 
-# Expose the port the app will run on
+# Expose the port
 EXPOSE 9000
 
 # Start PHP-FPM
