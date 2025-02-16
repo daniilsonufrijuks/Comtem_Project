@@ -8,7 +8,7 @@ RUN apt-get update && apt-get install -y \
     libjpeg-dev \
     libfreetype6-dev \
     zip \
-    libbc-math-dev && \
+    libbcmath-dev && \
     docker-php-ext-configure gd --with-freetype --with-jpeg && \
     docker-php-ext-install gd && \
     docker-php-ext-install pdo pdo_mysql && \
