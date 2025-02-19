@@ -113,7 +113,7 @@ Route::get('/auction', function () {
 //})->name('product');
 
 
-// sends products id from ProductCardDB to Product page
+// sends products id from ProductCardDB to Product pagge
 Route::get('/product', function (Request $request) {
 //    return Inertia::render('Product', [
 //        'productId' => $request->query('id'), // Pass the query parameter to the frontend
