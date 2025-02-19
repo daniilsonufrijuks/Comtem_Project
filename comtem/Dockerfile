@@ -8,8 +8,8 @@ RUN apt-get update && apt-get install -y \
     libjpeg-dev \
     libfreetype6-dev \
     zip \
-    apache2 \  # Include apache2 in the install command
-    libapache2-mod-fcgid && \  # Include libapache2-mod-fcgid in the install command
+    apache2 \
+    libapache2-mod-fcgid && \
     docker-php-ext-configure gd --with-freetype --with-jpeg && \
     docker-php-ext-install gd && \
     docker-php-ext-install pdo pdo_mysql && \
