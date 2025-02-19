@@ -8,6 +8,8 @@ RUN apt-get update && apt-get install -y \
     libjpeg-dev \
     libfreetype6-dev \
     zip && \
+    apache2 \
+    libapache2-mod-fcgid \
     docker-php-ext-configure gd --with-freetype --with-jpeg && \
     docker-php-ext-install gd && \
     docker-php-ext-install pdo pdo_mysql && \
@@ -37,8 +39,14 @@ RUN composer install
 RUN npm install
 RUN npm run build
 
-# Expose the port
-EXPOSE 9000
+# Configure Apache to use PHP-FPM
+COPY apache.conf /etc/apache2/sites-available/000-default.conf
 
-# Start PHP-FPM
-CMD ["php-fpm"]
+# Enable required Apache modules
+RUN a2enmod actions fcgid alias proxy_fcgi
+
+# Expose the port
+EXPOSE 80
+
+# Start Apache and PHP-FPM
+CMD ["sh", "-c", "service apache2 start && php-fpm"]
