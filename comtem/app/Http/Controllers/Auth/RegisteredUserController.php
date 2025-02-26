@@ -59,7 +59,15 @@ class RegisteredUserController extends Controller
             'password' => Hash::make($request->password),
         ]);
         // Send a welcome email
-        Mail::to($user->email)->send(new WelcomeEmail($user));
+//        Mail::to($user->email)->send(new WelcomeEmail($user));
+        // Try sending the email and catch errors
+        try {
+            Mail::to($user->email)->send(new WelcomeEmail($user));
+//            Log::info('Email sent successfully to: ' . $user->email);
+        } catch (\Exception $e) {
+//            Log::error('Email sending failed: ' . $e->getMessage());
+            return back()->with('error', 'Failed to send email. Please try again.');
+        }
         //dump("end");
         //dd('User created successfully!');
         //event(new Registered($user));
@@ -67,7 +75,7 @@ class RegisteredUserController extends Controller
         //Auth::login($user);
         //auth()->login($user);
 
-        return redirect(route('home', absolute: false));
+        return redirect(route('quiz', absolute: false));
 
     }
 }
