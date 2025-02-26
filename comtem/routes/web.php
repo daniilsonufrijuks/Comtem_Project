@@ -85,6 +85,12 @@ Route::get('/auction', function () {
     return Inertia::render('Auction');
 })->name('auction');
 
+Route::get('/quiz', function () {
+    return Inertia::render('Quiz');
+})->name('quiz');
+
+
+
 //Route::get('/auction/add', function () {
 //    return Inertia::render('AddAItem');
 //})->name('addaitem');
