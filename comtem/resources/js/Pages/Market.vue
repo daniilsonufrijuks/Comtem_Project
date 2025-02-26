@@ -104,4 +104,19 @@ export default {
     flex-direction: column;
     gap: 70px; /* Adjust as needed */
 }
+
+.products {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* Two equal columns */
+    gap: 20px; /* Adjust spacing between product cards */
+    justify-content: center; /* Center product cards */
+    max-width: 1000px; /* Optional: Set a max width for better alignment */
+    margin: 0 auto; /* Center the grid */
+}
+
+@media (max-width: 1120px) {
+    .products {
+        grid-template-columns: 1fr; /* One column on smaller screens */
+    }
+}
 </style>

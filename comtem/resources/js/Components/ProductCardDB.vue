@@ -146,7 +146,7 @@ export default {
 }
 
 
-/* Media query for screens 500px or less */
+/* Media query for screens 950px or less */
 @media (max-width: 950px) {
     .product-card {
         flex: 1 1 calc(50% - 5px);
