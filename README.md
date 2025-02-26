@@ -1,2 +1,35 @@
 # COMTEM
 ## Computer Tech Market 
+
+
+[![PyPI status](https://img.shields.io/pypi/status/ansicolortags.svg)](https://pypi.python.org/pypi/ansicolortags/)
+[![git](https://badgen.net/badge/icon/git?icon=git&label)](https://git-scm.com)
+[![GitHub](https://img.shields.io/badge/--181717?logo=github&logoColor=ffffff)](https://github.com/)
+[![Visual Studio Code](https://img.shields.io/badge/--007ACC?logo=visual%20studio%20code&logoColor=ffffff)](https://code.visualstudio.com/)
+
+
+<p align="center">
+  <img src="comtem/public/m.png" alt="html">
+</p>
+
+<a href="#">
+    <img src="comtem/public/img.png" alt="html" style="vertical-align:top; margin:6px 4px">
+</a> 
+
+<a href="#">
+    <img src="comtem/public/img_1.png" alt="html" style="vertical-align:top; margin:6px 4px">
+</a>  
+
+
+[LV]
+Projekta galvenā ideja ir izveidot lietotājam draudzīgu, 
+ātru un drošu e-komercijas platformu, kas specializējas datoru, 
+laptopu un komponentu pārdošanā. Šī platforma nodrošina personalizētu 
+iepirkšanās pieredzi ar plašu preču katalogu, izsoli, emuāru, kurā 
+lietotājs var atrast izglītojošus materiālus par datortehnikas 
+lietošanu, kā arī virtuālo asistentu (mākslīgais intelekts) un 
+lietotāju atbalstu. Projekts izmanto Laravel(PHP) un Vue.js, 
+MySQL kā tehnoloģisko bāzi, 
+kas nodrošina augstu veiktspēju un pielāgojamību.
+
+**Authors: Daniils Onufrijuks aka daniilsonufrijuks **

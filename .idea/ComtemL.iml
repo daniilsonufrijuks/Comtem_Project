@@ -8,6 +8,8 @@
       <sourceFolder url="file://$MODULE_DIR$/comtem/tests" isTestSource="true" packagePrefix="Tests\" />
       <sourceFolder url="file://$MODULE_DIR$/comtem/tests/Feature" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/comtem/tests/Unit" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/spec" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/tests" isTestSource="true" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/carbonphp/carbon-doctrine-types" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/composer" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/doctrine/inflector" />
@@ -160,6 +162,29 @@
       <excludeFolder url="file://$MODULE_DIR$/comtem/vendor/vlucas/phpdotenv" />
       <excludeFolder url="file://$MODULE_DIR$/comtem/vendor/voku/portable-ascii" />
       <excludeFolder url="file://$MODULE_DIR$/comtem/vendor/webmozart/assert" />
+      <excludeFolder url="file://$MODULE_DIR$/comtem/vendor/openai-php/client" />
+      <excludeFolder url="file://$MODULE_DIR$/comtem/vendor/openai/openai" />
+      <excludeFolder url="file://$MODULE_DIR$/comtem/vendor/php-http/discovery" />
+      <excludeFolder url="file://$MODULE_DIR$/comtem/vendor/php-http/multipart-stream-builder" />
+      <excludeFolder url="file://$MODULE_DIR$/comtem/vendor/laravel/cashier" />
+      <excludeFolder url="file://$MODULE_DIR$/comtem/vendor/moneyphp/money" />
+      <excludeFolder url="file://$MODULE_DIR$/comtem/vendor/stripe/stripe-php" />
+      <excludeFolder url="file://$MODULE_DIR$/comtem/vendor/symfony/polyfill-intl-icu" />
+      <excludeFolder url="file://$MODULE_DIR$/comtem/vendor/league/uri" />
+      <excludeFolder url="file://$MODULE_DIR$/comtem/vendor/league/uri-interfaces" />
+      <excludeFolder url="file://$MODULE_DIR$/comtem/vendor/maltekuhr/laravel-gpt" />
+      <excludeFolder url="file://$MODULE_DIR$/comtem/vendor/staabm/side-effects-detector" />
+      <excludeFolder url="file://$MODULE_DIR$/comtem/vendor/symfony/http-client" />
+      <excludeFolder url="file://$MODULE_DIR$/comtem/vendor/symfony/http-client-contracts" />
+      <excludeFolder url="file://$MODULE_DIR$/comtem/vendor/firebase/php-jwt" />
+      <excludeFolder url="file://$MODULE_DIR$/comtem/vendor/google/auth" />
+      <excludeFolder url="file://$MODULE_DIR$/comtem/vendor/google/cloud" />
+      <excludeFolder url="file://$MODULE_DIR$/comtem/vendor/google/gax" />
+      <excludeFolder url="file://$MODULE_DIR$/comtem/vendor/google/grpc-gcp" />
+      <excludeFolder url="file://$MODULE_DIR$/comtem/vendor/google/protobuf" />
+      <excludeFolder url="file://$MODULE_DIR$/comtem/vendor/grpc/grpc" />
+      <excludeFolder url="file://$MODULE_DIR$/comtem/vendor/psr/cache" />
+      <excludeFolder url="file://$MODULE_DIR$/comtem/vendor/rize/uri-template" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />

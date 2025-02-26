@@ -164,6 +164,29 @@
       <path value="$PROJECT_DIR$/comtem/vendor/symfony/polyfill-php80" />
       <path value="$PROJECT_DIR$/comtem/vendor/dflydev/dot-access-data" />
       <path value="$PROJECT_DIR$/comtem/vendor/psr/event-dispatcher" />
+      <path value="$PROJECT_DIR$/comtem/vendor/php-http/multipart-stream-builder" />
+      <path value="$PROJECT_DIR$/comtem/vendor/php-http/discovery" />
+      <path value="$PROJECT_DIR$/comtem/vendor/openai-php/client" />
+      <path value="$PROJECT_DIR$/comtem/vendor/openai/openai" />
+      <path value="$PROJECT_DIR$/comtem/vendor/symfony/polyfill-intl-icu" />
+      <path value="$PROJECT_DIR$/comtem/vendor/laravel/cashier" />
+      <path value="$PROJECT_DIR$/comtem/vendor/moneyphp/money" />
+      <path value="$PROJECT_DIR$/comtem/vendor/stripe/stripe-php" />
+      <path value="$PROJECT_DIR$/comtem/vendor/symfony/http-client" />
+      <path value="$PROJECT_DIR$/comtem/vendor/symfony/http-client-contracts" />
+      <path value="$PROJECT_DIR$/comtem/vendor/maltekuhr/laravel-gpt" />
+      <path value="$PROJECT_DIR$/comtem/vendor/staabm/side-effects-detector" />
+      <path value="$PROJECT_DIR$/comtem/vendor/league/uri" />
+      <path value="$PROJECT_DIR$/comtem/vendor/league/uri-interfaces" />
+      <path value="$PROJECT_DIR$/comtem/vendor/rize/uri-template" />
+      <path value="$PROJECT_DIR$/comtem/vendor/grpc/grpc" />
+      <path value="$PROJECT_DIR$/comtem/vendor/firebase/php-jwt" />
+      <path value="$PROJECT_DIR$/comtem/vendor/google/protobuf" />
+      <path value="$PROJECT_DIR$/comtem/vendor/google/gax" />
+      <path value="$PROJECT_DIR$/comtem/vendor/google/auth" />
+      <path value="$PROJECT_DIR$/comtem/vendor/psr/cache" />
+      <path value="$PROJECT_DIR$/comtem/vendor/google/cloud" />
+      <path value="$PROJECT_DIR$/comtem/vendor/google/grpc-gcp" />
     </include_path>
   </component>
   <component name="PhpProjectSharedConfiguration" php_language_level="8.2">
