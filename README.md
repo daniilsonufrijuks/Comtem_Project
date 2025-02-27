@@ -32,4 +32,15 @@ lietotāju atbalstu. Projekts izmanto Laravel(PHP) un Vue.js,
 MySQL kā tehnoloģisko bāzi, 
 kas nodrošina augstu veiktspēju un pielāgojamību.
 
+
+[EN]
+The main idea of the project is to create a user-friendly,
+fast and secure e-commerce platform specializing in the sale of computers,
+laptops and components. This platform provides a personalized
+shopping experience with an extensive product catalog, an auction, a blog where the
+user can find educational materials on the use of computer equipment, as well as virtual assistants (artificial intelligence) and
+user support. The project uses Laravel(PHP) and Vue.js,
+MySQL as a technological base,
+which ensures high performance and scalability.
+
 **Authors: Daniils Onufrijuks aka daniilsonufrijuks **
