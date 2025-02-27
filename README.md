@@ -43,4 +43,17 @@ user support. The project uses Laravel(PHP) and Vue.js,
 MySQL as a technological base,
 which ensures high performance and scalability.
 
+
+
+### How to use
+
+1. Clone repo to xampp/htdocs/..
+2. Install npm and composer
+3. Install other needed packages (vue)
+4. Run php artisan migrate
+5. Run php artisan serve
+
+(You need to open xampp and run apache and mesql servers, then 
+create new db in the phpmyadmin and connect it in the env file)
+
 **Authors: Daniils Onufrijuks aka daniilsonufrijuks **
