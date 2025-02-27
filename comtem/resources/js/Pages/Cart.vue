@@ -100,6 +100,8 @@ import ProductCard from "@/Components/ProductCard.vue";
 import {mapState, useStore} from "vuex";
 import {computed} from "vue";
 import {usePage} from "@inertiajs/vue3";
+import {loadStripe} from "@stripe/stripe-js";
+import * as response from "autoprefixer";
 
 export default {
     name: 'Cart',
@@ -173,7 +175,7 @@ export default {
                         console.log("Please log in first.");
                     } else {
                         // Send sanitized cart data to the backend
-                        const orderResponse = await axios.post('/checkout', {
+                        const orderResponse = await axios.post('/order', {
                             items: sanitizedCart,
                             total: store.state.cart.reduce((sum, item) => sum + item.price * item.quantity, 0),
                         });
@@ -182,9 +184,10 @@ export default {
 
                         // Optionally clear cart after successful checkout
                         store.commit('CLEAR_CART');
-
+                        // const stripe = await loadStripe("");
+                        // await stripe.redirectToCheckout({ sessionId: response.data.id });
                         // Redirect to home page
-                        window.location.href = `/`;
+                        // window.location.href = `/`;
                     }
                 }
             } catch (error) {

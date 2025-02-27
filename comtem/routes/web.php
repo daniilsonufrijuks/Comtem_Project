@@ -5,6 +5,7 @@ use App\Http\Controllers\AuctionController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\BidController;
 use App\Http\Controllers\ChatController;
+use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\ContactController;
 //use App\Http\Controllers\OpenAIController;
 use App\Http\Controllers\OrderController;
@@ -186,7 +187,7 @@ Route::get('/products/{id}', [ProductsController::class, 'show']);
 
 
 // Proceed to checkout (with session-based authentication)
-Route::post('/checkout', [OrderController::class, 'store'])->middleware('auth');
+Route::post('/order', [OrderController::class, 'store'])->middleware('auth');
 
 
 
@@ -265,6 +266,9 @@ Route::delete('/delete-expired-auctions', [AuctionController::class, 'destroy'])
 
 
 
+
+// for stripe after pressing proceed btn in cart
+Route::post('/checkout', [CheckoutController::class, 'checkout']);
 
 
 

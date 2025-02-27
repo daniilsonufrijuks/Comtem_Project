@@ -16,6 +16,7 @@
         "maltekuhr/laravel-gpt": "v1.x-dev",
         "openai-php/client": "^0.10.3",
         "openai/openai": "dev-main",
+        "stripe/stripe-php": "^16.6",
         "tightenco/ziggy": "^2.0"
     },
     "require-dev": {

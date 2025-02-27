@@ -21,6 +21,36 @@ class OrderController extends Controller
             'total' => $request->total ?? 0,
         ]);
 
+        // Attach each item to the order (assuming you have an OrderItem model)
+//        foreach ($request['items'] as $item) {
+//            $order->items()->create([
+//                'product_id' => $item['id'],
+//                'quantity' => $item['quantity'],
+//                'price' => $item['price'],
+//            ]);
+//        }
+//
+//        // Return Stripe session ID for redirect
+//        $stripe = new \Stripe\StripeClient(env('STRIPE_SECRET'));
+//        $session = $stripe->checkout->sessions->create([
+//            'payment_method_types' => ['card'],
+//            'line_items' => array_map(function ($item) {
+//                return [
+//                    'price_data' => [
+//                        'currency' => 'usd',
+//                        'product_data' => ['name' => $item['name']],
+//                        'unit_amount' => $item['price'] * 100, // Stripe expects amount in cents
+//                    ],
+//                    'quantity' => $item['quantity'],
+//                ];
+//            }, $request['items']),
+//            'mode' => 'payment',
+//            'success_url' => url('/order-success?session_id={CHECKOUT_SESSION_ID}'),
+//            'cancel_url' => url('/cart'),
+//        ]);
+//
+//        return response()->json(['id' => $session->id]);
+
         return response()->json([
             'message' => 'Order placed successfully!',
             'order' => $order,
