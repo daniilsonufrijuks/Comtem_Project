@@ -30,9 +30,11 @@ export default {
     data() {
         return {
             videos: [
+                // https://youtu.be/XEEcxYzNOfI?si=HOyKec5_kCK5p_Sm
                 { id: 'b85h_ujZ_vg?si=TxTPv8ABd8wJOF4t', title: 'Video 1' },
                 { id: 'beW8pCezrdI?si=_6FoX2LEQJmPHtQC', title: 'Video 2' },
-                { id: 'WpnLehvOM6E?si=kWKwhcBmqfGb-j0O', title: 'Video 3' }
+                { id: 'WpnLehvOM6E?si=kWKwhcBmqfGb-j0O', title: 'Video 3' },
+                { id: 'XEEcxYzNOfI?si=HOyKec5_kCK5p_Sm', title: 'Video 4' }
             ]
         };
     }
