@@ -8,11 +8,11 @@
             <div class="wave" id="wave4"></div>
         </div>
         <ul class="menu">
-            <li class="menu__item"><a class="menu__link" href="">Home</a></li>
-            <li class="menu__item"><a class="menu__link" href="">About</a></li>
-            <li class="menu__item"><a class="menu__link" href="#">Services</a></li>
+            <li class="menu__item"><a class="menu__link" href="/">Home</a></li>
+            <li class="menu__item"><a class="menu__link" href="/about">About</a></li>
+            <li class="menu__item"><a class="menu__link" href="https://github.com/daniilsonufrijuks">DAN</a></li>
             <li class="menu__item"><a class="menu__link" href="#">Team</a></li>
-            <li class="menu__item"><a class="menu__link" href="">Contact</a></li>
+            <li class="menu__item"><a class="menu__link" href="/contact">Contact</a></li>
         </ul>
         <p>&copy;2025 COMTEM | MADE BY DAN | All Rights Reserved</p>
     </footer>
