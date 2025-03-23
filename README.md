@@ -44,6 +44,11 @@ MySQL as a technological base,
 which ensures high performance and scalability.
 
 
+### Gallery
+![img_1.png](img_1.png)
+![img_2.png](img_2.png)
+![img_3.png](img_3.png)
+![img_4.png](img_4.png)
 
 ### How to use
 
