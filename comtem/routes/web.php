@@ -212,6 +212,7 @@ Route::get('/user', [UserController::class, 'userProfile'])->name('user');
 Route::get('/admin/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
 
 Route::get('/admin/orders', [AdminController::class, 'showOrders'])->name('admin.orders');
+Route::get('/admin/ordersj', [AdminController::class, 'showjoinedOrders'])->name('admin.j.orders');
 Route::get('/admin/products', [AdminController::class, 'showProducts'])->name('admin.products');
 Route::post('/admin/products', [AdminController::class, 'storeProduct'])->name('admin.products.add');
 

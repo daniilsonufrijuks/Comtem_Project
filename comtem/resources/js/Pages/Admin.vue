@@ -27,6 +27,33 @@
             </tbody>
         </table>
 
+        <!-- Orders with User Data Table -->
+        <h2>Orders with User Details</h2>
+        <table>
+            <thead>
+            <tr>
+                <th>Order ID</th>
+                <th>Customer Name</th>
+                <th>Email</th>
+                <th>Items</th>
+                <th>Status</th>
+                <th>Total</th>
+                <th>Ordered At</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr v-for="order in ordersj" :key="order.id">
+                <td>{{ order.id }}</td>
+                <td>{{ order.user ? order.user.name : 'N/A' }}</td>
+                <td>{{ order.user ? order.user.email : 'N/A' }}</td>
+                <td>{{ order.items }}</td>
+                <td>{{ order.status }}</td>
+                <td>{{ order.total }}</td>
+                <td>{{ order.created_at }}</td>
+            </tr>
+            </tbody>
+        </table>
+
         <h2>Products</h2>
         <table>
             <thead>
@@ -89,6 +116,10 @@ export default {
             type: Array,
             required: true,
         },
+        ordersj: {
+            type: Array,
+            required: true,
+        },
     },
     data() {
         return {
@@ -101,11 +132,13 @@ export default {
             imageFile: null,
             products: [],
             orders: [],
+            ordersj: [],
         };
     },
     mounted() {
         this.fetchOrders();
         this.fetchProducts();
+        this.fetchJoinedOrders();
     },
     computed: {
 
@@ -173,6 +206,21 @@ export default {
                 })
                 .then((data) => {
                     this.products = data; // Assign the fetched data to the 'products' property
+                })
+                .catch((error) => {
+                    console.error("Error fetching products:", error);
+                });
+        },
+        fetchJoinedOrders() {
+            fetch('/admin/ordersj')
+                .then((response) => {
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! Status: ${response.status}`);
+                    }
+                    return response.json();
+                })
+                .then((data) => {
+                    this.ordersj = data; // Assign the fetched data to the 'products' property
                 })
                 .catch((error) => {
                     console.error("Error fetching products:", error);

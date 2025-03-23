@@ -72,4 +72,11 @@ class AdminController extends Controller
         // Redirect to the products page
         return redirect()->route('admin.dashboard')->with('success', 'Product added successfully!');
     }
+
+    public function showjoinedOrders(): \Illuminate\Http\JsonResponse
+    {
+        $orders = Orders::with('user')->get();
+
+        return response()->json($orders);
+    }
 }
