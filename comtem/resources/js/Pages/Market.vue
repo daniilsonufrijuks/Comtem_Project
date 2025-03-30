@@ -6,6 +6,7 @@
         <Visitit />
         <Categories />
         <PCCalc />
+        <PCPriceCalculator />
 <!--        <Productsintro />-->
         <div class="products">
             <ProductCardDB v-for="product in products" :key="product.id" :product="product" />
@@ -26,10 +27,12 @@ import Navbar from "@/Components/Navbar.vue";
 import Footer from "@/Components/Footer.vue";
 import ProductCardDB from "@/Components/ProductCardDB.vue";
 import PCCalc from "@/Components/PCCalc.vue";
+import PCPriceCalculator from "@/Components/PCPriceCalc.vue";
 
 export default {
     name: 'Market',
     components: {
+        PCPriceCalculator,
         ProductCardDB,
         Navbar,
         Visitit,

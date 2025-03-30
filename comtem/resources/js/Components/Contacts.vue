@@ -9,8 +9,8 @@
                 <p>Phone: <a href="tel:+37166778899">+371 66778899</a></p>
                 <p>Email: <a href="mailto:info@comtem.com">info@comtem.com</a></p>
                 <p>Working Days: 09:00 – 18:00</p>
-                <p>Saturday: Closed</p>
-                <p>Sunday: Closed</p>
+                <p>Saturday: 09:00 – 16:00</p>
+                <p>Sunday: 09:00 – 16:00</p>
             </div>
             <div class="contact-box">
                 <img src="/images/front/customer_service_icon.png" alt="Customer Service Icon">
