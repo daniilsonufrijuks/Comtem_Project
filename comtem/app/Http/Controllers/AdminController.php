@@ -75,7 +75,20 @@ class AdminController extends Controller
 
     public function showjoinedOrders(): \Illuminate\Http\JsonResponse
     {
-        $orders = Orders::with('user')->get();
+//        $orders = Orders::with('user')->get();
+//
+//        return response()->json($orders);
+        $orders = Orders::join('users', 'orders.user_id', '=', 'users.id')
+            ->select(
+                'orders.id',
+                'orders.items',
+                'orders.status',
+                'orders.total',
+                'orders.created_at',
+                'users.name as customer_name',
+                'users.email as customer_email'
+            )
+            ->get();
 
         return response()->json($orders);
     }

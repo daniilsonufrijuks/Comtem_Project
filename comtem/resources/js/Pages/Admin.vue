@@ -44,8 +44,10 @@
             <tbody>
             <tr v-for="order in ordersj" :key="order.id">
                 <td>{{ order.id }}</td>
-                <td>{{ order.user ? order.user.name : 'N/A' }}</td>
-                <td>{{ order.user ? order.user.email : 'N/A' }}</td>
+<!--                <td>{{ order.user ? order.user.name : 'N/A' }}</td>-->
+<!--                <td>{{ order.user ? order.user.email : 'N/A' }}</td>-->
+                <td>{{ order.customer_name ? order.customer_name : 'N/A' }}</td>
+                <td>{{ order.customer_email ? order.customer_email : 'N/A' }}</td>
                 <td>{{ order.items }}</td>
                 <td>{{ order.status }}</td>
                 <td>{{ order.total }}</td>
