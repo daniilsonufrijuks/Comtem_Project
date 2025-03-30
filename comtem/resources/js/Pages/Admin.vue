@@ -1,5 +1,6 @@
 <template>
     <div>
+        <button @click="$inertia.visit('/')" class="back-button">Back to user page</button>
         <h1><b>Admin Dashboard</b></h1>
 
         <!-- Orders Table -->
@@ -248,4 +249,19 @@ th, td {
 form div {
     margin-bottom: 10px;
 }
+
+.back-button {
+    background-color: purple;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.back-button:hover {
+    background-color: darkviolet;
+}
+
 </style>
