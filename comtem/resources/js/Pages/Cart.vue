@@ -156,15 +156,22 @@ export default {
             try {
                 // Log the cart data before sending it
                 console.log('Cart items before checkout:', store.state.cart);
-
                 // Ensure cart is an array and sanitize data
                 if (Array.isArray(store.state.cart) && store.state.cart.length > 0) {
+                    // console.log(item.id, item.name, item.price, item.category)
+
                     const sanitizedCart = store.state.cart.map(item => ({
                         id: item.id,
                         name: item.name,
-                        price: item.price,
-                        quantity: item.quantity,
+                        price: parseFloat(item.price), // ensure it's a number
+                        quantity: parseInt(item.quantity), // ensure it's an integer
+                        description: item.description || '',  // add missing fields
+                        image: item.image || '',
+                        category: item.category || '',
+                        total_price: parseFloat(item.price) * item.quantity,
                     }));
+                    console.log(store.state.cart)
+
 
                     // const response = await axios.get('/auth/user');-->
                 // <!--                // if (!response.data.loggedIn) {-->
@@ -177,7 +184,11 @@ export default {
                         // Send sanitized cart data to the backend
                         const orderResponse = await axios.post('/order', {
                             items: sanitizedCart,
-                            total: store.state.cart.reduce((sum, item) => sum + item.price * item.quantity, 0),
+                            // total: store.state.cart.reduce((sum, item) => sum + item.price * item.quantity, 0),
+                            total: store.state.cart.reduce(
+                                (sum, item) => sum + parseFloat(item.price) * parseInt(item.quantity),
+                                0
+                            ),
                         });
 
                         console.log('Order Response:', orderResponse.data);

@@ -12,12 +12,24 @@ class OrderController extends Controller
     public function store(Request $request): \Illuminate\Http\JsonResponse
     {
         $request->validate([
-            'items' => 'required|array',
+//            'items' => 'required|array',
+            'items.*.name' => 'required|string',
+            'items.*.price' => 'required|numeric',
+            'items.*.description' => 'nullable|string',
+            'items.*.image' => 'nullable|string',
+            'items.*.category' => 'required|string',
+            'items.*.total_price' => 'required|numeric',
+            'items.*.shipping_address' => 'nullable|string',
+            'total' => 'required|numeric',
         ]);
+
+//        $orderNumber = uniqid();
+        $orderNumber = uniqid();
 
         $order = Orders::create([
             'user_id' => auth()->id(),
-            'items' => json_encode($request->items),
+//            'items' => json_encode($request->items),
+//            'items' => $orderNumber,
             'total' => $request->total ?? 0,
         ]);
 
@@ -50,6 +62,34 @@ class OrderController extends Controller
 //        ]);
 //
 //        return response()->json(['id' => $session->id]);
+
+
+        $itemIds = [];
+
+        foreach ($request->items as $item) {
+//            \Log::info('Processing item:', $item);
+            $orderItem = \App\Models\OrderGoods::create([
+                'order_id' => $order->id,
+//                'order_number' => $orderNumber,
+                'status' => 'pending',
+                'name' => $item['name'],
+                'price' => $item['price'],
+                'description' => $item['description'] ?? null,
+                'image' => $item['image'] ?? null,
+//                'category' => $item['category'],
+                'category' => $item['category'] ?? null,  // Check if category exists
+                'total_price' => $item['total_price'] ?? null,
+                'shipping_address' => $item['shipping_address'] ?? null,
+            ]);
+
+            $itemIds[] = $orderItem->id;
+        }
+
+        // Store only the item IDs in the orders table
+//        $order->items = implode(',', $itemIds);  // Store as a comma-separated string
+        $order->save();
+
+
 
         return response()->json([
             'message' => 'Order placed successfully!',
