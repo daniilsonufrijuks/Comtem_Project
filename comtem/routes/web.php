@@ -273,6 +273,14 @@ Route::post('/checkout', [CheckoutController::class, 'checkout']);
 
 
 
+// to find products using search bar
+//Route::get('/search', [ProductsController::class, 'search'])->name('products.search');
+Route::get('/search', [ProductsController::class, 'search']);
+
+
+
+
+
 //Route::post('/chatai', function (\Illuminate\Http\Request $request) {
 //    $message = $request->input('message');
 //

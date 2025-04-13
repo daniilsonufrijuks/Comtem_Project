@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use App\Models\Products;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
 
 class ProductsController extends Controller
 {
@@ -108,6 +109,23 @@ class ProductsController extends Controller
             return response()->json(['error' => 'Product not found'], 404);
         }
 
+        return response()->json($products);
+    }
+
+//     for search bar for suggestions
+    public function search(Request $request)
+    {
+        $query = $request->input('query');
+
+        $products = Products::where('name', 'LIKE', "%{$query}%")
+            ->orWhere('description', 'LIKE', "%{$query}%")
+            ->get();
+
+//        return view('products.search-results', compact('products', 'query'));
+//        return Inertia::render('SearchResults', [
+//            'products' => $products,
+//            'query' => $query,
+//        ]);
         return response()->json($products);
     }
 
