@@ -2,9 +2,9 @@
     <!--    <Navbar :routes="routes" />-->
     <Navbar :routes="routes"/>
     <Search />
-    <Slider/>
+<!--    <Slider/>-->
     <div class="main-container">
-        <Visitit />
+<!--        <Visitit />-->
 <!--        <Productsintro />-->
         <ProductCard :product="selectedProduct"/>
         <Testimonial />
