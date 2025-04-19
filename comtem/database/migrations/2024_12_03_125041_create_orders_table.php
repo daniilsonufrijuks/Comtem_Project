@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('user_id');
-            $table->json("items");
+//            $table->json("items");
             $table->string('status')->default('pending');
             $table->decimal('total', 10, 2)->default(0);
             $table->timestamp('ordered_at')->nullable();

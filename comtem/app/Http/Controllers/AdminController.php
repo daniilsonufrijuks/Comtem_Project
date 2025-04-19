@@ -22,7 +22,10 @@ class AdminController extends Controller
         //global $request;
 
         // Fetch the filtered results
-        $orders = Orders::select(['id', 'user_id', 'items', 'status', 'total', 'created_at'])->get();
+//        $orders = Orders::select(['id', 'user_id', 'items', 'status', 'total', 'created_at'])->get();
+        $orders = Orders::with(['orderGoods', 'user:id,name,email']) // add any user fields you need
+        ->select(['id', 'user_id', 'status', 'total', 'ordered_at', 'created_at'])
+            ->get();
 
         return response()->json($orders);
     }
@@ -78,17 +81,34 @@ class AdminController extends Controller
 //        $orders = Orders::with('user')->get();
 //
 //        return response()->json($orders);
+//        $orders = Orders::join('users', 'orders.user_id', '=', 'users.id')
+//            ->select(
+//                'orders.id',
+//                'orders.items',
+//                'orders.status',
+//                'orders.total',
+//                'orders.created_at',
+//                'users.name as customer_name',
+//                'users.email as customer_email'
+//            )
+//            ->get();
         $orders = Orders::join('users', 'orders.user_id', '=', 'users.id')
+            ->join('goods_orders', 'orders.id', '=', 'goods_orders.order_id')
             ->select(
-                'orders.id',
-                'orders.items',
-                'orders.status',
+                'orders.id as order_id',
+                'orders.status as order_status',
                 'orders.total',
                 'orders.created_at',
                 'users.name as customer_name',
-                'users.email as customer_email'
+                'users.email as customer_email',
+                'goods_orders.name as item_name',
+                'goods_orders.price as item_price',
+                'goods_orders.status as item_status',
+                'goods_orders.category',
+                'goods_orders.total_price'
             )
             ->get();
+
 
         return response()->json($orders);
     }

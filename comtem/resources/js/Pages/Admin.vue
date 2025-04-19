@@ -10,7 +10,6 @@
             <tr>
                 <th>ID</th>
                 <th>Customer</th>
-                <th>items</th>
                 <th>status</th>
                 <th>total</th>
                 <th>ordered_at</th>
@@ -20,7 +19,6 @@
             <tr v-for="order in orders" :key="order.id">
                 <td>{{ order.id }}</td>
                 <td>{{ order.user_id }}</td>
-                <td>{{ order.items }}</td>
                 <td>{{ order.status }}</td>
                 <td>{{ order.total }}</td>
                 <td>{{ order.created_at }}</td>
@@ -36,23 +34,23 @@
                 <th>Order ID</th>
                 <th>Customer Name</th>
                 <th>Email</th>
-                <th>Items</th>
+                <th>Name</th>
                 <th>Status</th>
-                <th>Total</th>
-                <th>Ordered At</th>
+                <th>Price</th>
+                <th>Category</th>
             </tr>
             </thead>
             <tbody>
             <tr v-for="order in ordersj" :key="order.id">
-                <td>{{ order.id }}</td>
+                <td>{{ order.order_id }}</td>
 <!--                <td>{{ order.user ? order.user.name : 'N/A' }}</td>-->
 <!--                <td>{{ order.user ? order.user.email : 'N/A' }}</td>-->
                 <td>{{ order.customer_name ? order.customer_name : 'N/A' }}</td>
                 <td>{{ order.customer_email ? order.customer_email : 'N/A' }}</td>
-                <td>{{ order.items }}</td>
+                <td>{{ order.item_name }}</td>
                 <td>{{ order.status }}</td>
-                <td>{{ order.total }}</td>
-                <td>{{ order.created_at }}</td>
+                <td>{{ order.total_price }}</td>
+                <td>{{ order.category }}</td>
             </tr>
             </tbody>
         </table>
