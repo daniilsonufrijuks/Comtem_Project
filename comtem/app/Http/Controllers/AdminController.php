@@ -66,6 +66,7 @@ class AdminController extends Controller
                 'description' => $request->description,
                 'image' => $imagePath,
                 'category' => $request->category,
+                'admin_id' => auth('admin')->id(),
             ]);
         } catch (\Exception $e) {
             \Log::error('Error adding product: ' . $e->getMessage());

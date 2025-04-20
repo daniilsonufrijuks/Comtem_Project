@@ -12,6 +12,7 @@ class Products extends Model
         'price',
         'description',
         'img',
-        'category'
+        'category',
+        'admin_id'
     ];
 }

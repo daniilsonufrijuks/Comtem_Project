@@ -35,7 +35,8 @@ class DatabaseSeeder extends Seeder
             'price' => 105,
             'description' => 'Intel Core i5 processor, 5 Ghz',
             'image' => 'images/front/inteli5.png',
-            'category' => 'Component'
+            'category' => 'Component',
+            'admin_id' => 1
         ]);
 
         Products::create([
@@ -43,7 +44,8 @@ class DatabaseSeeder extends Seeder
             'price' => 200,
             'description' => 'Intel Core i7 processor, 6 Ghz',
             'image' => 'images/front/inteli7.jpg',
-            'category' => 'Component'
+            'category' => 'Component',
+            'admin_id' => 1
         ]);
 
         Products::create([
@@ -51,7 +53,8 @@ class DatabaseSeeder extends Seeder
             'price' => 150,
             'description' => 'Intel Core i5 processor, 6 Ghz',
             'image' => 'images/front/inteli5.png',
-            'category' => 'Component'
+            'category' => 'Component',
+            'admin_id' => 1
         ]);
 
         Products::create([
@@ -59,7 +62,8 @@ class DatabaseSeeder extends Seeder
             'price' => 400,
             'description' => 'Intel Core i9 processor, 7 Ghz',
             'image' => 'images/front/inteli9.jpg',
-            'category' => 'Component'
+            'category' => 'Component',
+            'admin_id' => 1
         ]);
 
         Products::create([
@@ -67,7 +71,8 @@ class DatabaseSeeder extends Seeder
             'price' => 450,
             'description' => 'Intel Core i9 processor, 9 Ghz',
             'image' => 'images/front/inteli9.jpg',
-            'category' => 'Component'
+            'category' => 'Component',
+            'admin_id' => 1
         ]);
 
         Products::create([
@@ -75,7 +80,8 @@ class DatabaseSeeder extends Seeder
             'price' => 50,
             'description' => 'Intel Core i3 processor, 3 Ghz',
             'image' => 'images/front/inteli3.jpg',
-            'category' => 'Component'
+            'category' => 'Component',
+            'admin_id' => 1
         ]);
 
         Products::create([
@@ -83,7 +89,8 @@ class DatabaseSeeder extends Seeder
             'price' => 70,
             'description' => 'Adata SSD 1 TB DISK',
             'image' => 'images/front/adata.jpg',
-            'category' => 'Component'
+            'category' => 'Component',
+            'admin_id' => 1
         ]);
 
         Products::create([
@@ -91,7 +98,8 @@ class DatabaseSeeder extends Seeder
             'price' => 90,
             'description' => 'WD SSD 1 TB DISK',
             'image' => 'images/front/adata.jpg',
-            'category' => 'Component'
+            'category' => 'Component',
+            'admin_id' => 1
         ]);
 
 
@@ -100,7 +108,8 @@ class DatabaseSeeder extends Seeder
             'price' => 300,
             'description' => 'Nvidia RTX 3060 6GB',
             'image' => 'images/front/3060.jpg',
-            'category' => 'Component'
+            'category' => 'Component',
+            'admin_id' => 1
         ]);
 
         Products::create([
@@ -108,7 +117,8 @@ class DatabaseSeeder extends Seeder
             'price' => 500,
             'description' => 'Nvidia RTX 3080 12 GB',
             'image' => 'images/front/3080.jpg',
-            'category' => 'Component'
+            'category' => 'Component',
+            'admin_id' => 1
         ]);
 
         Products::create([
@@ -116,7 +126,8 @@ class DatabaseSeeder extends Seeder
             'price' => 700,
             'description' => 'Nvidia RTX 3090 12 GB',
             'image' => 'images/front/3090.jpg',
-            'category' => 'Component'
+            'category' => 'Component',
+            'admin_id' => 1
         ]);
 
 
@@ -125,7 +136,8 @@ class DatabaseSeeder extends Seeder
             'price' => 50,
             'description' => 'Kingston RAM 3200 MHz 8GB 1 stick',
             'image' => 'images/front/kingstonram.jpg',
-            'category' => 'Component'
+            'category' => 'Component',
+            'admin_id' => 1
         ]);
 
         Products::create([
@@ -133,7 +145,8 @@ class DatabaseSeeder extends Seeder
             'price' => 70,
             'description' => 'Kingston RAM 3200 MHz 16GB 1 stick',
             'image' => 'images/front/kingstonram.jpg',
-            'category' => 'Component'
+            'category' => 'Component',
+            'admin_id' => 1
         ]);
 
         Products::create([
@@ -141,7 +154,8 @@ class DatabaseSeeder extends Seeder
             'price' => 80,
             'description' => 'Kingston RAM 3200 MHz 32GB 1 stick',
             'image' => 'images/front/kingstonram.jpg',
-            'category' => 'Component'
+            'category' => 'Component',
+            'admin_id' => 1
         ]);
 
         Products::create([
@@ -153,7 +167,8 @@ class DatabaseSeeder extends Seeder
                                 RAM Fury 16 Gb 3200 Mhz
                                 SSD 1 TB',
             'image' => 'images/front/msilp.jpg',
-            'category' => 'Laptop'
+            'category' => 'Laptop',
+            'admin_id' => 1
         ]);
 
         Products::create([
@@ -165,7 +180,8 @@ class DatabaseSeeder extends Seeder
                                 RAM Fury 16 Gb 3200 Mhz
                                 SSD 1 TB',
             'image' => 'images/front/asusgl.jpg',
-            'category' => 'Laptop'
+            'category' => 'Laptop',
+            'admin_id' => 1
         ]);
 
         Products::create([
@@ -176,7 +192,8 @@ class DatabaseSeeder extends Seeder
                                 RAM Fury 32 Gb 3200 Mhz
                                 SSD 1 TB',
             'image' => 'images/front/giglp.jpg',
-            'category' => 'Laptop'
+            'category' => 'Laptop',
+            'admin_id' => 1
         ]);
 
         Products::create([
@@ -191,7 +208,8 @@ class DatabaseSeeder extends Seeder
                                 HDD 2 TB
                                 Power Supply Be quiet 700 W',
             'image' => 'images/front/pc.png',
-            'category' => 'Pc'
+            'category' => 'Pc',
+            'admin_id' => 1
         ]);
 
 
