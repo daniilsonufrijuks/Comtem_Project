@@ -103,7 +103,7 @@ class ProductsController extends Controller
 
 
 
-        $products = Products::find($id, ['name', 'price', 'description', 'image', 'category']);
+        $products = Products::find($id, ['id', 'name', 'price', 'description', 'image', 'category']);
 
         if (!$products) {
             return response()->json(['error' => 'Product not found'], 404);

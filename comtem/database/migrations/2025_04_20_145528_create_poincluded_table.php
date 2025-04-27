@@ -12,10 +12,9 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('poincluded', function (Blueprint $table) {
-            $table->id();
             $table->foreignId('order_id')->constrained()->onDelete('cascade');  // Assumes an 'orders' table exists
             $table->foreignId('product_id')->constrained()->onDelete('cascade');  // Assumes a 'products' table exists
-            $table->integer('quantity');  // Store quantity of product in the order
+            $table->integer('quantity')->default(1);  // Store quantity of product in the order
             $table->decimal('price', 8, 2);  // Store the price of the product at the time of order
             $table->timestamps();
         });

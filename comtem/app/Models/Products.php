@@ -15,4 +15,11 @@ class Products extends Model
         'category',
         'admin_id'
     ];
+
+    public function orders()
+    {
+        return $this->belongsToMany(Orders::class, 'poincluded')
+            ->withPivot('quantity', 'price')
+            ->withTimestamps();
+    }
 }

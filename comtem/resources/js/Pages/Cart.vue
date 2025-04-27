@@ -155,7 +155,7 @@ export default {
         const proceedToCheckout = async () => {
             try {
                 // Log the cart data before sending it
-                console.log('Cart items before checkout:', store.state.cart);
+                console.log('Cart items before checkout:', store.state.cart, Array.isArray(store.state.cart));
                 // Ensure cart is an array and sanitize data
                 if (Array.isArray(store.state.cart) && store.state.cart.length > 0) {
                     // console.log(item.id, item.name, item.price, item.category)

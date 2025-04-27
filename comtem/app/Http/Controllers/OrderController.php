@@ -12,7 +12,7 @@ class OrderController extends Controller
     public function store(Request $request): \Illuminate\Http\JsonResponse
     {
         $request->validate([
-//            'items' => 'required|array',
+            'items' => 'required|array',
             'items.*.name' => 'required|string',
             'items.*.price' => 'required|numeric',
             'items.*.description' => 'nullable|string',
@@ -20,6 +20,8 @@ class OrderController extends Controller
             'items.*.category' => 'required|string',
             'items.*.total_price' => 'required|numeric',
             'items.*.shipping_address' => 'nullable|string',
+            'items.*.id' => 'required|integer',
+            'items.*.quantity' => 'required|integer|min:1',
             'total' => 'required|numeric',
         ]);
 
@@ -83,6 +85,11 @@ class OrderController extends Controller
             ]);
 
             $itemIds[] = $orderItem->id;
+
+            $order->products()->attach($item['id'], [
+                'quantity' => $item['quantity'],
+                'price' => $item['price'],
+            ]);
         }
 
         // Store only the item IDs in the orders table
