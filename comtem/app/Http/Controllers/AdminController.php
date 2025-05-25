@@ -12,9 +12,38 @@ class AdminController extends Controller
 {
     public function dashboard(): \Inertia\Response
     {
-        $orders = Orders::with('user')->get(); // Include user data if needed
-        return Inertia::render('Admin', ['orders' => $orders]);
+        $orders = Orders::with('user')->get(); // Existing
+
+        $products = Products::select(['id', 'name', 'price', 'description', 'image', 'category'])->get();
+
+        $ordersj = Orders::join('users', 'orders.user_id', '=', 'users.id')
+            ->join('goods_orders', 'orders.id', '=', 'goods_orders.order_id')
+            ->select(
+                'orders.id as order_id',
+                'orders.status as order_status',
+                'orders.total',
+                'orders.created_at',
+                'users.name as customer_name',
+                'users.email as customer_email',
+                'goods_orders.name as item_name',
+                'goods_orders.price as item_price',
+                'goods_orders.status as item_status',
+                'goods_orders.category',
+                'goods_orders.total_price'
+            )
+            ->get();
+
+        return Inertia::render('Admin', [
+            'orders' => $orders,
+            'products' => $products,
+            'ordersj' => $ordersj
+        ]);
     }
+
+
+
+
+
     public function showOrders(Request $request): \Illuminate\Http\JsonResponse
     {
 //        $orders = Orders::all(); // Fetch all orders
@@ -46,11 +75,18 @@ class AdminController extends Controller
             'category' => 'required|string|max:255',
         ]);
 
-        if (!$request->hasFile('image')) {
-            return redirect()->back()->withErrors(['image' => 'Image is required']);
+//        if (!$request->hasFile('image')) {
+//            return redirect()->back()->withErrors(['image' => 'Image is required']);
+//        }
+//
+//        $imagePath = $request->file('image')->store('products', 'public');
+        $imagePath = null;
+        if ($request->hasFile('image')) {
+            $image = $request->file('image');
+            $imageName = time() . '_' . $image->getClientOriginalName();
+            $image->move(public_path('images/front'), $imageName);
+            $imagePath = 'images/front/' . $imageName; // Store the correct relative path in DB
         }
-
-        $imagePath = $request->file('image')->store('products', 'public');
 
 //        Products::create([
 //            'name' => $request->name,
@@ -112,5 +148,22 @@ class AdminController extends Controller
 
 
         return response()->json($orders);
+    }
+
+    public function destroyProduct($id) {
+        Products::findOrFail($id)->delete();
+        return redirect()->back();
+    }
+    public function destroyOrder($id) {
+        Orders::findOrFail($id)->delete();
+        return redirect()->back();
+    }
+
+    public function update(Request $request, $id)
+    {
+        $product = Products::findOrFail($id);
+        $product->update($request->only('name', 'price', 'category', 'description'));
+
+        return redirect()->back();
     }
 }

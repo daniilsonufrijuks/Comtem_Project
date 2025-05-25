@@ -1,113 +1,90 @@
 <template>
-    <div>
+    <div class="admin-dashboard">
         <button @click="$inertia.visit('/')" class="back-button">Back to user page</button>
-        <h1><b>Admin Dashboard</b></h1>
+        <h1 class="title">Admin Dashboard</h1>
 
-        <!-- Orders Table -->
-        <h2>Orders</h2>
-        <table>
-            <thead>
-            <tr>
-                <th>ID</th>
-                <th>Customer</th>
-                <th>status</th>
-                <th>total</th>
-                <th>ordered_at</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr v-for="order in orders" :key="order.id">
-                <td>{{ order.id }}</td>
-                <td>{{ order.user_id }}</td>
-                <td>{{ order.status }}</td>
-                <td>{{ order.total }}</td>
-                <td>{{ order.created_at }}</td>
-            </tr>
-            </tbody>
-        </table>
+        <!-- Orders -->
+        <section class="section">
+            <h2 class="section-title">Orders</h2>
+            <div class="card-grid">
+                <div class="card" v-for="order in orders" :key="order.id">
+                    <p><strong>ID:</strong> {{ order.id }}</p>
+                    <p><strong>Customer ID:</strong> {{ order.user_id }}</p>
+                    <p><strong>Status:</strong> {{ order.status }}</p>
+                    <p><strong>Total:</strong> {{ order.total }}</p>
+                    <p><strong>Ordered At:</strong> {{ order.created_at }}</p>
+                    <div class="actions">
+                        <button @click="deleteRecord('order', order.id)">Delete</button>
+                    </div>
+                </div>
+            </div>
+        </section>
 
-        <!-- Orders with User Data Table -->
-        <h2>Orders with User Details</h2>
-        <table>
-            <thead>
-            <tr>
-                <th>Order ID</th>
-                <th>Customer Name</th>
-                <th>Email</th>
-                <th>Name</th>
-                <th>Status</th>
-                <th>Price</th>
-                <th>Category</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr v-for="order in ordersj" :key="order.id">
-                <td>{{ order.order_id }}</td>
-<!--                <td>{{ order.user ? order.user.name : 'N/A' }}</td>-->
-<!--                <td>{{ order.user ? order.user.email : 'N/A' }}</td>-->
-                <td>{{ order.customer_name ? order.customer_name : 'N/A' }}</td>
-                <td>{{ order.customer_email ? order.customer_email : 'N/A' }}</td>
-                <td>{{ order.item_name }}</td>
-                <td>{{ order.status }}</td>
-                <td>{{ order.total_price }}</td>
-                <td>{{ order.category }}</td>
-            </tr>
-            </tbody>
-        </table>
+        <!-- Orders with User Details -->
+        <section class="section">
+            <h2 class="section-title">Orders with User Details</h2>
+            <div class="card-grid">
+                <div class="card" v-for="order in ordersj" :key="order.id">
+                    <p><strong>Order ID:</strong> {{ order.order_id }}</p>
+                    <p><strong>Customer:</strong> {{ order.customer_name }} ({{ order.customer_email }})</p>
+                    <p><strong>Item:</strong> {{ order.item_name }}</p>
+                    <p><strong>Status:</strong> {{ order.status }}</p>
+                    <p><strong>Total Price:</strong> {{ order.total_price }}</p>
+                    <p><strong>Category:</strong> {{ order.category }}</p>
+                    <div class="actions">
+                        <button @click="deleteRecord('orderj', order.id)">Delete</button>
+                    </div>
+                </div>
+            </div>
+        </section>
 
-        <h2>Products</h2>
-        <table>
-            <thead>
-            <tr>
-                <th>Name</th>
-                <th>Price</th>
-                <th>Category</th>
-                <th>Description</th>
-                <th>Image</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr v-for="product in products" :key="product.id">
-                <td>{{ product.name }}</td>
-                <td>{{ product.price }}</td>
-                <td>{{ product.category }}</td>
-                <td>{{ product.description }}</td>
-<!--                <td><img :src="'/storage/' + product.image" alt="Product Image" /></td>-->
-            </tr>
-            </tbody>
-        </table>
+        <!-- Products -->
+        <section class="section">
+            <h2 class="section-title">Products</h2>
+            <div class="card-grid">
+                <div class="card" v-for="product in products" :key="product.id">
+                    <template v-if="editProduct && editProduct.id === product.id">
+                        <input v-model="editProduct.name" placeholder="Name" />
+                        <input v-model="editProduct.price" type="number" placeholder="Price" />
+                        <input v-model="editProduct.category" placeholder="Category" />
+                        <textarea v-model="editProduct.description" placeholder="Description"></textarea>
+                        <button @click="updateProduct">Save</button>
+                        <button @click="editProduct = null">Cancel</button>
+                    </template>
+                    <template v-else>
+                        <p><strong>Name:</strong> {{ product.name }}</p>
+                        <p><strong>Price:</strong> ${{ product.price }}</p>
+                        <p><strong>Category:</strong> {{ product.category }}</p>
+                        <p><strong>Description:</strong> {{ product.description }}</p>
+                        <div class="actions">
+                            <button @click="editProduct = { ...product }">Edit</button>
+                            <button @click="deleteRecord('product', product.id)">Delete</button>
+                        </div>
+                    </template>
+                </div>
+            </div>
+        </section>
 
-        <!-- Add Product Form -->
-        <h2>Add Product</h2>
-        <form @submit.prevent="addProduct">
-            <div>
-                <label for="name">Name:</label>
-                <input id="name" v-model="newProduct.name" type="text" required />
-            </div>
-            <div>
-                <label for="price">Price:</label>
-                <input id="price" v-model="newProduct.price" type="number" required />
-            </div>
-            <div>
-                <label for="category">Category:</label>
-                <input id="category" v-model="newProduct.category" type="text" required />
-            </div>
-            <div>
-                <label for="description">Description:</label>
-                <textarea id="description" v-model="newProduct.description"></textarea>
-            </div>
-            <div>
-                <label for="img">Image:</label>
-                <input id="img" type="file" @change="handleFileUpload" />
-            </div>
-            <button type="submit">Add Product</button>
-        </form>
+        <!-- Add Product -->
+        <section class="section">
+            <h2 class="section-title">Add Product</h2>
+            <form @submit.prevent="addProduct" class="form">
+                <input v-model="newProduct.name" type="text" placeholder="Name" required />
+                <input v-model="newProduct.price" type="number" placeholder="Price" required />
+                <input v-model="newProduct.category" type="text" placeholder="Category" required />
+                <textarea v-model="newProduct.description" placeholder="Description"></textarea>
+                <input id="img" name="image" type="file" @change="handleFileUpload" />
+                <button type="submit">Add Product</button>
+            </form>
+        </section>
     </div>
 </template>
 
 <script>
+import product from "@/Pages/Product.vue";
 
 export default {
+    // props: ['orders', 'products', 'ordersj'],
     props: {
         orders: {
             type: Array,
@@ -124,25 +101,10 @@ export default {
     },
     data() {
         return {
-            newProduct: {
-                name: '',
-                price: '',
-                category: '',
-                description: '',
-            },
+            newProduct: { name: '', price: '', category: '', description: '' },
             imageFile: null,
-            products: [],
-            orders: [],
-            ordersj: [],
+            editProduct: null, // for editing
         };
-    },
-    mounted() {
-        this.fetchOrders();
-        this.fetchProducts();
-        this.fetchJoinedOrders();
-    },
-    computed: {
-
     },
     methods: {
         addProduct() {
@@ -177,89 +139,119 @@ export default {
                 },
             });
         },
-
         handleFileUpload(event) {
-            this.imageFile = event.target.files[0];
+            // this.imageFile = event.target.files[0];
+            const file = event.target.files[0];
+            if (file) {
+                this.imageFile = file; // Ensure img is a File object
+            }
         },
-        // Sort products based on the selected order
-        fetchOrders() {
-            fetch('/admin/orders')
-                .then((response) => {
-                    if (!response.ok) {
-                        throw new Error(`HTTP error! Status: ${response.status}`);
-                    }
-                    return response.json();
-                })
-                .then((data) => {
-                    this.orders = data; // Assign the fetched data to the 'products' property
-                })
-                .catch((error) => {
-                    console.error("Error fetching products:", error);
+        deleteRecord(type, id) {
+            if (confirm('Are you sure you want to delete this record?')) {
+                this.$inertia.delete(`/admin/${type}s/${id}`, {
+                    onSuccess: () => console.log(`${type} deleted.`),
+                    onError: err => console.error('Error deleting:', err),
                 });
+            }
         },
-        fetchProducts() {
-            fetch('/admin/products')
-                .then((response) => {
-                    if (!response.ok) {
-                        throw new Error(`HTTP error! Status: ${response.status}`);
-                    }
-                    return response.json();
-                })
-                .then((data) => {
-                    this.products = data; // Assign the fetched data to the 'products' property
-                })
-                .catch((error) => {
-                    console.error("Error fetching products:", error);
-                });
-        },
-        fetchJoinedOrders() {
-            fetch('/admin/ordersj')
-                .then((response) => {
-                    if (!response.ok) {
-                        throw new Error(`HTTP error! Status: ${response.status}`);
-                    }
-                    return response.json();
-                })
-                .then((data) => {
-                    this.ordersj = data; // Assign the fetched data to the 'products' property
-                })
-                .catch((error) => {
-                    console.error("Error fetching products:", error);
-                });
+        updateProduct() {
+            this.$inertia.put(`/admin/products/${this.editProduct.id}`, this.editProduct, {
+                onSuccess: () => {
+                    this.editProduct = null;
+                },
+                onError: err => console.error('Error updating product:', err),
+            });
         },
     },
 };
 </script>
 
-<style>
-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin: 20px 0;
+<style scoped>
+.admin-dashboard {
+    padding: 20px;
+    font-family: Arial, sans-serif;
 }
-table, th, td {
-    border: 1px solid black;
+
+.title {
+    text-align: center;
+    color: #420d65;
 }
-th, td {
-    padding: 8px;
-    text-align: left;
+
+.section {
+    margin: 40px 0;
 }
-form div {
-    margin-bottom: 10px;
+
+.section-title {
+    margin-bottom: 20px;
+    color: #333;
+}
+
+.card-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.card {
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    padding: 15px;
+    background-color: #fff;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    height: 230px;
+}
+
+.actions {
+    margin-top: 10px;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.actions button {
+    background-color: #e63946;
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.actions button:hover {
+    background-color: #d62828;
+}
+
+.form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    max-width: 400px;
+}
+
+.form input,
+.form textarea,
+.form button {
+    padding: 10px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+}
+
+.form button {
+    background-color: #420d65;
+    color: white;
+    cursor: pointer;
 }
 
 .back-button {
-    background-color: purple;
+    background-color: #420d65;
     color: white;
     padding: 10px 20px;
     border: none;
     border-radius: 5px;
     cursor: pointer;
-    font-size: 16px;
+    margin-bottom: 20px;
 }
 
 .back-button:hover {
-    background-color: darkviolet;
+    background-color: #330a4f;
 }
-
 </style>

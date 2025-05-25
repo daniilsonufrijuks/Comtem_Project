@@ -46,9 +46,9 @@ Route::get('/about', function () {
     return Inertia::render('About');
 })->name('about');
 
-Route::get('/contact', function () {
+Route::get('/contacts', function () {
     return Inertia::render('Contact');
-})->name('contact');
+})->name('contacts');
 
 Route::get('/market', function () {
     return Inertia::render('Market');
@@ -215,8 +215,9 @@ Route::get('/admin/orders', [AdminController::class, 'showOrders'])->name('admin
 Route::get('/admin/ordersj', [AdminController::class, 'showjoinedOrders'])->name('admin.j.orders');
 Route::get('/admin/products', [AdminController::class, 'showProducts'])->name('admin.products');
 Route::post('/admin/products', [AdminController::class, 'storeProduct'])->name('admin.products.add');
-
-
+Route::delete('/admin/products/{id}', [AdminController::class, 'destroyProduct']);
+Route::delete('/admin/orders/{id}', [AdminController::class, 'destroyOrder']);
+Route::put('/admin/products/{id}', [AdminController::class, 'update']);
 
 
 

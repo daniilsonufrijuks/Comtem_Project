@@ -19,12 +19,12 @@ const submit = () => {
         <div class="form login">
             <div class="form-content">
                 <header>Login</header>
-                <form @submit.prevent="submit">
+                <form @submit.prevent="submit"  autocomplete="off">
                     <div class="field input-field">
-                        <input type="email" v-model="form.email" placeholder="Email" class="input" required>
+                        <input type="email" v-model="form.email" placeholder="Email" class="input" required autocomplete="off">
                     </div>
                     <div class="field input-field">
-                        <input type="password" v-model="form.password" placeholder="Password" class="password" required>
+                        <input type="password" v-model="form.password" placeholder="Password" class="password" required autocomplete="off">
                         <i class='bx bx-hide eye-icon'></i>
                     </div>
                     <div class="form-link">
