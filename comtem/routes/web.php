@@ -90,6 +90,13 @@ Route::get('/quiz', function () {
     return Inertia::render('Quiz');
 })->name('quiz');
 
+Route::get('/phones', function () {
+    return Inertia::render('Phones');
+})->name('phones');
+
+Route::get('/peripherals', function () {
+    return Inertia::render('Peripherals');
+})->name('peripherals');
 
 
 //Route::get('/auction/add', function () {
@@ -162,6 +169,8 @@ Route::post('/logout', function () {
 Route::get('/products/components', [ProductsController::class, 'getComponentsProducts']);
 Route::get('/products/laptops', [ProductsController::class, 'getLaptopsProducts']);
 Route::get('/products/pcs', [ProductsController::class, 'getPcsProducts']);
+Route::get('/products/phones', [ProductsController::class, 'getPhonesProducts']);
+Route::get('/products/peripherals', [ProductsController::class, 'getPeripheralsProducts']);
 Route::get('/products/{id}', [ProductsController::class, 'show']);
 
 

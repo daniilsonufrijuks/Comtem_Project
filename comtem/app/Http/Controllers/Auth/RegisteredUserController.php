@@ -58,6 +58,8 @@ class RegisteredUserController extends Controller
             'email' => $request->email,
             'password' => Hash::make($request->password),
         ]);
+
+        Auth::login($user);
         // Send a welcome email
 //        Mail::to($user->email)->send(new WelcomeEmail($user));
         // Try sending the email and catch errors
@@ -71,9 +73,8 @@ class RegisteredUserController extends Controller
         //dump("end");
         //dd('User created successfully!');
         //event(new Registered($user));
-
-        //Auth::login($user);
-        //auth()->login($user);
+//        Auth::login($user);
+//        auth()->login($user);
 
         return redirect(route('quiz', absolute: false));
 

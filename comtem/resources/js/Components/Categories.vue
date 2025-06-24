@@ -24,6 +24,18 @@
             <p>AUCTION</p>
             <button onclick="location.href='/auction'">VISIT</button>
         </div>
+
+        <div class="product-card">
+            <img src="/images/front/phones.png" alt="Product 5">
+            <p>PHONES</p>
+            <button onclick="location.href='/phones'">VISIT</button>
+        </div>
+
+        <div class="product-card">
+            <img src="/images/front/keyboard.png" alt="Product 6">
+            <p>PERIPHERALS</p>
+            <button onclick="location.href='/peripherals'">VISIT</button>
+        </div>
     </div>
     <!-- Categories -->
 </template>
