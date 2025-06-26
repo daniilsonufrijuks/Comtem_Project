@@ -34,11 +34,12 @@
             </div>
         </div>
         <Visitit />
+        <Roulette />
         <div class="products">
             <ProductCardDB v-for="product in products" :key="product.id" :product="product" />
         </div>
 <!--        <Productsintro />-->
-<!--        <Contact />-->
+        <Contact />
     </div>
     <Footer />
 </template>
@@ -54,10 +55,12 @@ import AboutUsText from "../Components/AboutUsText.vue";
 import Navbar from "@/Components/Navbar.vue";
 import Footer from "@/Components/Footer.vue";
 import ProductCardDB from "@/Components/ProductCardDB.vue";
+import Roulette from "@/Components/Roulette.vue";
 
 export default {
     name: 'Home',
     components: {
+        Roulette,
         ProductCardDB,
         Navbar,
         Visitit,

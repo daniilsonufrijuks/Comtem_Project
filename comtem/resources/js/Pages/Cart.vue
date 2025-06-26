@@ -191,6 +191,22 @@ export default {
                             ),
                         });
 
+                        // stripe
+                        const response = await axios.post('/stripe/checkout', {
+                            items: sanitizedCart,
+                        });
+                        // const stripe = await loadStripe(import.meta.env.VITE_STRIPE_KEY); // public key
+                        const stripeKey = import.meta.env.VITE_STRIPE_KEY;
+
+                        if (!stripeKey) {
+                            console.error('Stripe public key is not defined in the environment variables.');
+                            return;
+                        }
+
+                        const stripe = await loadStripe(stripeKey);
+
+                        await stripe.redirectToCheckout({ sessionId: response.data.id });
+
                         console.log('Order Response:', orderResponse.data);
 
                         // Optionally clear cart after successful checkout

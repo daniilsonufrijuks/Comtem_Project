@@ -12,6 +12,8 @@ use App\Http\Controllers\OrderController;
 use App\Http\Controllers\PageController;
 use App\Http\Controllers\ProductsController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\RouletteController;
+use App\Http\Controllers\StripeController;
 use App\Http\Controllers\UserController;
 use Illuminate\Foundation\Application;
 use Illuminate\Http\Request;
@@ -279,7 +281,8 @@ Route::delete('/delete-expired-auctions', [AuctionController::class, 'destroy'])
 
 
 // for stripe after pressing proceed btn in cart
-Route::post('/checkout', [CheckoutController::class, 'checkout']);
+//Route::post('/checkout', [CheckoutController::class, 'checkout']);
+Route::post('/stripe/checkout', [StripeController::class, 'create'])->name('stripe.checkout');
 
 
 
@@ -289,6 +292,8 @@ Route::get('/search', [ProductsController::class, 'search']);
 
 
 
+// roulette
+Route::get('/spin', [RouletteController::class, 'spin']);
 
 
 //Route::post('/chatai', function (\Illuminate\Http\Request $request) {
