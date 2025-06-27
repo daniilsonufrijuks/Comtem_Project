@@ -1,7 +1,7 @@
 <template>
 
     <div class="video-section">
-        <h2>Watch Our Videos</h2>
+        <h2 class="font-bold">🎥 Watch Our Videos</h2>
         <div class="videos">
             <div v-for="video in videos" :key="video.id" class="video">
                 <iframe

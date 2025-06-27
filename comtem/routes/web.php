@@ -4,6 +4,7 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AuctionController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\BidController;
+use App\Http\Controllers\BookController;
 use App\Http\Controllers\ChatController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\CommentController;
@@ -301,6 +302,11 @@ Route::get('/spin', [RouletteController::class, 'spin']);
 // for comments
 Route::get('/comments', [CommentController::class, 'index']);
 Route::post('/comments', [CommentController::class, 'store']);
+
+
+
+// for books and documentation
+Route::get('/books', [BookController::class, 'index']);
 
 
 //Route::post('/chatai', function (\Illuminate\Http\Request $request) {

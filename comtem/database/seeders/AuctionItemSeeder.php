@@ -13,11 +13,11 @@ class AuctionItemSeeder extends Seeder
      */
     public function run(): void
     {
-        Auction::create([
-            'name' => 'MacBook Pro',
-            'description' => 'MacBook Pro laptop uniq',
-            'starting_bid' => 10000,
-            'img' => 'images/front/mcbook.jpg',
-        ]);
+//        Auction::create([
+//            'name' => 'MacBook Pro',
+//            'description' => 'MacBook Pro laptop uniq',
+//            'starting_bid' => 10000,
+//            'img' => 'images/front/mcbook.jpg',
+//        ]);
     }
 }

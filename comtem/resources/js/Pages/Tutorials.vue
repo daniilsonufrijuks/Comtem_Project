@@ -38,6 +38,7 @@
 <!--            </div>-->
 <!--        </div>-->
         <VideosTutor />
+        <BooksLibrary />
         <!--        <Productsintro />-->
         <Testimonial />
         <!--        <chatwithai />-->
@@ -59,10 +60,12 @@ import Footer from "@/Components/Footer.vue";
 import ProductCardDB from "@/Components/ProductCardDB.vue";
 import chatwithai from "@/Components/chatwithai.vue";
 import VideosTutor from "@/Components/VideosTutor.vue";
+import BooksLibrary from "@/Components/BooksLib.vue";
 
 export default {
     name: 'Home',
     components: {
+        BooksLibrary,
         ProductCardDB,
         Navbar,
         Visitit,
