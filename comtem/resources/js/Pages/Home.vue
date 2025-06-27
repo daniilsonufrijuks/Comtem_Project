@@ -1,6 +1,7 @@
 <template>
 <!--    <Navbar :routes="routes" />-->
     <Banner/>
+    <RobotAssistant />
     <Navbar :routes="routes"/>
     <Search />
     <Slider/>
@@ -32,10 +33,12 @@ import ProductCardDB from "@/Components/ProductCardDB.vue";
 import chatwithai from "@/Components/chatwithai.vue";
 import Banner from "@/Components/Banner.vue";
 import SectionCom from "@/Components/SectionCom.vue";
+import RobotAssistant from "@/Components/Robot.vue";
 
 export default {
     name: 'Home',
     components: {
+        RobotAssistant,
         SectionCom,
         ProductCardDB,
         Navbar,
