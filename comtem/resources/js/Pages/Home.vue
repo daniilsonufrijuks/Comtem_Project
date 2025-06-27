@@ -12,6 +12,7 @@
 <!--        <Productsintro />-->
         <Testimonial />
         <chatwithai />
+        <SectionCom />
         <Contact />
     </div>
     <Footer />
@@ -30,10 +31,12 @@ import Footer from "@/Components/Footer.vue";
 import ProductCardDB from "@/Components/ProductCardDB.vue";
 import chatwithai from "@/Components/chatwithai.vue";
 import Banner from "@/Components/Banner.vue";
+import SectionCom from "@/Components/SectionCom.vue";
 
 export default {
     name: 'Home',
     components: {
+        SectionCom,
         ProductCardDB,
         Navbar,
         Visitit,

@@ -6,6 +6,7 @@ use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\BidController;
 use App\Http\Controllers\ChatController;
 use App\Http\Controllers\CheckoutController;
+use App\Http\Controllers\CommentController;
 use App\Http\Controllers\ContactController;
 //use App\Http\Controllers\OpenAIController;
 use App\Http\Controllers\OrderController;
@@ -294,6 +295,12 @@ Route::get('/search', [ProductsController::class, 'search']);
 
 // roulette
 Route::get('/spin', [RouletteController::class, 'spin']);
+
+
+
+// for comments
+Route::get('/comments', [CommentController::class, 'index']);
+Route::post('/comments', [CommentController::class, 'store']);
 
 
 //Route::post('/chatai', function (\Illuminate\Http\Request $request) {
