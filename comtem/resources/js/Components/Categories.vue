@@ -37,17 +37,17 @@
             <button onclick="location.href='/peripherals'">VISIT</button>
         </div>
 
-<!--        <div class="product-card">-->
-<!--            <img src="/images/front/furniture.png" alt="Product 5">-->
-<!--            <p>FURNITURE</p>-->
-<!--            <button onclick="location.href='/furniture'">VISIT</button>-->
-<!--        </div>-->
+        <div class="product-card">
+            <img src="/images/front/table.png" alt="Product 5">
+            <p>FURNITURE</p>
+            <button onclick="location.href='/furniture'">VISIT</button>
+        </div>
 
-<!--        <div class="product-card">-->
-<!--            <img src="/images/front/cables.png" alt="Product 6">-->
-<!--            <p>CABLES</p>-->
-<!--            <button onclick="location.href='/cables'">VISIT</button>-->
-<!--        </div>-->
+        <div class="product-card">
+            <img src="/images/front/cables.png" alt="Product 6">
+            <p>CABLES</p>
+            <button onclick="location.href='/cables'">VISIT</button>
+        </div>
     </div>
     <!-- Categories -->
 </template>
