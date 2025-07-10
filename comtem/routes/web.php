@@ -42,6 +42,12 @@ use Inertia\Inertia;
 //    // Add more routes here if needed
 //],
 
+
+
+
+
+
+
 Route::get('/', function () {
     return Inertia::render('Home');
 })->name('home');
@@ -101,6 +107,20 @@ Route::get('/phones', function () {
 Route::get('/peripherals', function () {
     return Inertia::render('Peripherals');
 })->name('peripherals');
+
+Route::get('/furniture', function () {
+    return Inertia::render('Furniture');
+})->name('furniture');
+
+Route::get('/cables', function () {
+    return Inertia::render('Cables');
+})->name('cables');
+
+
+
+
+
+
 
 
 //Route::get('/auction/add', function () {
@@ -170,10 +190,15 @@ Route::post('/logout', function () {
 
 
 
+
 Route::get('/products/components', [ProductsController::class, 'getComponentsProducts']);
 Route::get('/products/laptops', [ProductsController::class, 'getLaptopsProducts']);
 Route::get('/products/pcs', [ProductsController::class, 'getPcsProducts']);
 Route::get('/products/phones', [ProductsController::class, 'getPhonesProducts']);
+
+Route::get('/products/furniture', [ProductsController::class, 'getFurnitureProducts']);
+Route::get('/products/cables', [ProductsController::class, 'getCablesProducts']);
+
 Route::get('/products/peripherals', [ProductsController::class, 'getPeripheralsProducts']);
 Route::get('/products/{id}', [ProductsController::class, 'show']);
 
