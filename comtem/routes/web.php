@@ -137,8 +137,6 @@ Route::get('/cables', function () {
 
 
 
-
-
 // for dinamic product displaying
 //Route::get('/product', function () {
 //    return Inertia::render('Product');

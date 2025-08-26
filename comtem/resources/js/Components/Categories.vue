@@ -60,9 +60,7 @@
     margin: 20px auto;
     max-width: 1200px;
     gap: 20px;
-    display: flex;
     flex-wrap: wrap;
-    justify-content: space-between;
     position: relative;
 }
 

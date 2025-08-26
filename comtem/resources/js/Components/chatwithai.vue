@@ -60,19 +60,26 @@ export default {
                     headers: {
                         "Content-Type": "application/json",
                         "X-CSRF-TOKEN": csrfToken,
+                        "Accept": "application/json",
                     },
                     body: JSON.stringify({ message: input }),
                 });
-                console.log("Raw response:", response);
 
+                let data;
+                const contentType = response.headers.get('content-type');
 
-                const contentType = response.headers.get("Content-Type");
-                if (!contentType || !contentType.includes("application/json")) {
-                    throw new Error("Invalid response format.");
+                if (contentType && contentType.includes('application/json')) {
+                    data = await response.json();
+                } else {
+                    // If not JSON, read as text for debugging
+                    const text = await response.text();
+                    console.error('Non-JSON response:', text);
+                    throw new Error('Server returned invalid format. Please try again.');
                 }
 
-                const data = await response.json();
-                console.log("Parsed response:", data);
+                if (!response.ok) {
+                    throw new Error(data.reply || data.message || `Server error: ${response.status}`);
+                }
 
                 this.chatMessages.push({
                     sender: "ai",
@@ -82,7 +89,7 @@ export default {
                 console.error("Error fetching AI response:", error);
                 this.chatMessages.push({
                     sender: "ai",
-                    text: "Sorry, I'm having trouble connecting to the server. Please try again later.",
+                    text: error.message || "Sorry, I'm having trouble connecting to the server. Please try again later.",
                 });
             } finally {
                 this.isLoading = false;
