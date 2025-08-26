@@ -16,7 +16,7 @@ class ChatController extends Controller
         ]);
 
         // Check if API key is available
-        $apiKey = config('services.deepseek.api_key');
+        $apiKey = config('services.deepseek.api_key'); // using services
 
         if (empty($apiKey)) {
             Log::error('DeepSeek API key not found in environment');
