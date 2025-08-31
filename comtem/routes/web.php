@@ -234,7 +234,10 @@ Route::post('/order', [OrderController::class, 'store'])->middleware('auth');
 // to get user page about user
 Route::get('/user', [UserController::class, 'userProfile'])->name('user');
 
+// Profile update routes (using the existing ProfileController)
+Route::put('/profile/update', [ProfileController::class, 'update'])->name('profile.update');
 
+Route::delete('/profile-delete', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
 
 
