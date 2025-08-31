@@ -1,32 +1,20 @@
 <template>
-    <Navbar :routes="routes" />
+    <!--    <Navbar :routes="routes" />-->
+    <Banner/>
+    <RobotAssistant />
+    <Navbar :routes="routes"/>
     <Search />
-    <Slider />
+<!--    <Slider/>-->
     <div class="main-container">
         <Visitit />
-        <!-- Filter Inputs -->
-        <div class="filters">
-            <input
-                v-model.number="filters.price_min"
-                type="number"
-                placeholder="Min Price"
-                @input="fetchProducts"
-            />
-            <input
-                v-model.number="filters.price_max"
-                type="number"
-                placeholder="Max Price"
-                @input="fetchProducts"
-            />
-            <!-- Sorting Dropdown -->
-            <select v-model="sortOrder" @change="sortProducts">
-                <option value="asc">Lowest Price First</option>
-                <option value="desc">Highest Price First</option>
-            </select>
-        </div>
+        <AskedQuestions />
         <div class="products">
-            <ProductCardDB v-for="product in sortedProducts" :key="product.id" :product="product" />
+            <ProductCardDB v-for="product in products" :key="product.id" :product="product" />
         </div>
+        <!--        <Productsintro />-->
+        <Testimonial />
+        <chatwithai />
+        <SectionCom />
         <Contact />
     </div>
     <Footer />
@@ -35,27 +23,40 @@
 <script>
 import Visitit from '../Components/Visitit.vue';
 import Slider from '../Components/Slider.vue';
-import Contact from '../Components/Contact.vue';
-import Search from '../Components/Search.vue';
+import Productsintro from "../Components/Productsintro.vue";
+import Contact from "../Components/Contact.vue";
+import Search from "../Components/Search.vue";
+import Testimonial from "../Components/Testimonial.vue";
+import AboutUsText from "../Components/AboutUsText.vue";
 import Navbar from "@/Components/Navbar.vue";
 import Footer from "@/Components/Footer.vue";
-import ProductCard from "@/Components/ProductCard.vue";
 import ProductCardDB from "@/Components/ProductCardDB.vue";
-
+import chatwithai from "@/Components/chatwithai.vue";
+import Banner from "@/Components/Banner.vue";
+import SectionCom from "@/Components/SectionCom.vue";
+import RobotAssistant from "@/Components/Robot.vue";
+import AskedQuestions from "@/Components/AskedQuestions.vue";
 export default {
-    name: 'ComponentsPage',
+    name: 'Home',
     components: {
+        RobotAssistant,
+        SectionCom,
         ProductCardDB,
-        ProductCard,
         Navbar,
         Visitit,
         Slider,
+        Productsintro,
         Contact,
         Search,
+        Testimonial,
+        AboutUsText,
         Footer,
+        chatwithai,
+        Banner,
+        AskedQuestions
     },
     props: {
-        routes: Object,
+        routes: Object
     },
     data() {
         return {
@@ -64,24 +65,10 @@ export default {
                 price_min: 0,
                 price_max: 100000,
             },
-            sortOrder: "asc", // Default sorting order
         };
     },
     mounted() {
         this.fetchProducts();
-
-    },
-    computed: {
-        // Sort products based on the selected order
-        sortedProducts() {
-            return [...this.products].sort((a, b) => {
-                if (this.sortOrder === "asc") {
-                    return a.price - b.price;
-                } else {
-                    return b.price - a.price;
-                }
-            });
-        },
     },
     methods: {
         // fetchProducts() {
@@ -99,10 +86,9 @@ export default {
             const params = new URLSearchParams({
                 price_min: this.filters.price_min ?? 0,
                 price_max: this.filters.price_max ?? 100000,
-                // sort_order: this.sortOrder,
             }).toString();
 
-            fetch(`/products/games?${params}`)
+            fetch(`/products/laptops?${params}`)
                 .then((response) => {
                     if (!response.ok) {
                         throw new Error(`HTTP error! Status: ${response.status}`);
@@ -127,29 +113,19 @@ export default {
     flex-direction: column;
     gap: 70px; /* Adjust as needed */
 }
+
 .products {
-    display: flex;
-    flex-wrap: wrap;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* Two equal columns */
     gap: 20px; /* Adjust spacing between product cards */
     justify-content: center; /* Center product cards */
+    max-width: 1000px; /* Optional: Set a max width for better alignment */
+    margin: 0 auto; /* Center the grid */
 }
-.filters {
-    display: flex;
-    justify-content: center;
-    gap: 1rem;
-    margin-bottom: 1rem;
-}
-@media screen and (max-width: 768px) {
-    .filters {
-        flex-direction: column; /* Stack filters vertically */
-        align-items: center;   /* Center the filters horizontally */
-        gap: 0.5rem;           /* Adjust spacing between inputs */
-    }
 
-    .filters input,
-    .filters select {
-        width: 100%;          /* Make inputs and select dropdown full-width */
-        max-width: 300px;     /* Optionally limit the maximum width */
+@media (max-width: 1120px) {
+    .products {
+        grid-template-columns: 1fr; /* One column on smaller screens */
     }
 }
 </style>

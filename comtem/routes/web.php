@@ -116,8 +116,13 @@ Route::get('/cables', function () {
     return Inertia::render('Cables');
 })->name('cables');
 
+Route::get('/games', function () {
+    return Inertia::render('PlayZone');
+})->name('games');
 
-
+Route::get('/faq', function () {
+    return Inertia::render('FAQ');
+})->name('faq');
 
 
 
@@ -189,15 +194,20 @@ Route::post('/logout', function () {
 
 
 
+// for getting products for pages for categories
 Route::get('/products/components', [ProductsController::class, 'getComponentsProducts']);
 Route::get('/products/laptops', [ProductsController::class, 'getLaptopsProducts']);
 Route::get('/products/pcs', [ProductsController::class, 'getPcsProducts']);
 Route::get('/products/phones', [ProductsController::class, 'getPhonesProducts']);
 
 Route::get('/products/furniture', [ProductsController::class, 'getFurnitureProducts']);
+
 Route::get('/products/cables', [ProductsController::class, 'getCablesProducts']);
 
 Route::get('/products/peripherals', [ProductsController::class, 'getPeripheralsProducts']);
+
+Route::get('/products/games', [ProductsController::class, 'getGamesProducts']);
+
 Route::get('/products/{id}', [ProductsController::class, 'show']);
 
 

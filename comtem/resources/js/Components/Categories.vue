@@ -48,6 +48,12 @@
             <p>CABLES</p>
             <button onclick="location.href='/cables'">VISIT</button>
         </div>
+
+        <div class="product-card">
+            <img src="/images/front/games.png" alt="Product 7">
+            <p>GAME ZONE</p>
+            <button onclick="location.href='/games'">VISIT</button>
+        </div>
     </div>
     <!-- Categories -->
 </template>
