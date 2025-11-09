@@ -3,11 +3,11 @@
         <h2 class="text-2xl font-bold mb-4">Comments</h2>
 
         <div v-if="user">
-      <textarea
-          v-model="newComment"
-          placeholder="Write a comment..."
-          class="w-full p-3 border rounded mb-2"
-      />
+            <textarea
+                v-model="newComment"
+                placeholder="Write a comment..."
+                class="w-full p-3 border rounded mb-2"
+            />
             <button
                 @click="submitComment"
                 class="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 rounded"
@@ -19,17 +19,19 @@
             <p class="text-gray-600">Please log in to comment.</p>
         </div>
 
-        <div
-            v-for="comment in comments"
-            :key="comment.id"
-            class="border-t pt-4 mt-4"
-        >
-            <strong>{{ comment.user?.name || 'Guest' }}</strong>:
-            <p class="mt-1">{{ comment.body }}</p>
+        <!-- Scrollable comments section -->
+        <div class="mt-4 border-t pt-4 max-h-80 overflow-y-auto pr-2 space-y-4">
+            <div
+                v-for="comment in comments"
+                :key="comment.id"
+                class="border-b pb-3"
+            >
+                <strong>{{ comment.user?.name || 'Guest' }}</strong>:
+                <p class="mt-1">{{ comment.body }}</p>
+            </div>
         </div>
     </div>
 </template>
-
 <script>
 import axios from 'axios';
 

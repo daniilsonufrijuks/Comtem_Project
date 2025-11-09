@@ -1,255 +1,338 @@
-
 <template>
     <section id="productdetails" v-if="product">
         <div class="single-pro-image">
-            <img :src="product.image || ''" width="50%" id="MainImg" alt="">
-            <div class="small-image-group">
-                <div class="small-img-col" v-for="i in 4" :key="i">
-                    <img :src="product.image || '' " width="100%" class="small-img" alt="">
-                </div>
-            </div>
+            <img
+                :src="product.image || ''"
+                width="100%"
+                id="MainImg"
+                alt="Product image"
+                class="clickable-img"
+                @click="openModal = true"
+            />
         </div>
+
         <div class="single-pro-details">
-            <h6>{{ product.category }}</h6>
-            <h4>{{ product.name }}</h4>
-            <h2>${{ product.price }}</h2>
-<!--            <select>-->
-<!--                <option>Select option</option>-->
-<!--                <option>Box</option>-->
-<!--                <option>Single</option>-->
-<!--            </select>-->
-            <input type="number" v-model="quantity" value="1">
-            <button class="normal" @click="addToCart(this.product)">Add to Cart</button>
+            <h6 class="category">{{ product.category }}</h6>
+            <h4 class="product-name">{{ product.name }}</h4>
+            <h2 class="product-price">${{ product.price }}</h2>
+
+            <div class="quantity-add">
+                <input type="number" v-model="quantity" min="1" />
+                <button class="add-btn" @click="addToCart(product)">
+                    🛒 Add to Cart
+                </button>
+            </div>
+
             <h4>Product Details</h4>
-            <span class="gcardt">{{ product.description }}.</span>
+            <p class="description">{{ product.description }}</p>
+<!--            <div-->
+<!--                v-if="product.variations && product.variations.length"-->
+<!--                class="variation-cards"-->
+<!--            >-->
+<!--                <p class="variation-label">Available Options:</p>-->
+<!--                <div class="variation-list">-->
+<!--                    <div-->
+<!--                        v-for="variation in product.variations"-->
+<!--                        :key="variation.id"-->
+<!--                        :class="[-->
+<!--                        'variation-card',-->
+<!--                        { selected: selectedVariation && selectedVariation.id === variation.id }-->
+<!--                      ]"-->
+<!--                        @click="selectVariation(variation)"-->
+<!--                    >-->
+<!--                        <h5>{{ variation.name }}</h5>-->
+<!--                        <span>${{ variation.price || product.price }}</span>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--            </div>-->
         </div>
+
+        <!-- Image modal -->
+        <div v-if="openModal" class="modal" @click="openModal = false">
+            <img :src="product.image" alt="Large product view" class="modal-img" />
+        </div>
+
     </section>
+
     <p v-else>Loading product details...</p>
 
-    <!-- Notification Slider -->
+    <!-- Notification -->
     <transition name="slide">
         <div v-if="showNotification" class="notification">
-            Item added to cart!
+            ✅ Item added to cart!
         </div>
     </transition>
 </template>
 
-
 <script>
-import { useStore } from 'vuex';
-import {ref} from "vue";
+import { useStore } from "vuex";
+import {computed, ref} from "vue";
 
 export default {
-    props: ['product'], // Make sure to pass `product` as a prop
+    props: ["product"],
     setup(props) {
         const store = useStore();
-
-        // Initialize quantity with default value 1
         const quantity = ref(1);
         const showNotification = ref(false);
+        const openModal = ref(false);
+        const selectedVariation = ref(null);
+
+        // if (props.product.variations?.length) {
+        //     selectedVariation.value = props.product.variations[0];
+        // }
+
+        const displayPrice = computed(() => {
+            const variationPrice = parseFloat(selectedVariation.value?.price || 0);
+            const basePrice = parseFloat(props.product.price || 0);
+            return variationPrice + basePrice;
+        });
+
+        const selectVariation = (variation) => {
+            selectedVariation.value = variation;
+        };
 
         const addToCart = (product) => {
-            store.commit('ADD_TO_CART', { ...product, quantity: quantity.value });
-            console.log("added", product);
+            store.commit("ADD_TO_CART", { ...product,  variation_id: selectedVariation.value?.id || null,
+                variation_name: selectedVariation.value?.name || null, quantity: quantity.value, price: displayPrice.value, });
             showNotification.value = true;
-            // Hide the notification after 3 seconds
-            setTimeout(() => {
-                showNotification.value = false;
-            }, 3000);
+            setTimeout(() => (showNotification.value = false), 2500);
         };
-        // const addToCart = (product) => {
-        //     if (!product) {
-        //         console.error('Product data is missing!');
-        //         return;
-        //     }
-        //     store.commit('ADD_TO_CART', { ...product, quantity: 1 });
-        //     console.log("added", product);
-        //};
 
-        return { quantity, addToCart, showNotification };
+        return {
+            quantity, addToCart, showNotification, openModal, selectVariation,  selectedVariation,
+        };
     },
 };
-// export default {
-//     props: {
-//         product: {
-//             type: Object,
-//             required: true,
-//         },
-//         // cartItems: {
-//         //     type: Array,
-//         //     required: true,
-//         // },
-//     },
-//     // data() {
-//     //     return {
-//     //         quantity: 1,
-//     //         //cartItems: JSON.parse(localStorage.getItem('cartItems')) || [],
-//     //     };
-//     // },
-//     // methods: {
-//     //     addToCart(product) {
-//     //         //console.log(this.cartItems);
-//     //         console.log('Adding product to cart:', product);
-//     //         this.$emit('add-to-cart', {
-//     //             ...this.product,
-//     //             quantity: this.quantity || 1,
-//     //         });
-//     //         console.log("added");
-//     //     },
-//     // },
-//
-// }
-
-
 </script>
 
-
 <style scoped>
+/* ---------------- PRODUCT CARD ---------------- */
+#productdetails {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 40px;
+    margin: 100px auto;
+    width: 90%;
+    max-width: 1200px;
+    background: #fff;
+    border-radius: 16px;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+    padding: 40px;
+    transition: box-shadow 0.3s ease;
+}
+#productdetails:hover {
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+}
 
-/* Sliding notification styles */
+.single-pro-image {
+    flex: 1 1 40%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.clickable-img {
+    width: 100%;
+    border-radius: 12px;
+    cursor: zoom-in;
+    object-fit: contain;
+    transition: transform 0.3s ease;
+}
+.clickable-img:hover {
+    transform: scale(1.03);
+}
+
+.single-pro-details {
+    flex: 1 1 50%;
+    padding-top: 10px;
+}
+
+.category {
+    text-transform: uppercase;
+    color: #777;
+    font-size: 13px;
+    letter-spacing: 1px;
+}
+
+.product-name {
+    font-size: 26px;
+    font-weight: 700;
+    margin: 10px 0;
+}
+
+.product-price {
+    font-size: 22px;
+    color: #7a3a7b;
+    font-weight: 800;
+    margin-bottom: 20px;
+}
+
+.quantity-add {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 25px;
+}
+
+.quantity-add input {
+    width: 60px;
+    height: 40px;
+    padding-left: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+}
+
+.add-btn {
+    background-color: #7a3a7b;
+    color: #fff;
+    padding: 10px 18px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: background-color 0.3s, transform 0.2s;
+}
+.add-btn:hover {
+    background-color: #8e4b8f;
+    transform: scale(1.05);
+}
+
+.description {
+    line-height: 1.6;
+    color: #444;
+    font-size: 15px;
+}
+
+/* ---------------- IMAGE MODAL ---------------- */
+.modal {
+    position: fixed;
+    inset: 0;
+    background-color: rgba(0, 0, 0, 0.85);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 2000;
+    cursor: zoom-out;
+}
+
+.modal-img {
+    max-width: 80%;
+    max-height: 80%;
+    border-radius: 12px;
+    object-fit: contain;
+    animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+/* ---------------- NOTIFICATION ---------------- */
 .notification {
     position: fixed;
     bottom: 100px;
     right: 20px;
     background-color: #7a3a7b;
     color: white;
-    padding: 10px 20px;
-    border-radius: 5px;
+    padding: 12px 20px;
+    border-radius: 8px;
     font-size: 16px;
     z-index: 1000;
-    transform: translateX(10%);
-    transition: transform 0.5s ease-in-out;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
 }
 
-.notification-enter-active, .notification-leave-active {
-    transition: transform 0.5s ease-in-out;
+.slide-enter-active,
+.slide-leave-active {
+    transition: all 0.5s ease;
 }
 
-.notification-enter, .notification-leave-to {
-    transform: translateX(100%);
+.slide-enter-from,
+.slide-leave-to {
+    transform: translateX(120%);
+    opacity: 0;
 }
 
-.notification-enter-to, .notification-leave {
-    transform: translateX(0);
-}
-
-/* product */
-#productdetails {
-    display: flex;
-    margin-top: 110px;
-    margin-bottom: 110px;
-    justify-content: center;
-    align-items: center;
-    width: 80%;
-    max-width: 1200px;
-    padding: 50px;
-    box-sizing: border-box;
-    /* left: 100px; */
-    left: 15%;
-    position: relative;
-}
-
-.single-pro-image {
-    justify-content: center;
-    align-items: center;
-}
-
-#productdetails .single-pro-image{
-    width: 40%;
-    margin-right: 50px;
-}
-
-.small-image-group {
-    display: flex;
-    justify-content: space-between;
-}
-
-.small-img-col {
-    flex-basis: 24%;
-    cursor: pointer;
-}
-
-#productdetails .single-pro-details {
-    width: 50%;
-    padding-top: 30px;
-}
-
-#productdetails .single-pro-details h4 {
-    padding: 40px 0 20px 0;
-    font-weight: 700;
-}
-
-#productdetails .single-pro-details h2 {
-    font-size: 26px;
-    font-weight: 700;
-}
-
-#productdetails .single-pro-details select {
-    display: block;
-    padding: 5px 10px;
-    margin-bottom: 10px;
-}
-
-#productdetails .single-pro-details input {
-    width: 50px;
-    height: 47px;
-    padding-left: 10px;
-    font-size: 16px;
-    margin-right: 10px;
-}
-
-#productdetails .single-pro-details button {
-    background-color: #7a3a7b;
-    color: #e8e8e8;
-    border-radius: 5px;
-    padding: 5px 15px;
-}
-
-#productdetails .single-pro-details input:focus {
-    outline: none;
-}
-
-#productdetails .single-pro-details span {
-    line-height: 25px;
-}
-
-.gcardt {
-    animation: animt 5s ease-in-out infinite;
-}
-
-@keyframes animt {
-    0% {
-        color: #9a73a1;
-    }
-
-    50% {
-        color: #8b2c84;
-    }
-
-    100% {
-        color: #5c0a55;
-    }
-}
-
-/* product */
-
-
-/* product */
+/* ---------------- RESPONSIVE ---------------- */
 @media (max-width: 768px) {
     #productdetails {
-        display: flex;
         flex-direction: column;
+        padding: 25px;
     }
 
-    #productdetails .single-pro-image {
+    .single-pro-image,
+    .single-pro-details {
         width: 100%;
-        margin-right: 0px;
     }
 
-    #productdetails .single-pro-details {
-        width: 100%;
+    .product-name {
+        font-size: 22px;
+    }
+
+    .product-price {
+        font-size: 20px;
     }
 }
 
-/* product */
+
+
+.variation-cards {
+    margin-bottom: 25px;
+}
+
+.variation-label {
+    font-weight: 600;
+    margin-bottom: 10px;
+    color: #444;
+}
+
+.variation-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.variation-card {
+    flex: 0 0 auto;
+    padding: 10px 16px;
+    background-color: #f7f7f7;
+    border: 2px solid transparent;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    text-align: center;
+    min-width: 100px;
+}
+
+.variation-card:hover {
+    background-color: #f0e6f0;
+    border-color: #d1b3d1;
+}
+
+.variation-card.selected {
+    border-color: #7a3a7b;
+    background-color: #f4e4f4;
+    box-shadow: 0 0 8px rgba(122, 58, 123, 0.3);
+}
+
+.variation-card h5 {
+    font-size: 15px;
+    margin-bottom: 4px;
+    color: #333;
+}
+
+.variation-card span {
+    font-size: 14px;
+    color: #7a3a7b;
+    font-weight: 600;
+}
 </style>
