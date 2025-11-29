@@ -259,14 +259,25 @@ class ProductsController extends Controller
 
         $products = Products::where('name', 'LIKE', "%{$query}%")
             ->orWhere('description', 'LIKE', "%{$query}%")
+            ->limit(10)
             ->get();
 
-//        return view('products.search-results', compact('products', 'query'));
-//        return Inertia::render('SearchResults', [
-//            'products' => $products,
-//            'query' => $query,
-//        ]);
         return response()->json($products);
+    }
+
+    // For search results page
+    public function searchResults(Request $request)
+    {
+        $query = $request->input('query', '');
+
+        $products = Products::where('name', 'LIKE', "%{$query}%")
+            ->orWhere('description', 'LIKE', "%{$query}%")
+            ->get();
+
+        return Inertia::render('SearchResults', [
+            'products' => $products,
+            'query' => $query,
+        ]);
     }
 
 }

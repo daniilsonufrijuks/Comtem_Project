@@ -21,9 +21,6 @@
 </template>
 
 <script>
-import { Inertia } from "@inertiajs/inertia";
-import { route } from "ziggy-js";
-
 export default {
     data() {
         return {
@@ -41,7 +38,9 @@ export default {
                     });
                     this.filteredQueries = response.data;
                 } catch (error) {
-                    console.error('Error fetching search suggestions:', error);
+                    if (error.code !== 'ECONNABORTED') {
+                        console.error('Error fetching search suggestions:', error);
+                    }
                 }
             } else {
                 this.filteredQueries = [];
@@ -50,40 +49,60 @@ export default {
 
         // Handles search logic on form submission
         handleSearch() {
-            const query = this.query.toLowerCase();
+            const query = this.query.toLowerCase().trim();
+
+            if (!query) return;
+
+            // Clear suggestions first
+            this.filteredQueries = [];
 
             // Predefined search redirects based on certain queries
-            if (['about us', 'aboutus', 'about'].includes(query)) {
-                window.location.href = "/about";
-            } else if (query === 'home') {
-                window.location.href = "/";
-            } else if (['contacts', 'contact'].includes(query)) {
-                window.location.href = "/contact";
-            } else if (['market', 'markets', 'shop'].includes(query)) {
-                window.location.href = "/market";
-            } else if (['laptop', 'laptops', 'notebook'].includes(query)) {
-                window.location.href = "/laptops";
-            } else if (['pc', 'PC', 'pcs', 'computer'].includes(query)) {
-                window.location.href = "/pcs";
-            } else if (['components', 'videocards', 'cpu', 'ram', 'ssd', 'gpu', 'processor'].includes(query)) {
-                window.location.href = "/components";
+            const predefinedRoutes = {
+                'about us': '/about',
+                'aboutus': '/about',
+                'about': '/about',
+                'home': '/',
+                'contacts': '/contact',
+                'contact': '/contact',
+                'market': '/market',
+                'markets': '/market',
+                'shop': '/market',
+                'laptop': '/laptops',
+                'laptops': '/laptops',
+                'notebook': '/laptops',
+                'pc': '/pcs',
+                'pcs': '/pcs',
+                'computer': '/pcs',
+                'components': '/components',
+                'videocards': '/components',
+                'cpu': '/components',
+                'ram': '/components',
+                'ssd': '/components',
+                'gpu': '/components',
+                'processor': '/components'
+            };
+
+            if (predefinedRoutes[query]) {
+                window.location.href = predefinedRoutes[query];
+            } else {
+                // For general searches, redirect to search results using standard navigation
+                const searchUrl = `/search-results?query=${encodeURIComponent(this.query.trim())}`;
+                window.location.href = searchUrl;
             }
-            // } else {
-            //     // If no predefined page matches, search the products
-            //
-            // }
         },
 
         // Handle click on suggestion to directly navigate
         handleSuggestionClick(suggestion) {
-            this.query = suggestion.name;  // Update input with selected suggestion
-            window.location.href = `/product?id=${suggestion.id}`
+            this.query = suggestion.name;
+            this.filteredQueries = [];
+            window.location.href = `/product?id=${suggestion.id}`;
         },
     },
 };
 </script>
 
 <style scoped>
+/* Your existing styles remain the same */
 .search {
     display: flex;
     position: relative;
@@ -92,10 +111,10 @@ export default {
 }
 
 .search i.fa {
-    width: 60px; /* Increase this to make the icon area larger */
+    width: 60px;
     display: inline-block;
-    text-align: center; /* Center the icon inside the box */
-    padding-left: 10px; /* Adjust padding to align the icon nicely */
+    text-align: center;
+    padding-left: 10px;
 }
 
 .container_search {
@@ -127,7 +146,6 @@ export default {
     background: #8311cf;
 }
 
-/* Suggestions list style */
 .suggestions-list {
     list-style-type: none;
     padding: 0;
@@ -137,7 +155,7 @@ export default {
     overflow-y: auto;
     position: absolute;
     z-index: 10000000;
-    top: 100%; /* Positions the suggestions directly below the search bar */
+    top: 100%;
     left: 0;
     background-color: white;
     width: 100%;

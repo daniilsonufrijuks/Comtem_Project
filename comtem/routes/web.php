@@ -328,6 +328,9 @@ Route::post('/stripe/checkout', [StripeController::class, 'create'])->name('stri
 //Route::get('/search', [ProductsController::class, 'search'])->name('products.search');
 Route::get('/search', [ProductsController::class, 'search']);
 
+// For search results page
+Route::get('/search-results', [ProductsController::class, 'searchResults'])->name('search.results');
+
 
 
 // roulette
