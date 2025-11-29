@@ -23,6 +23,7 @@
         "@inertiajs/inertia": "^0.11.1",
         "@stripe/stripe-js": "^5.10.0",
         "font-awesome": "^4.7.0",
+        "marked": "^17.0.1",
         "vue-fortune-wheel": "^2.1.0",
         "vue-router": "^4.5.0",
         "vue3-roulette": "^0.3.3",
