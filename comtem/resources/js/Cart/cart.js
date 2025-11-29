@@ -29,7 +29,21 @@ const store = createStore({
             //     // If the product doesn't exist, add a new item to the cart
             //     state.cart.push({ ...product, quantity: product.quantity || 1 });
             // }
-            state.cart.push({ ...product, quantity: product.quantity || 1 });
+
+            const existingItem = state.cart.find(item => item.id === product.id);
+
+            if (existingItem) {
+                // If item exists, just increase quantity
+                existingItem.quantity += product.quantity || 1;
+            } else {
+                // If item doesn't exist, add new item with quantity
+                state.cart.push({
+                    ...product,
+                    quantity: product.quantity || 1
+                });
+            }
+
+            // state.cart.push({ ...product, quantity: product.quantity || 1 });
 
 
             // Save updated cart to localStorage

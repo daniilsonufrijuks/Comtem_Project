@@ -25,26 +25,6 @@
 
             <h4>Product Details</h4>
             <p class="description">{{ product.description }}</p>
-<!--            <div-->
-<!--                v-if="product.variations && product.variations.length"-->
-<!--                class="variation-cards"-->
-<!--            >-->
-<!--                <p class="variation-label">Available Options:</p>-->
-<!--                <div class="variation-list">-->
-<!--                    <div-->
-<!--                        v-for="variation in product.variations"-->
-<!--                        :key="variation.id"-->
-<!--                        :class="[-->
-<!--                        'variation-card',-->
-<!--                        { selected: selectedVariation && selectedVariation.id === variation.id }-->
-<!--                      ]"-->
-<!--                        @click="selectVariation(variation)"-->
-<!--                    >-->
-<!--                        <h5>{{ variation.name }}</h5>-->
-<!--                        <span>${{ variation.price || product.price }}</span>-->
-<!--                    </div>-->
-<!--                </div>-->
-<!--            </div>-->
         </div>
 
         <!-- Image modal -->
