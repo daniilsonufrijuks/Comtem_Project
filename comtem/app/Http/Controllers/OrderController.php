@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use App\Models\Orders;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Stripe\StripeClient;
 
 class OrderController extends Controller
@@ -143,5 +144,33 @@ class OrderController extends Controller
 //                'message' => 'Payment failed: ' . $e->getMessage(),
 //            ], 400);
 //        }
+    }
+
+    public function userOrders()
+    {
+        $user = auth()->user();
+        if (!$user) {
+            return response()->json(['message' => 'Unauthorized'], 401);
+        }
+
+        $orders = DB::table('orders')
+            ->join('goods_orders', 'orders.id', '=', 'goods_orders.order_id')
+            ->where('orders.user_id', $user->id)
+            ->select(
+                'orders.id as order_id',
+                'orders.status as order_status',
+                'orders.total as order_total',
+                'orders.created_at',
+                'goods_orders.id as item_id',
+                'goods_orders.name as item_name',
+                'goods_orders.price as item_price',
+                'goods_orders.total_price as item_total_price',
+                'goods_orders.image',
+                'goods_orders.category'
+            )
+            ->orderBy('orders.ordered_at', 'desc')
+            ->get();
+
+        return response()->json($orders);
     }
 }

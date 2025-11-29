@@ -249,6 +249,8 @@ Route::put('/profile/update', [ProfileController::class, 'update'])->name('profi
 
 Route::delete('/profile-delete', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
+Route::get('/orders/user', [OrderController::class, 'userOrders'])
+    ->middleware('auth');
 
 
 
@@ -346,6 +348,9 @@ Route::post('/comments', [CommentController::class, 'store']);
 
 // for books and documentation
 Route::get('/books', [BookController::class, 'index']);
+
+
+
 
 
 //Route::post('/chatai', function (\Illuminate\Http\Request $request) {

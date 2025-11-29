@@ -26,6 +26,11 @@ class Orders extends Model
     {
         return $this->hasMany(OrderGoods::class, 'order_id');
     }
+    public function goods(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(OrderGoods::class, 'order_id');
+    }
+
 
     public function products()
     {
