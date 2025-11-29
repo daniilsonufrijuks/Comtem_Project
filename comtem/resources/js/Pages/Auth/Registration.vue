@@ -16,16 +16,13 @@ const submit = () => {
     });
 };
 
-// defineProps({
-//     routes: {
-//         type: Object,
-//         required: true,
-//     },
-// });
 </script>
 
 <template>
     <section class="container forms">
+        <Link :href="route('home')" class="back-button">
+            {{ 'Back Home' }}
+        </Link>
         <div class="form login">
             <div class="form-content">
                 <header>Registration</header>
@@ -210,6 +207,29 @@ a.google span{
     opacity: 0.6;
     color: #232836;
 }
+
+/* ========== Back Button ========== */
+.back-button {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    background-color: #fff;
+    color: #a741e4;
+    padding: 8px 16px;
+    border-radius: 6px;
+    border: 2px solid #a741e4;
+    font-weight: 500;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    z-index: 10;
+}
+
+.back-button:hover {
+    background-color: #b07cf1;
+    color: #fff;
+    cursor: pointer;
+}
+
 
 @media screen and (max-width: 400px) {
     .form{
