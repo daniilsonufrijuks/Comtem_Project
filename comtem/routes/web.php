@@ -260,16 +260,45 @@ Route::get('/orders/user', [OrderController::class, 'userOrders'])
 
 
 // admin page and get/post
-Route::get('/admin/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
+//Route::get('/admin/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
+//
+//Route::get('/admin/orders', [AdminController::class, 'showOrders'])->name('admin.orders');
+//Route::get('/admin/ordersj', [AdminController::class, 'showjoinedOrders'])->name('admin.j.orders');
+//Route::get('/admin/products', [AdminController::class, 'showProducts'])->name('admin.products');
+//Route::post('/admin/products', [AdminController::class, 'storeProduct'])->name('admin.products.add');
+//Route::delete('/admin/products/{id}', [AdminController::class, 'destroyProduct']);
+//Route::delete('/admin/orders/{id}', [AdminController::class, 'destroyOrder']);
+//Route::put('/admin/products/{id}', [AdminController::class, 'update']);
+Route::middleware(['auth:admin'])->group(function () {
+    Route::get('/admin/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
 
-Route::get('/admin/orders', [AdminController::class, 'showOrders'])->name('admin.orders');
-Route::get('/admin/ordersj', [AdminController::class, 'showjoinedOrders'])->name('admin.j.orders');
-Route::get('/admin/products', [AdminController::class, 'showProducts'])->name('admin.products');
-Route::post('/admin/products', [AdminController::class, 'storeProduct'])->name('admin.products.add');
-Route::delete('/admin/products/{id}', [AdminController::class, 'destroyProduct']);
-Route::delete('/admin/orders/{id}', [AdminController::class, 'destroyOrder']);
-Route::put('/admin/products/{id}', [AdminController::class, 'update']);
+    // Data endpoints
+    Route::get('/admin/orders', [AdminController::class, 'showOrders'])->name('admin.orders');
+    Route::get('/admin/order-items', [AdminController::class, 'showOrderItems'])->name('admin.order-items');
+    Route::get('/admin/ordersj', [AdminController::class, 'showjoinedOrders'])->name('admin.j.orders');
+    Route::get('/admin/products', [AdminController::class, 'showProducts'])->name('admin.products');
+    Route::get('/admin/users', [AdminController::class, 'showUsers'])->name('admin.users');
+    #Route::get('/admin/brands', [AdminController::class, 'showBrands'])->name('admin.brands');
+    #Route::get('/admin/categories', [AdminController::class, 'showCategories'])->name('admin.categories');
+    Route::get('/admin/analytics', [AdminController::class, 'getAnalytics'])->name('admin.analytics');
 
+    // CRUD operations
+    Route::post('/admin/products', [AdminController::class, 'storeProduct'])->name('admin.products.add');
+//    Route::post('/admin/brands', [AdminController::class, 'storeBrand'])->name('admin.brands.add');
+//    Route::post('/admin/categories', [AdminController::class, 'storeCategory'])->name('admin.categories.add');
+
+    Route::delete('/admin/products/{id}', [AdminController::class, 'destroyProduct']);
+    Route::delete('/admin/orders/{id}', [AdminController::class, 'destroyOrder']);
+    Route::delete('/admin/orderitems/{id}', [AdminController::class, 'destroyOrderItem']);
+    Route::delete('/admin/users/{id}', [AdminController::class, 'destroyUser']);
+
+//    Route::delete('/admin/brands/{id}', [AdminController::class, 'destroyBrand']);
+//    Route::delete('/admin/categories/{id}', [AdminController::class, 'destroyCategory']);
+    Route::put('/admin/users/{id}', [AdminController::class, 'updateUser']);
+    Route::put('/admin/orders/{id}', [AdminController::class, 'updateOrder']);
+    Route::put('/admin/products/{id}', [AdminController::class, 'updateProduct']);
+    Route::put('/admin/orders/{id}/status', [AdminController::class, 'updateOrderStatus'])->name('admin.orders.status');
+});
 
 
 

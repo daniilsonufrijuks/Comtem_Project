@@ -25,6 +25,9 @@ const photos = [
     "../images/front/slbg3.png",
     "../images/front/slbg4.jpg",
     "../images/front/slbg5.jpg",
+    "../images/front/slbg6.jpg",
+    "../images/front/slbg7.jpg",
+    "../images/front/slbg8.jpg",
 ];
 
 const currentIndex = ref(0);
