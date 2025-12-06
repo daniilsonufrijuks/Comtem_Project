@@ -7,6 +7,9 @@
 <!--        <Visitit />-->
 <!--        <Productsintro />-->
         <ProductCard :product="selectedProduct"/>
+        <div class="products">
+            <ProductCardDB v-for="product in products.slice(0, 2)" :key="product.id" :product="product" />
+        </div>
         <Testimonial />
         <Contact />
     </div>
@@ -24,10 +27,12 @@ import AboutUsText from "../Components/AboutUsText.vue";
 import Navbar from "@/Components/Navbar.vue";
 import Footer from "@/Components/Footer.vue";
 import ProductCard from "@/Components/ProductCard.vue";
+import ProductCardDB from "@/Components/ProductCardDB.vue";
 //import {useRoute} from "ziggy-js";
 export default {
     name: 'Home',
     components: {
+        ProductCardDB,
         Navbar,
         Visitit,
         Slider,
@@ -53,6 +58,11 @@ export default {
     data() {
         return {
             selectedProduct: null, // Store the selected product data here
+            products: [],
+            filters: {
+                price_min: 0,
+                price_max: 100000,
+            },
             // routes: {}  // Assuming you have some routing data
         };
     },
@@ -83,6 +93,7 @@ export default {
         } else {
             console.error('Product ID not found in query parameters.');
         }
+        this.fetchProducts();
         // if (productId) {
         //     this.fetchProductDetails(productId);
         // } else {
@@ -101,7 +112,29 @@ export default {
                 .catch((error) => {
                     console.error('Error fetching product details:', error);
                 });
-        }
+        },
+
+        fetchProducts() {
+            const params = new URLSearchParams({
+                price_min: this.filters.price_min ?? 0,
+                price_max: this.filters.price_max ?? 100000,
+            }).toString();
+
+            fetch(`/products/laptops?${params}`)
+                .then((response) => {
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! Status: ${response.status}`);
+                    }
+                    return response.json();
+                })
+                .then((data) => {
+                    console.log("Fetched products:", data);
+                    this.products = data;
+                })
+                .catch((error) => {
+                    console.error("Error fetching products:", error);
+                });
+        },
     }
     // data() {
     //     return {
@@ -149,5 +182,20 @@ export default {
     display: flex;
     flex-direction: column;
     gap: 70px; /* Adjust as needed */
+}
+
+.products {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* Two equal columns */
+    gap: 20px; /* Adjust spacing between product cards */
+    justify-content: center; /* Center product cards */
+    max-width: 1000px; /* Optional: Set a max width for better alignment */
+    margin: 0 auto; /* Center the grid */
+}
+
+@media (max-width: 1120px) {
+    .products {
+        grid-template-columns: 1fr; /* One column on smaller screens */
+    }
 }
 </style>
