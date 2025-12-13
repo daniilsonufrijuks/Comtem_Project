@@ -558,7 +558,7 @@ export default {
 
             const formData = new FormData();
             Object.keys(this.editProduct).forEach(key => {
-                if (this.editProduct[key] !== null && this.editProduct[key] !== undefined) {
+                if (key !== 'image' && this.editProduct[key] !== null && this.editProduct[key] !== undefined) {
                     formData.append(key, this.editProduct[key]);
                 }
             });
