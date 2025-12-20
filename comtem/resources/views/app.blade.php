@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="author" content="daniilsonufrijuks">
     <meta name="description" content="Laptop, PC, Components shop with auction and ai">
-    <meta http-equiv="refresh" content="180">
+    <meta http-equiv="refresh" content="700">
     <meta name="keywords" content="auction, e-commerce, buy, sell, deals, online shopping, pc, laptop, components, parts, auction, ai, stores near me, hardware store near me, lv, en">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
