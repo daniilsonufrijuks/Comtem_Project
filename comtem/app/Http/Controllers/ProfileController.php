@@ -29,18 +29,21 @@ class ProfileController extends Controller
      */
     public function update(ProfileUpdateRequest $request)
     {
-        $request->user()->fill($request->validated());
 
-        if ($request->user()->isDirty('email')) {
-            $request->user()->email_verified_at = null;
+        $user = $request->user();
+
+        $user->fill($request->validated());
+
+        if ($user->isDirty('email')) {
+            $user->email_verified_at = null;
         }
 
-        $request->user()->save();
+        $user->save();
 
         if ($request->expectsJson() || $request->is('api/*')) {
             return response()->json([
                 'message' => 'Profile updated successfully',
-                'user' => $request->user()
+                'user' => $user->fresh()
             ]);
         }
 

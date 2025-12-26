@@ -47,6 +47,15 @@
                                         <input type="text" v-model="editForm.name" class="form-control">
                                     </div>
                                 </div>
+                                <div class="col-sm-6">
+                                    <p class="m-b-10 f-w-600">Address</p>
+                                    <div v-if="!isEditing">
+                                        <h6 class="text-muted f-w-400">{{ user.address }}</h6>
+                                    </div>
+                                    <div v-else>
+                                        <input type="text" v-model="editForm.address" class="form-control">
+                                    </div>
+                                </div>
                             </div>
 
                             <!-- Edit buttons -->
@@ -146,6 +155,7 @@ export default {
     },
     data() {
         return {
+            localUser: { ...this.user },
             products: [], // Store products fetched from API
             filters: {
                 price_min: 0,
@@ -154,7 +164,8 @@ export default {
             isEditing: false,
             editForm: {
                 name: '',
-                email: ''
+                email: '',
+                address: '',
             },
             successMessage: '',
             errorMessage: '',
@@ -168,19 +179,9 @@ export default {
         this.fetchProducts();
         this.editForm.name = this.user?.name || '';
         this.editForm.email = this.user?.email || '';
+        this.editForm.address = this.user?.address || '';
     },
     methods: {
-        // fetchProducts() {
-        //     fetch('/products/laptops') // Adjust API endpoint if necessary
-        //         .then((response) => response.json())
-        //         .then((data) => {
-        //             console.log('Fetched products:', data);
-        //             this.products = data;
-        //         })
-        //         .catch((error) => {
-        //             console.error('Error fetching products:', error);
-        //         });
-        // },
         fetchProducts() {
             const params = new URLSearchParams({
                 price_min: this.filters.price_min ?? 0,
@@ -212,6 +213,7 @@ export default {
             if (this.isEditing) {
                 this.editForm.name = this.user.name;
                 this.editForm.email = this.user.email;
+                this.editForm.address = this.user.address;
             }
         },
 
@@ -220,6 +222,7 @@ export default {
             // Reset form to original values
             this.editForm.name = this.user.name;
             this.editForm.email = this.user.email;
+            this.editForm.address = this.user.address;
             this.successMessage = '';
             this.errorMessage = '';
         },
@@ -229,75 +232,91 @@ export default {
             this.successMessage = '';
             this.errorMessage = '';
 
-            // Simple validation
+            // Simple validation - address is optional
             if (!this.editForm.name || !this.editForm.email) {
                 this.errorMessage = 'Name and email are required';
                 this.loading = false;
                 return;
             }
 
-            const formData = new FormData();
-            formData.append('_method', 'PUT');
-            formData.append('name', this.editForm.name);
-            formData.append('email', this.editForm.email);
+            // Get CSRF token
+            const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
 
+            if (!csrfToken) {
+                this.errorMessage = 'CSRF token not found. Please refresh the page.';
+                this.loading = false;
+                return;
+            }
+
+            // Use PUT method directly (not POST with _method)
             fetch('/profile/update', {
-                method: 'POST',
+                method: 'PUT', // Changed from POST to PUT
                 headers: {
-                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                    'X-CSRF-TOKEN': csrfToken,
+                    'Content-Type': 'application/json', // ✅ Use JSON
                     'Accept': 'application/json',
                 },
-                body: formData
+                body: JSON.stringify({
+                    name: this.editForm.name,
+                    email: this.editForm.email,
+                    address: this.editForm.address || '' // Always send address, even if empty
+                })
             })
                 .then(response => {
-                    const contentType = response.headers.get('content-type');
-                    if (contentType && contentType.includes('application/json')) {
+                    console.log('Response status:', response.status);
+
+                    if (response.status === 422) {
+                        // Validation error
                         return response.json().then(data => {
-                            if (!response.ok) {
-                                throw new Error(JSON.stringify(data));
-                            }
-                            return data;
-                        });
-                    } else {
-                        // Handle non-JSON response (HTML error page)
-                        return response.text().then(text => {
-                            throw new Error(`Server returned HTML instead of JSON. Status: ${response.status}`);
+                            throw new Error(JSON.stringify({ errors: data.errors }));
                         });
                     }
+
+                    if (!response.ok) {
+                        // For other errors
+                        return response.json().then(data => {
+                            throw new Error(`HTTP error! status: ${response.status}, message: ${data.message}`);
+                        });
+                    }
+
+                    return response.json();
                 })
                 .then((data) => {
-                    this.successMessage = 'Profile updated successfully!';
-                    // Update the user data with new values
+                    console.log('Success response:', data);
+                    this.successMessage = data.message || 'Profile updated successfully!';
+
+                    // Update the user data
                     this.user.name = this.editForm.name;
                     this.user.email = this.editForm.email;
+                    this.user.address = this.editForm.address;
 
                     // Exit edit mode after a short delay
                     setTimeout(() => {
-                        this.isEditing = false;
+                        window.location.reload();
                     }, 1500);
                 })
                 .catch(error => {
                     console.error('Error updating profile:', error);
 
-                    // Check if it's a validation error from Laravel
                     try {
-                        const errorData = JSON.parse(error.message.replace('Server error: 500 - ', ''));
+                        const errorData = JSON.parse(error.message);
                         if (errorData.errors) {
                             // Display validation errors
-                            this.errorMessage = Object.values(errorData.errors)[0][0];
+                            const firstError = Object.values(errorData.errors)[0];
+                            this.errorMessage = Array.isArray(firstError) ? firstError[0] : firstError;
+                            return;
+                        }
+                        if (errorData.message) {
+                            this.errorMessage = errorData.message;
                             return;
                         }
                     } catch (e) {
-                        // Not a JSON response, use generic error message
-                    }
-
-                    // this.errorMessage = 'Failed to update profile. Please check your inputs and try again.';
-
-                    // Check for specific error messages
-                    if (error.message.includes('HTML instead of JSON')) {
-                        this.errorMessage = 'Server error occurred. Please check your Laravel logs for details.';
-                    } else {
-                        this.errorMessage = 'Failed to update profile. Please try again.';
+                        // Not a JSON response, show generic error
+                        if (error.message.includes('HTTP error')) {
+                            this.errorMessage = 'Server error occurred. Please try again.';
+                        } else {
+                            this.errorMessage = 'Failed to update profile. Please check your inputs.';
+                        }
                     }
                 })
                 .finally(() => {
