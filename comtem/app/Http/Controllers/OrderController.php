@@ -24,16 +24,32 @@ class OrderController extends Controller
             'items.*.id' => 'required|integer',
             'items.*.quantity' => 'required|integer|min:1',
             'total' => 'required|numeric',
+            'award' => 'required|integer',
+            'shipping' => 'required|numeric',
         ]);
 
-//        $orderNumber = uniqid();
+
+
+        $user = $request->user();
+        // FIX: Use 'awards' column (plural)
+        $award = $user->awards ?? 0;
+
+        // SHIPPING LOGIC (SERVER AUTHORITY)
+        $shippingCost = $award > 100 ? 0 : 3;
+
+        // ITEMS TOTAL
+        $itemsTotal = collect($request->items)->sum(function ($item) {
+            return $item['price'] * $item['quantity'];
+        });
+
+        // FINAL TOTAL
+        $finalTotal = $itemsTotal + $shippingCost;
+
         $orderNumber = uniqid();
 
         $order = Orders::create([
             'user_id' => auth()->id(),
-//            'items' => json_encode($request->items),
-//            'items' => $orderNumber,
-            'total' => $request->total ?? 0,
+            'total' => $finalTotal, // FIX: Remove $request-> prefix
         ]);
 
         // Attach each item to the order (assuming you have an OrderItem model)

@@ -4,6 +4,7 @@ import { createStore } from 'vuex';
 const store = createStore({
     state: {
         cart: JSON.parse(localStorage.getItem('cart')) || [], // Array to store cart items
+        award: JSON.parse(localStorage.getItem('user_award')) || 0,
     },
     // state: {
     //     cart: [
@@ -19,16 +20,6 @@ const store = createStore({
     //},
     mutations: {
         ADD_TO_CART(state, product) {
-            // Check if the product already exists in the cart
-            // const existingProduct = state.cart.find((item) => item.id === product.id);
-            //
-            // if (existingProduct) {
-            //     // If product exists, just update the quantity
-            //     existingProduct.quantity += product.quantity;
-            // } else {
-            //     // If the product doesn't exist, add a new item to the cart
-            //     state.cart.push({ ...product, quantity: product.quantity || 1 });
-            // }
 
             const existingItem = state.cart.find(item => item.id === product.id);
 
@@ -59,11 +50,17 @@ const store = createStore({
             state.cart = [];
             localStorage.setItem('cart', JSON.stringify(state.cart));
         },
+
+        SET_AWARD(state, award) {
+            state.award = award;
+            localStorage.setItem('user_award', JSON.stringify(award)); // Save to localStorage
+        },
     },
     getters: {
         cartItems: (state) => state.cart,
         cartTotal: (state) =>
             state.cart.reduce((total, item) => total + item.price * item.quantity, 0),
+        award: (state) => state.award,
     },
 });
 

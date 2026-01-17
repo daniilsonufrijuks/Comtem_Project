@@ -235,7 +235,12 @@ Route::get('/products/{id}', [ProductsController::class, 'show']);
 // Proceed to checkout (with session-based authentication)
 Route::post('/order', [OrderController::class, 'store'])->middleware('auth');
 
-
+Route::middleware('auth')->get('/user/award', function (Request $request) {
+    $user = $request->user();
+    return response()->json([
+        'award' => $user ? $user->awards : 0 // Note: using 'awards' column name
+    ]);
+});
 
 
 

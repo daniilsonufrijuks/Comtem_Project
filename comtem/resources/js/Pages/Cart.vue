@@ -30,15 +30,30 @@
                     </div>
                 </div>
 
+
                 <div class="cart-summary">
-                    <div class="cart-total">
-                        <span class="total-label">Total:</span>
-                        <span class="total-value">${{ cartTotal.toFixed(2) }}</span>
+                    <div class="summary-row">
+                        <span>Subtotal</span>
+                        <span>${{ cartTotal.toFixed(2) }}</span>
                     </div>
-                    <div class="cart-actions">
-                        <button @click="clearCart" class="btn-clear">Clear Cart</button>
-                        <button @click="proceedToCheckout" class="btn-checkout">Proceed to Checkout</button>
+
+                    <div class="summary-row">
+                        <span>Shipping</span>
+                        <span>
+                            <span v-if="shippingCost === 0" class="free">FREE 🎉</span>
+                            <span v-else>${{ shippingCost.toFixed(2) ?? '0.00' }}</span>
+                        </span>
                     </div>
+
+                    <div class="summary-row total">
+                        <span>Total</span>
+                        <span>${{ finalTotal.toFixed(2) ?? '0.00'}}</span>
+                    </div>
+
+                    <button class="btn-clear" @click="clearCart">Clear Cart</button>
+                    <button class="btn-checkout" @click="proceedToCheckout">
+                        Proceed to Checkout
+                    </button>
                 </div>
             </div>
 
@@ -63,7 +78,7 @@ import Navbar from "@/Components/Navbar.vue";
 import Footer from "@/Components/Footer.vue";
 import ProductCard from "@/Components/ProductCard.vue";
 import {mapState, useStore} from "vuex";
-import {computed} from "vue";
+import {computed, onMounted} from "vue";
 import {usePage} from "@inertiajs/vue3";
 import {loadStripe} from "@stripe/stripe-js";
 
@@ -93,17 +108,64 @@ export default {
         },
     },
     setup() {
+        // Fetch user award from backend
+        const fetchUserAward = async () => {
+            try {
+                console.log('Fetching user award...');
+                const response = await axios.get('/user/award');
+                console.log('Award response:', response.data);
+                if (response.data && response.data.award !== undefined) {
+                    store.commit('SET_AWARD', response.data.award);
+                }
+            } catch (error) {
+                console.error("Error fetching user award:", error);
+            }
+        };
+
+        onMounted(async () => {
+            console.log('Cart component mounted, isAuthenticated:', isAuthenticated.value);
+            if (isAuthenticated.value) {
+                await fetchUserAward();
+            }
+        });
+
+
+
+
+
         const store = useStore();
 
+
+
         const cartItems = computed(() => store.getters.cartItems);
-        console.log(cartItems.value);
+
         const cartTotal = computed(() => store.getters.cartTotal);
 
+        const awardAmount = computed(() => store.getters.award ?? 0);
+
+
+        console.log('Cart items:', cartItems.value);
+        console.log('Award amount:', awardAmount.value);
+
+
+
         const page = usePage();
+
+
 
         const isAuthenticated = computed(() => {
             return !!(page.props.auth && page.props.auth.user);
         });
+
+        const shippingCost = computed(() => {
+            const award = parseInt(awardAmount.value);
+            console.log('Calculating shipping with award:', award);
+            return award > 100 ? 0 : 3;
+        });
+
+        const finalTotal = computed(() => {
+            return cartTotal.value + shippingCost.value
+        })
 
         const clearCart = () => {
             store.commit('CLEAR_CART');
@@ -130,12 +192,17 @@ export default {
                         window.location.href = `/login`;
                         console.log("Please log in first.");
                     } else {
+                        const userResponse = await axios.get('/user/award');
+                        const currentAward = userResponse.data?.award || 0;
+
                         const orderResponse = await axios.post('/order', {
                             items: sanitizedCart,
                             total: store.state.cart.reduce(
                                 (sum, item) => sum + parseFloat(item.price) * parseInt(item.quantity),
                                 0
                             ),
+                            award: awardAmount.value,
+                            shipping: shippingCost.value,
                         });
 
                         const response = await axios.post('/stripe/checkout', {
@@ -166,6 +233,9 @@ export default {
             cartTotal,
             clearCart,
             proceedToCheckout,
+            finalTotal,
+            shippingCost,
+            awardAmount,
         };
     }
 }
