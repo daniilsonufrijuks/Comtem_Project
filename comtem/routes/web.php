@@ -365,7 +365,8 @@ Route::get('/search-results', [ProductsController::class, 'searchResults'])->nam
 
 
 // roulette
-Route::get('/spin', [RouletteController::class, 'spin']);
+Route::post('/spin', [RouletteController::class, 'spin'])->middleware('auth');
+
 
 
 

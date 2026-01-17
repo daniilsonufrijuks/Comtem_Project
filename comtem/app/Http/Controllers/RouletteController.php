@@ -4,22 +4,25 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class RouletteController extends Controller
 {
-    public function spin()
+    public function spin(Request $request)
     {
-        $segments = [
-            'Prize 1',
-            'Prize 2',
-            'Prize 3',
-            'Try Again',
-            'Lose',
-            'Prize 4'
-        ];
+        $request->validate([
+            'award' => 'required|integer|min:0'
+        ]);
 
-        $result = $segments[array_rand($segments)];
+        $user = Auth::user();
 
-        return response()->json(['result' => $result]);
+        // Sum award into existing value
+        $user->awards += $request->award;
+        $user->save();
+
+        return response()->json([
+            'won' => $request->award,
+            'total_awards' => $user->awards,
+        ]);
     }
 }

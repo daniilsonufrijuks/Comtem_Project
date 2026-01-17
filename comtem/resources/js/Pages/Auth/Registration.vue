@@ -7,6 +7,7 @@ const form = useForm({
     email: '',
     password: '',
     password_confirmation: '',
+    address: '',
 });
 
 const submit = () => {
@@ -29,6 +30,9 @@ const submit = () => {
                 <form @submit.prevent="submit">
                     <div class="field input-field">
                         <input type="email" v-model="form.email" placeholder="Email" class="input" required>
+                    </div>
+                    <div class="field input-field">
+                        <input type="text" v-model="form.address" placeholder="Address" class="input" required>
                     </div>
                     <div class="field input-field">
                         <input type="password" v-model="form.password" placeholder="Password" class="password" required>
