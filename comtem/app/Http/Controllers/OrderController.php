@@ -26,6 +26,7 @@ class OrderController extends Controller
             'total' => 'required|numeric',
             'award' => 'required|integer',
             'shipping' => 'required|numeric',
+            'shipping_address' => 'nullable|string',
         ]);
 
 
@@ -49,7 +50,8 @@ class OrderController extends Controller
 
         $order = Orders::create([
             'user_id' => auth()->id(),
-            'total' => $finalTotal, // FIX: Remove $request-> prefix
+            'total' => $finalTotal,
+            'shipping_address' => $request->shipping_address ?? null, // Store order-level shipping address
         ]);
 
         // Attach each item to the order (assuming you have an OrderItem model)

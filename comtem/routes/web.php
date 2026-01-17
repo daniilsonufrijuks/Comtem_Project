@@ -242,6 +242,18 @@ Route::middleware('auth')->get('/user/award', function (Request $request) {
     ]);
 });
 
+Route::middleware('auth')->get('/user/profile', function (Request $request) {
+    $user = $request->user();
+    return response()->json([
+        'address' => $user->address ?? '',
+    ]);
+});
+
+
+
+
+
+
 
 
 

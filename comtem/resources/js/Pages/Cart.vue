@@ -78,7 +78,7 @@ import Navbar from "@/Components/Navbar.vue";
 import Footer from "@/Components/Footer.vue";
 import ProductCard from "@/Components/ProductCard.vue";
 import {mapState, useStore} from "vuex";
-import {computed, onMounted} from "vue";
+import {computed, onMounted, ref} from "vue";
 import {usePage} from "@inertiajs/vue3";
 import {loadStripe} from "@stripe/stripe-js";
 
@@ -108,6 +108,7 @@ export default {
         },
     },
     setup() {
+
         // Fetch user award from backend
         const fetchUserAward = async () => {
             try {
@@ -122,10 +123,27 @@ export default {
             }
         };
 
+
+        const fetchUserAddress = async () => {
+            try {
+                const response = await axios.get('/user/profile');
+                if (response.data && response.data.address) {
+                    // Commit the address to Vuex store
+                    store.commit('SET_ADDRESS', response.data.address);
+                    console.log('Fetched and stored shipping address:', response.data.address);
+                }
+            } catch (error) {
+                console.error("Error fetching user address:", error);
+            }
+        };
+
+
+
         onMounted(async () => {
             console.log('Cart component mounted, isAuthenticated:', isAuthenticated.value);
             if (isAuthenticated.value) {
                 await fetchUserAward();
+                await fetchUserAddress();
             }
         });
 
@@ -143,9 +161,12 @@ export default {
 
         const awardAmount = computed(() => store.getters.award ?? 0);
 
+        const shippingAddress = computed(() => store.getters.address);
+
 
         console.log('Cart items:', cartItems.value);
         console.log('Award amount:', awardAmount.value);
+        console.log('Shipping address:', shippingAddress.value);
 
 
 
@@ -185,6 +206,7 @@ export default {
                         image: item.image || '',
                         category: item.category || '',
                         total_price: parseFloat(item.price) * item.quantity,
+                        shipping_address: shippingAddress.value,
                     }));
                     console.log(store.state.cart)
 
@@ -203,6 +225,7 @@ export default {
                             ),
                             award: awardAmount.value,
                             shipping: shippingCost.value,
+                            shipping_address: shippingAddress.value
                         });
 
                         const response = await axios.post('/stripe/checkout', {
@@ -236,6 +259,7 @@ export default {
             finalTotal,
             shippingCost,
             awardAmount,
+            shippingAddress,
         };
     }
 }

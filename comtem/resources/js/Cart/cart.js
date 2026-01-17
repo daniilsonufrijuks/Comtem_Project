@@ -5,19 +5,8 @@ const store = createStore({
     state: {
         cart: JSON.parse(localStorage.getItem('cart')) || [], // Array to store cart items
         award: JSON.parse(localStorage.getItem('user_award')) || 0,
+        address: JSON.parse(localStorage.getItem('user_address')) || '',
     },
-    // state: {
-    //     cart: [
-    //         {
-    //             id: 1,
-    //             name: 'Sample Product',
-    //             description: 'This is a test product.',
-    //             price: 100,
-    //             quantity: 2,
-    //             image: '/path/to/image.jpg',
-    //         },
-    //     ],
-    //},
     mutations: {
         ADD_TO_CART(state, product) {
 
@@ -55,12 +44,18 @@ const store = createStore({
             state.award = award;
             localStorage.setItem('user_award', JSON.stringify(award)); // Save to localStorage
         },
+
+        SET_ADDRESS(state, address) {
+            state.address = address;
+            localStorage.setItem('user_address', JSON.stringify(address));
+        },
     },
     getters: {
         cartItems: (state) => state.cart,
         cartTotal: (state) =>
             state.cart.reduce((total, item) => total + item.price * item.quantity, 0),
         award: (state) => state.award,
+        address: (state) => state.address || '',
     },
 });
 
