@@ -14,7 +14,7 @@
                 <p>Try checking your spelling or using more general terms.</p>
             </div>
 
-            <div class="product-list" v-else>
+            <div class="products" v-else>
                 <ProductCardDB
                     v-for="p in products"
                     :key="p.id"
@@ -24,6 +24,7 @@
         </div>
     </div>
 </template>
+
 
 <script>
 import ProductCardDB from "@/Components/ProductCardDB.vue";
@@ -86,13 +87,19 @@ h2 {
     justify-content: center;
 }
 
-.product-list {
+.products {
     display: grid;
     grid-template-columns: repeat(2, 1fr); /* Two equal columns */
     gap: 20px; /* Adjust spacing between product cards */
     justify-content: center; /* Center product cards */
     max-width: 1000px; /* Optional: Set a max width for better alignment */
     margin: 0 auto; /* Center the grid */
+}
+
+@media (max-width: 1120px) {
+    .products {
+        grid-template-columns: 1fr; /* One column on smaller screens */
+    }
 }
 
 

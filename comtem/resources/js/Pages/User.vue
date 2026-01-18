@@ -113,8 +113,8 @@
         <div class="products">
             <ProductCardDB v-for="product in products" :key="product.id" :product="product" />
         </div>
-<!--        <Productsintro />-->
-<!--        <Contact />-->
+        <!--        <Productsintro />-->
+        <!--        <Contact />-->
     </div>
     <Footer />
 </template>
