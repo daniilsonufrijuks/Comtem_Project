@@ -3,7 +3,6 @@
         <div class="single-pro-image">
             <img
                 :src="product.image || ''"
-                width="100%"
                 id="MainImg"
                 alt="Product image"
                 class="clickable-img"
@@ -25,6 +24,23 @@
 
             <h4>Product Details</h4>
             <p class="description">{{ product.description }}</p>
+
+            <h4 class="section-title">Key Features</h4>
+            <ul class="features">
+                <li>⚡ High-performance electronic components</li>
+                <li>🔋 Energy-efficient and reliable operation</li>
+                <li>🛡️ Durable construction for long-term use</li>
+                <li>🎛️ User-friendly and intuitive design</li>
+                <li>🔌 Compatible with standard accessories</li>
+            </ul>
+
+            <!-- SPECS -->
+            <h4 class="section-title">Technical Specifications</h4>
+            <ul class="specs">
+                <li><strong>Category:</strong> {{ product.category }}</li>
+                <li><strong>Price:</strong> ${{ product.price }}</li>
+                <li><strong>Availability:</strong> In Stock</li>
+            </ul>
         </div>
 
         <!-- Image modal -->
@@ -86,47 +102,45 @@ export default {
 </script>
 
 <style scoped>
-/* ---------------- PRODUCT CARD ---------------- */
+/* ---------- LAYOUT ---------- */
 #productdetails {
     display: flex;
     flex-wrap: wrap;
-    justify-content: center;
-    align-items: flex-start;
     gap: 40px;
     margin: 100px auto;
     width: 90%;
     max-width: 1200px;
     background: #fff;
     border-radius: 16px;
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
     padding: 40px;
-    transition: box-shadow 0.3s ease;
-}
-#productdetails:hover {
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 6px 20px rgba(0,0,0,0.1);
 }
 
+/* ---------- IMAGE ---------- */
 .single-pro-image {
     flex: 1 1 40%;
     display: flex;
     justify-content: center;
     align-items: center;
+    max-height: 420px;
 }
-
 .clickable-img {
-    width: 100%;
+    max-width: 100%;
+    max-height: 420px;
+    width: auto;
+    height: auto;
+    object-fit: contain;
     border-radius: 12px;
     cursor: zoom-in;
-    object-fit: contain;
     transition: transform 0.3s ease;
 }
 .clickable-img:hover {
     transform: scale(1.03);
 }
 
+/* ---------- DETAILS ---------- */
 .single-pro-details {
     flex: 1 1 50%;
-    padding-top: 10px;
 }
 
 .category {
@@ -137,182 +151,138 @@ export default {
 }
 
 .product-name {
-    font-size: 26px;
+    font-size: 28px;
     font-weight: 700;
     margin: 10px 0;
 }
 
 .product-price {
-    font-size: 22px;
+    font-size: 24px;
     color: #7a3a7b;
     font-weight: 800;
     margin-bottom: 20px;
 }
 
-.quantity-add {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-bottom: 25px;
+.section-title {
+    margin-top: 28px;
+    margin-bottom: 10px;
+    font-size: 18px;
+    font-weight: 700;
 }
 
+/* ---------- DESCRIPTION ---------- */
+.description {
+    line-height: 1.8;
+    color: #333;
+    font-size: 15.5px;
+}
+
+/* ---------- FEATURES ---------- */
+.features {
+    list-style: none;
+    padding: 0;
+    margin-top: 10px;
+}
+.features li {
+    padding: 10px 14px;
+    margin-bottom: 10px;
+    background: #f8f9fb;
+    border-left: 4px solid #7a3a7b;
+    border-radius: 6px;
+    font-size: 14.5px;
+}
+
+/* ---------- SPECS ---------- */
+.specs {
+    font-size: 14.5px;
+    color: #444;
+}
+.specs li {
+    margin-bottom: 6px;
+}
+
+/* ---------- CART ---------- */
+.quantity-add {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+}
 .quantity-add input {
     width: 60px;
     height: 40px;
-    padding-left: 10px;
-    font-size: 16px;
-    border: 1px solid #ccc;
     border-radius: 6px;
+    border: 1px solid #ccc;
+    padding-left: 10px;
 }
-
 .add-btn {
-    background-color: #7a3a7b;
+    background: #7a3a7b;
     color: #fff;
-    padding: 10px 18px;
     border: none;
+    padding: 10px 18px;
     border-radius: 6px;
     cursor: pointer;
     font-weight: 600;
-    transition: background-color 0.3s, transform 0.2s;
 }
 .add-btn:hover {
-    background-color: #8e4b8f;
-    transform: scale(1.05);
+    background: #8e4b8f;
 }
 
-.description {
-    line-height: 1.6;
-    color: #444;
-    font-size: 15px;
-}
-
-/* ---------------- IMAGE MODAL ---------------- */
+/* ---------- MODAL ---------- */
 .modal {
     position: fixed;
     inset: 0;
-    background-color: rgba(0, 0, 0, 0.85);
+    background: rgba(0, 0, 0, 0.9);
     display: flex;
     justify-content: center;
     align-items: center;
     z-index: 2000;
-    cursor: zoom-out;
 }
-
 .modal-img {
-    max-width: 80%;
-    max-height: 80%;
-    border-radius: 12px;
+    width: 90vw;
+    height: 90vh;
     object-fit: contain;
-    animation: fadeIn 0.3s ease;
+    border-radius: 12px;
+    animation: zoomIn 0.25s ease;
 }
-
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: scale(0.95);
-    }
-    to {
-        opacity: 1;
-        transform: scale(1);
-    }
-}
-
-/* ---------------- NOTIFICATION ---------------- */
+/* ---------- NOTIFICATION ---------- */
 .notification {
     position: fixed;
     bottom: 100px;
     right: 20px;
-    background-color: #7a3a7b;
+    background: #7a3a7b;
     color: white;
     padding: 12px 20px;
     border-radius: 8px;
-    font-size: 16px;
     z-index: 1000;
-    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
 }
 
+/* ---------- ANIMATION ---------- */
 .slide-enter-active,
 .slide-leave-active {
     transition: all 0.5s ease;
 }
-
 .slide-enter-from,
 .slide-leave-to {
     transform: translateX(120%);
     opacity: 0;
 }
 
-/* ---------------- RESPONSIVE ---------------- */
+/* ---------- RESPONSIVE ---------- */
 @media (max-width: 768px) {
     #productdetails {
         flex-direction: column;
         padding: 25px;
     }
+}
 
-    .single-pro-image,
-    .single-pro-details {
-        width: 100%;
+@keyframes zoomIn {
+    from {
+        transform: scale(0.85);
+        opacity: 0;
     }
-
-    .product-name {
-        font-size: 22px;
+    to {
+        transform: scale(1);
+        opacity: 1;
     }
-
-    .product-price {
-        font-size: 20px;
-    }
-}
-
-
-
-.variation-cards {
-    margin-bottom: 25px;
-}
-
-.variation-label {
-    font-weight: 600;
-    margin-bottom: 10px;
-    color: #444;
-}
-
-.variation-list {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-}
-
-.variation-card {
-    flex: 0 0 auto;
-    padding: 10px 16px;
-    background-color: #f7f7f7;
-    border: 2px solid transparent;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: all 0.25s ease;
-    text-align: center;
-    min-width: 100px;
-}
-
-.variation-card:hover {
-    background-color: #f0e6f0;
-    border-color: #d1b3d1;
-}
-
-.variation-card.selected {
-    border-color: #7a3a7b;
-    background-color: #f4e4f4;
-    box-shadow: 0 0 8px rgba(122, 58, 123, 0.3);
-}
-
-.variation-card h5 {
-    font-size: 15px;
-    margin-bottom: 4px;
-    color: #333;
-}
-
-.variation-card span {
-    font-size: 14px;
-    color: #7a3a7b;
-    font-weight: 600;
 }
 </style>
