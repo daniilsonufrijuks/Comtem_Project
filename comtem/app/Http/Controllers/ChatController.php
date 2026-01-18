@@ -79,6 +79,44 @@ class ChatController extends Controller
                 ->orWhere('category', 'LIKE', '%notebook%');
         }
 
+
+        if (str_contains($messageLower, 'cpu') ||
+            str_contains($messageLower, 'cpus') ||
+            str_contains($messageLower, 'processor')) {
+            $query->orWhere('description', 'LIKE', '%cpu%')
+                ->orWhere('description', 'LIKE', '%processor%');
+        }
+
+        if (str_contains($messageLower, 'gpu') ||
+            str_contains($messageLower, 'nvidia') ||
+            str_contains($messageLower, 'rtx')) {
+            $query->orWhere('description', 'LIKE', '%nvidia%')
+                ->orWhere('description', 'LIKE', '%rtx%');
+        }
+
+        if (str_contains($messageLower, 'ram') ||
+            str_contains($messageLower, 'stick')) {
+            $query->orWhere('description', 'LIKE', '%ram%')
+                ->orWhere('description', 'LIKE', '%stick%');
+        }
+
+        if (str_contains($messageLower, 'pc') ||
+            str_contains($messageLower, 'computer')) {
+            $query->orWhere('description', 'LIKE', '%station%')
+                ->orWhere('description', 'LIKE', '%pc%');
+        }
+
+
+        if (str_contains($messageLower, 'keyboard') ||
+            str_contains($messageLower, 'keyboards')) {
+            $query->orWhere('description', 'LIKE', '%keyboard%');
+        }
+
+        if (str_contains($messageLower, 'headphones') ||
+            str_contains($messageLower, 'headset')) {
+            $query->orWhere('description', 'LIKE', '%Headphones%');
+        }
+
         Log::info('Searching products with terms: ' . implode(', ', $searchTerms));
 
         return $query->limit(10)->get();
