@@ -2,11 +2,22 @@
     <section class="testimonial-section">
         <div class="parent-container">
             <blockquote class="responsive-quote">
-                <p>Dear Valued Customer,
-                    We are excited to introduce COMTEM, where cutting-edge
-                    technology meets unbeatable service! Whether you're a tech enthusiast,
-                    a professional looking for the latest gadgets, or someone seeking reliable tech support,
-                    we've got everything you need.</p> <cite> COMTEM DEV GROUP</cite>
+                <p class="headline">
+                    Dear Valued Customer,
+                </p>
+
+                <p>
+                    Welcome to <strong>COMTEM</strong> — where cutting-edge technology meets exceptional service.
+                    Whether you’re a tech enthusiast, a professional seeking reliable solutions, or simply looking
+                    for the latest innovations, we’re here to support you every step of the way.
+                </p>
+
+                <p>
+                    Our commitment goes beyond products. We focus on quality, reliability, and customer satisfaction
+                    to ensure you always get technology you can trust.
+                </p>
+
+                <cite>— COMTEM DEV GROUP</cite>
             </blockquote>
         </div>
     </section>
@@ -14,43 +25,10 @@
 
 
 <style scoped>
-
 .testimonial-section {
-    background-color: #420d65;
+    background: linear-gradient(135deg, #3b0a57, #4b1170);
+    padding: 80px 0;
     margin-top: 100px;
-}
-
-.responsive-quote {
-    position: relative;
-    margin: 130px 0;
-    padding: 40px;
-    background-color: #c785d0;
-    border-radius: 16px;
-}
-
-.responsive-quote::before {
-    content: url("data:image/svg+xml,%3Csvg class='quote-svg' xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Cpath d='M7.56863 4H4.43137C2.56863 4 1 5.6 1 7.5V10.8C1 12.7 2.56863 14.3 4.43137 14.3H6.78431C7.56863 14.3 8.35294 14 9.03922 13.6V15.7C9.03922 17 8.05882 18 6.78431 18H5.21569C4.62745 18 4.23529 18.4 4.23529 19C4.23529 19.6 4.62745 20 5.21569 20H6.78431C9.13725 20 11 18.1 11 15.7V10V7.5C11 5.6 9.43137 4 7.56863 4Z'%3E%3C/path%3E%3Cpath d='M19.6638 4H16.4299C14.5679 4 13 5.6 13 7.5V10.8C13 12.7 14.5679 14.3 16.4299 14.3H18.7818C19.5658 14.3 20.3497 14 21.0357 13.6V15.7C21.0357 17 20.0557 18 18.7818 18H17.2138C16.6259 18 16.2339 18.4 16.2339 19C16.2339 19.6 16.6259 20 17.2138 20H18.7818C21.1337 20 22.9956 18.1 22.9956 15.7V10V7.5C23.0936 5.6 21.5257 4 19.6638 4Z'%3E%3C/path%3E%3C/svg%3E");
-    position: absolute;
-    top: -10px;
-    left: -10px;
-    transform: scale(2);
-    opacity: 0.1;
-}
-
-.responsive-quote::after {
-    content: url("data:image/svg+xml,%3Csvg class='quote-svg' xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Cpath d='M7.56863 4H4.43137C2.56863 4 1 5.6 1 7.5V10.8C1 12.7 2.56863 14.3 4.43137 14.3H6.78431C7.56863 14.3 8.35294 14 9.03922 13.6V15.7C9.03922 17 8.05882 18 6.78431 18H5.21569C4.62745 18 4.23529 18.4 4.23529 19C4.23529 19.6 4.62745 20 5.21569 20H6.78431C9.13725 20 11 18.1 11 15.7V10V7.5C11 5.6 9.43137 4 7.56863 4Z'%3E%3C/path%3E%3Cpath d='M19.6638 4H16.4299C14.5679 4 13 5.6 13 7.5V10.8C13 12.7 14.5679 14.3 16.4299 14.3H18.7818C19.5658 14.3 20.3497 14 21.0357 13.6V15.7C21.0357 17 20.0557 18 18.7818 18H17.2138C16.6259 18 16.2339 18.4 16.2339 19C16.2339 19.6 16.6259 20 17.2138 20H18.7818C21.1337 20 22.9956 18.1 22.9956 15.7V10V7.5C23.0936 5.6 21.5257 4 19.6638 4Z'%3E%3C/path%3E%3C/svg%3E");
-    position: absolute;
-    bottom: -10px;
-    right: -10px;
-    transform: scale(2) rotate(180deg);
-    opacity: 0.1;
-}
-.responsive-quote p {
-    font-size: calc(16px + 0.25vw);
-}
-
-.responsive-quote cite {
-    font-size: calc(14px + 0.25vw);
 }
 
 .parent-container {
@@ -59,12 +37,74 @@
     margin: 0 auto;
 }
 
-@media (max-width: 500px) {
+.responsive-quote {
+    position: relative;
+    padding: 45px;
+    background: #ffffff;
+    border-radius: 18px;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+    color: #333;
+    line-height: 1.7;
+}
+
+/* Decorative quote marks */
+.responsive-quote::before,
+.responsive-quote::after {
+    content: "❝";
+    position: absolute;
+    font-size: 110px;
+    color: #7a3a7b;
+    opacity: 0.08;
+    font-family: serif;
+}
+
+.responsive-quote::before {
+    top: -25px;
+    left: 20px;
+}
+
+.responsive-quote::after {
+    content: "❞";
+    bottom: -35px;
+    right: 20px;
+}
+
+/* Text */
+.responsive-quote p {
+    font-size: 16.5px;
+    margin-bottom: 18px;
+}
+
+.headline {
+    font-size: 24px;
+    font-weight: 700;
+    color: #7a3a7b;
+    margin-bottom: 12px;
+}
+
+/* Cite */
+.responsive-quote cite {
+    display: block;
+    margin-top: 22px;
+    font-size: 14.5px;
+    font-weight: 600;
+    color: #7a3a7b;
+    text-align: right;
+}
+
+/* Mobile */
+@media (max-width: 600px) {
     .responsive-quote {
-        font-size: 1.2em; /* Уменьшаем размер текста на маленьких экранах */
-        padding: 15px; /* Уменьшаем отступы */
-        margin: 10px;  /* Уменьшаем внешние отступы */
-        line-height: 1.4; /* Немного уменьшаем межстрочный интервал */
+        padding: 28px;
+    }
+
+    .headline {
+        font-size: 21px;
+    }
+
+    .responsive-quote p {
+        font-size: 15px;
     }
 }
+
 </style>
