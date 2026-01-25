@@ -12,7 +12,7 @@
             <li class="menu__item"><a class="menu__link" href="/about">About</a></li>
             <li class="menu__item"><a class="menu__link" href="https://github.com/daniilsonufrijuks">DAN</a></li>
             <li class="menu__item"><a class="menu__link" href="#">Team</a></li>
-            <li class="menu__item"><a class="menu__link" href="/contact">Contact</a></li>
+            <li class="menu__item"><a class="menu__link" href="/contacts">Contact</a></li>
             <li class="menu__item"><a class="menu__link" href="/faq">FAQ</a></li>
         </ul>
         <p>&copy;2025 COMTEM | MADE BY DAN | All Rights Reserved</p>
