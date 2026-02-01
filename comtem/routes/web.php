@@ -373,6 +373,7 @@ Route::delete('/delete-expired-auctions', [AuctionController::class, 'destroy'])
 Route::middleware(['auth'])->group(function () {
     Route::post('/checkout', [StripeController::class, 'create']);
     Route::post('/stripe/checkout', [StripeController::class, 'create']);
+    #Route::get('/user', [UserController::class, 'userProfile'])->name('user');
 
     // Family routes (moved from api.php since you're not using api prefix)
     Route::prefix('family')->group(function () {
