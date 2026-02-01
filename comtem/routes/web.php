@@ -384,7 +384,7 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/child/{childId}/toggle-card-permission', [StripeController::class, 'toggleChildCardPermission']);
         Route::get('/transactions', [StripeController::class, 'getFamilyTransactions']);
         Route::get('/members', [StripeController::class, 'getFamilyMembers']);
-        Route::post('/family/checkout', [StripeController::class, 'familyCheckout']);
+        Route::post('/checkout', [StripeController::class, 'familyCheckout']); // Fixed this line
     });
 
     Route::get('/user/award', [UserController::class, 'getAward']);

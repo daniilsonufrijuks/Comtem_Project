@@ -12,7 +12,21 @@ class Orders extends Model
     /**
      * The attributes that are mass assignable.
      */
-    protected $fillable = ['user_id', 'items', 'status', 'total', 'ordered_at'];
+    protected $fillable = [
+        'user_id',
+        'total',
+        'shipping_address',
+        'payment_method',
+        'payment_intent_id',
+        'status',
+        'ordered_at'
+    ];
+
+
+    protected $casts = [
+        'ordered_at' => 'datetime',
+    ];
+
 
     /**
      * Define the relationship to the User model.
@@ -30,7 +44,6 @@ class Orders extends Model
     {
         return $this->hasMany(OrderGoods::class, 'order_id');
     }
-
 
     public function products()
     {

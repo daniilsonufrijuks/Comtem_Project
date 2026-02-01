@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Models\Orders;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Stripe\Checkout\Session;
@@ -12,7 +13,6 @@ use App\Models\Family;
 use App\Models\FamilyPaymentMethod;
 use App\Models\FamilyTransaction;
 use App\Models\User;
-use App\Models\Order; // Add this import
 use Stripe\PaymentMethod;
 use Stripe\Customer;
 use Stripe\Exception\CardException;
@@ -392,23 +392,50 @@ class StripeController extends Controller
     {
         $user = Auth::user();
 
-        if (!$user->family) {
+        if (!$user->family_id) {
             return response()->json([
                 'available' => false,
                 'reason' => 'Not part of a family'
             ]);
         }
 
-        $canUse = $user->canUseFamilyCard();
-        $familyHasCard = $user->family->hasPaymentMethod();
-        $defaultPaymentMethod = $user->family->defaultPaymentMethod();
+        try {
+            $family = Family::with('paymentMethods')->find($user->family_id);
 
-        return response()->json([
-            'available' => $canUse && $familyHasCard,
-            'can_use_family_card' => $canUse,
-            'family_has_card' => $familyHasCard,
-            'default_payment_method' => $defaultPaymentMethod,
-        ]);
+            if (!$family) {
+                return response()->json([
+                    'available' => false,
+                    'reason' => 'Family not found'
+                ]);
+            }
+
+            $canUse = (bool) $user->can_use_family_card || $user->role === 'parent';
+            $familyHasCard = $family->paymentMethods()->where('is_default', true)->exists();
+
+            $defaultPaymentMethod = null;
+            if ($familyHasCard) {
+                $defaultPaymentMethod = $family->paymentMethods()
+                    ->where('is_default', true)
+                    ->first();
+            }
+
+            return response()->json([
+                'available' => $canUse && $familyHasCard,
+                'can_use_family_card' => $canUse,
+                'family_has_card' => $familyHasCard,
+                'default_payment_method' => $defaultPaymentMethod,
+                'user_permission' => $user->can_use_family_card,
+                'user_role' => $user->role,
+            ]);
+
+        } catch (\Exception $e) {
+            \Log::error('Error checking family card: ' . $e->getMessage());
+            return response()->json([
+                'available' => false,
+                'reason' => 'Error checking family card',
+                'error' => $e->getMessage()
+            ], 500);
+        }
     }
 
     public function getFamilyMembers()
@@ -434,7 +461,7 @@ class StripeController extends Controller
         $user = Auth::user();
 
         // Check if user can use family card
-        if (!$user->canUseFamilyCard()) {
+        if (!$user->can_use_family_card && $user->role !== 'parent') {
             return response()->json([
                 'error' => 'You do not have permission to use the family card'
             ], 403);
@@ -451,16 +478,28 @@ class StripeController extends Controller
 
         try {
             $family = $user->family;
-            $defaultPaymentMethod = $family->defaultPaymentMethod();
+
+            if (!$family) {
+                return response()->json(['error' => 'No family found'], 400);
+            }
+
+            $defaultPaymentMethod = $family->paymentMethods()
+                ->where('is_default', true)
+                ->first();
 
             if (!$defaultPaymentMethod) {
                 return response()->json(['error' => 'No payment method available'], 400);
             }
 
-            // Calculate total
-            $total = collect($request->items)->sum(function ($item) {
+            // Calculate shipping and total (same logic as OrderController)
+            $award = $user->awards ?? 0;
+            $shippingCost = $award > 100 ? 0 : 3;
+
+            $itemsTotal = collect($request->items)->sum(function ($item) {
                 return $item['price'] * $item['quantity'];
             });
+
+            $total = $itemsTotal + $shippingCost;
 
             // Create payment intent
             $paymentIntent = PaymentIntent::create([
@@ -495,16 +534,43 @@ class StripeController extends Controller
                 ]),
             ]);
 
-            // Also create order in your system
-            $orderResponse = Order::create([
+            // Create order WITHOUT 'items' column - match your existing structure
+            $orderResponse = \App\Models\Orders::create([
                 'user_id' => $user->id,
-                'items' => json_encode($request->items),
                 'total' => $total,
                 'payment_method' => 'family_card',
                 'payment_intent_id' => $paymentIntent->id,
                 'shipping_address' => $request->shipping_address,
                 'status' => $paymentIntent->status === 'succeeded' ? 'completed' : 'pending',
             ]);
+
+            $itemIds = [];
+
+            // Create order goods for each item
+            foreach ($request->items as $item) {
+                $orderItem = \App\Models\OrderGoods::create([
+                    'order_id' => $orderResponse->id,
+                    'status' => 'completed',
+                    'name' => $item['name'],
+                    'price' => $item['price'],
+                    'description' => $item['description'] ?? null,
+                    'image' => $item['image'] ?? null,
+                    'category' => $item['category'] ?? null,
+                    'total_price' => $item['price'] * $item['quantity'],
+                    'shipping_address' => $request->shipping_address ?? null,
+                ]);
+
+                $itemIds[] = $orderItem->id;
+
+                // Attach products to order
+                $orderResponse->products()->attach($item['id'], [
+                    'quantity' => $item['quantity'],
+                    'price' => $item['price'],
+                ]);
+            }
+
+            // Optional: Store item IDs if you need them in orders table
+            // $orderResponse->update(['items' => implode(',', $itemIds)]);
 
             if ($paymentIntent->status === 'succeeded') {
                 return response()->json([
@@ -525,9 +591,11 @@ class StripeController extends Controller
                 'error' => $e->getError()->message,
             ], 400);
         } catch (\Exception $e) {
+            \Log::error('Family checkout error: ' . $e->getMessage());
             return response()->json([
                 'error' => 'Payment failed: ' . $e->getMessage(),
-            ], 400);
+                'trace' => $e->getTraceAsString(),
+            ], 500);
         }
     }
 }
