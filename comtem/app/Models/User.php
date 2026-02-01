@@ -4,13 +4,15 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Cashier\Billable;
 
 class User extends Authenticatable
 {
-    /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable;
     use Billable;
 
@@ -25,6 +27,10 @@ class User extends Authenticatable
         'password',
         'address',
         'awards',
+        'family_id',
+        'role',
+        'is_family_admin',
+        'can_use_family_card'
     ];
 
     /**
@@ -57,5 +63,43 @@ class User extends Authenticatable
     public function orders(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
         return $this->hasMany(Orders::class, 'user_id');
+    }
+
+    public function family(): BelongsTo
+    {
+        return $this->belongsTo(Family::class);
+    }
+
+    public function ownedFamily(): HasOne
+    {
+        return $this->hasOne(Family::class, 'parent_id');
+    }
+
+    public function transactions(): HasMany
+    {
+        return $this->hasMany(FamilyTransaction::class);
+    }
+
+
+    public function canUseFamilyCard(): bool
+    {
+        return $this->can_use_family_card && $this->family && $this->family->hasPaymentMethod();
+    }
+
+    public function getDefaultPaymentMethod()
+    {
+        if (!$this->family) return null;
+
+        return $this->family->defaultPaymentMethod();
+    }
+
+    public function familyTransactions(): HasMany
+    {
+        return $this->hasMany(FamilyTransaction::class);
+    }
+
+    public function isFamilyAdmin()
+    {
+        return $this->is_family_admin || ($this->family && $this->family->parent_id === $this->id);
     }
 }

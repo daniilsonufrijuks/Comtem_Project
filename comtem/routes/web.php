@@ -368,7 +368,31 @@ Route::delete('/delete-expired-auctions', [AuctionController::class, 'destroy'])
 
 // for stripe after pressing proceed btn in cart
 //Route::post('/checkout', [CheckoutController::class, 'checkout']);
-Route::post('/stripe/checkout', [StripeController::class, 'create'])->name('stripe.checkout');
+//Route::post('/stripe/checkout', [StripeController::class, 'create'])->name('stripe.checkout');
+
+Route::middleware(['auth'])->group(function () {
+    Route::post('/checkout', [StripeController::class, 'create']);
+    Route::post('/stripe/checkout', [StripeController::class, 'create']);
+
+    // Family routes (moved from api.php since you're not using api prefix)
+    Route::prefix('family')->group(function () {
+        Route::get('/card/available', [StripeController::class, 'checkFamilyCardAvailable']);
+        Route::post('/payment-method', [StripeController::class, 'setupFamilyPaymentMethod']);
+        Route::get('/payment-methods', [StripeController::class, 'getFamilyPaymentMethods']);
+        Route::post('/payment-methods/{paymentMethodId}/default', [StripeController::class, 'setDefaultFamilyPaymentMethod']);
+        Route::delete('/payment-methods/{paymentMethodId}', [StripeController::class, 'removePaymentMethod']);
+        Route::post('/child/{childId}/toggle-card-permission', [StripeController::class, 'toggleChildCardPermission']);
+        Route::get('/transactions', [StripeController::class, 'getFamilyTransactions']);
+        Route::get('/members', [StripeController::class, 'getFamilyMembers']);
+        Route::post('/family/checkout', [StripeController::class, 'familyCheckout']);
+    });
+
+    Route::get('/user/award', [UserController::class, 'getAward']);
+    Route::get('/user/profile', [UserController::class, 'getProfile']);
+    Route::get('/user/family', [UserController::class, 'getFamily']);
+});
+
+
 
 
 
