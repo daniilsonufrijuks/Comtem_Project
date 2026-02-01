@@ -162,14 +162,14 @@ class AdminController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:8',
-            'role' => 'required|in:user,parent,child,admin', // CHANGED from 'standalone' to 'admin'
+            'role' => 'required|in:user,parent,child,standalone',
             'awards' => 'nullable|integer|min:0',
             'family_id' => 'nullable|exists:families,id',
         ]);
 
         try {
             // Ensure role is valid for your database
-            $validRoles = ['user', 'parent', 'child', 'admin'];
+            $validRoles = ['standalone', 'parent', 'child', 'admin'];
             $role = in_array($request->role, $validRoles) ? $request->role : 'user';
 
             $userData = [
@@ -186,7 +186,7 @@ class AdminController extends Controller
 
             \Log::info('User data to create:', $userData);
 
-            $user = User::create($userData);
+            User::create($userData);
 
             return redirect()->back()->with('success', 'User added successfully!');
 

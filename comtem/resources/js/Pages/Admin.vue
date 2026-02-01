@@ -419,7 +419,7 @@
                     <div class="form-group">
                         <label>Role *</label>
                         <select v-model="newUser.role" required>
-                            <option value="user">User</option>
+                            <option value="standalone">Standalone</option>
                             <option value="parent">Parent</option>
                             <option value="child">Child</option>
                             <option value="admin">Admin</option>
@@ -1081,7 +1081,9 @@ export default {
             try {
                 await this.$inertia.post('/admin/users', this.newUser, {
                     preserveScroll: true,
+                    preserveState: true,
                     onSuccess: () => {
+                        console.log('SUCCESS callback fired');
                         this.showNotification('User added successfully!', 'success');
                         this.newUser = {
                             name: '',
@@ -1094,6 +1096,7 @@ export default {
                         this.activeTab = 'users';
                     },
                     onError: (errors) => {
+                        console.log('ERROR callback fired:', errors);
                         const errorMessage = Object.values(errors).flat().join(', ');
                         this.showNotification('Failed to add user: ' + errorMessage, 'error');
                     }
