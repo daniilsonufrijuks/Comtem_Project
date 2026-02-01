@@ -277,6 +277,7 @@ Route::get('/orders/user', [OrderController::class, 'userOrders'])
 
 
 // admin page and get/post
+
 //Route::get('/admin/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
 //
 //Route::get('/admin/orders', [AdminController::class, 'showOrders'])->name('admin.orders');
@@ -286,7 +287,42 @@ Route::get('/orders/user', [OrderController::class, 'userOrders'])
 //Route::delete('/admin/products/{id}', [AdminController::class, 'destroyProduct']);
 //Route::delete('/admin/orders/{id}', [AdminController::class, 'destroyOrder']);
 //Route::put('/admin/products/{id}', [AdminController::class, 'update']);
+
+
+//Route::middleware(['auth:admin'])->group(function () {
+//    Route::get('/admin/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
+//
+//    // Data endpoints
+//    Route::get('/admin/orders', [AdminController::class, 'showOrders'])->name('admin.orders');
+//    Route::get('/admin/order-items', [AdminController::class, 'showOrderItems'])->name('admin.order-items');
+//    Route::get('/admin/ordersj', [AdminController::class, 'showjoinedOrders'])->name('admin.j.orders');
+//    Route::get('/admin/products', [AdminController::class, 'showProducts'])->name('admin.products');
+//    Route::get('/admin/users', [AdminController::class, 'showUsers'])->name('admin.users');
+//    #Route::get('/admin/brands', [AdminController::class, 'showBrands'])->name('admin.brands');
+//    #Route::get('/admin/categories', [AdminController::class, 'showCategories'])->name('admin.categories');
+//    Route::get('/admin/analytics', [AdminController::class, 'getAnalytics'])->name('admin.analytics');
+//
+//    // CRUD operations
+//    Route::post('/admin/products', [AdminController::class, 'storeProduct'])->name('admin.products.add');
+////    Route::post('/admin/brands', [AdminController::class, 'storeBrand'])->name('admin.brands.add');
+////    Route::post('/admin/categories', [AdminController::class, 'storeCategory'])->name('admin.categories.add');
+//
+//    Route::delete('/admin/products/{id}', [AdminController::class, 'destroyProduct']);
+//    Route::delete('/admin/orders/{id}', [AdminController::class, 'destroyOrder']);
+//    Route::delete('/admin/orderitems/{id}', [AdminController::class, 'destroyOrderItem']);
+//    Route::delete('/admin/users/{id}', [AdminController::class, 'destroyUser']);
+//
+////    Route::delete('/admin/brands/{id}', [AdminController::class, 'destroyBrand']);
+////    Route::delete('/admin/categories/{id}', [AdminController::class, 'destroyCategory']);
+//    Route::put('/admin/users/{id}', [AdminController::class, 'updateUser']);
+//    Route::put('/admin/orders/{id}', [AdminController::class, 'updateOrder']);
+//    Route::put('/admin/products/{id}', [AdminController::class, 'updateProduct']);
+//    Route::put('/admin/orders/{id}/status', [AdminController::class, 'updateOrderStatus'])->name('admin.orders.status');
+//});
+
+
 Route::middleware(['auth:admin'])->group(function () {
+    // Dashboard
     Route::get('/admin/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
 
     // Data endpoints
@@ -295,27 +331,30 @@ Route::middleware(['auth:admin'])->group(function () {
     Route::get('/admin/ordersj', [AdminController::class, 'showjoinedOrders'])->name('admin.j.orders');
     Route::get('/admin/products', [AdminController::class, 'showProducts'])->name('admin.products');
     Route::get('/admin/users', [AdminController::class, 'showUsers'])->name('admin.users');
-    #Route::get('/admin/brands', [AdminController::class, 'showBrands'])->name('admin.brands');
-    #Route::get('/admin/categories', [AdminController::class, 'showCategories'])->name('admin.categories');
-    Route::get('/admin/analytics', [AdminController::class, 'getAnalytics'])->name('admin.analytics');
+    Route::get('/admin/families', [AdminController::class, 'showFamilies'])->name('admin.families'); // NEW
+    Route::get('/admin/analytics', [AdminController::class, 'getAnalytics']);
+    Route::get('/admin/export-orders', [AdminController::class, 'exportOrders'])->name('admin.export.orders'); // NEW
 
     // CRUD operations
     Route::post('/admin/products', [AdminController::class, 'storeProduct'])->name('admin.products.add');
-//    Route::post('/admin/brands', [AdminController::class, 'storeBrand'])->name('admin.brands.add');
-//    Route::post('/admin/categories', [AdminController::class, 'storeCategory'])->name('admin.categories.add');
+    Route::post('/admin/users', [AdminController::class, 'storeUser'])->name('admin.users.add'); // NEW
+    Route::post('/admin/families', [AdminController::class, 'storeFamily'])->name('admin.families.add'); // NEW
 
+    // Delete operations
     Route::delete('/admin/products/{id}', [AdminController::class, 'destroyProduct']);
     Route::delete('/admin/orders/{id}', [AdminController::class, 'destroyOrder']);
     Route::delete('/admin/orderitems/{id}', [AdminController::class, 'destroyOrderItem']);
     Route::delete('/admin/users/{id}', [AdminController::class, 'destroyUser']);
+    Route::delete('/admin/families/{id}', [AdminController::class, 'destroyFamily']); // NEW
 
-//    Route::delete('/admin/brands/{id}', [AdminController::class, 'destroyBrand']);
-//    Route::delete('/admin/categories/{id}', [AdminController::class, 'destroyCategory']);
+    // Update operations
     Route::put('/admin/users/{id}', [AdminController::class, 'updateUser']);
     Route::put('/admin/orders/{id}', [AdminController::class, 'updateOrder']);
     Route::put('/admin/products/{id}', [AdminController::class, 'updateProduct']);
+    Route::put('/admin/families/{id}', [AdminController::class, 'updateFamily']); // NEW
     Route::put('/admin/orders/{id}/status', [AdminController::class, 'updateOrderStatus'])->name('admin.orders.status');
 });
+
 
 
 
@@ -425,101 +464,8 @@ Route::get('/books', [BookController::class, 'index']);
 
 
 
-//Route::post('/chatai', function (\Illuminate\Http\Request $request) {
-//    $message = $request->input('message');
-//
-//    // Example using OpenAI's GPT
-//    $client = new Client(['api_key' => env('OPENAI_API_KEY')]);
-//
-//    $response = $client->chat()->create([
-//        'model' => 'gpt-4',
-//        'messages' => [
-//            ['role' => 'system', 'content' => 'You are an expert in PC components.'],
-//            ['role' => 'user', 'content' => $message],
-//        ],
-//    ]);
-//
-//    return response()->json([
-//        'reply' => $response['choices'][0]['message']['content'],
-//    ]);
-//});
 
 
-
-//
-//use GuzzleHttp\Client as GuzzleClient;
-//
-//Route::post('/chatai', function (\Illuminate\Http\Request $request) {
-//    $message = $request->input('message');
-//
-//    try {
-//        // Set up the necessary configuration for HttpTransporter
-//        $config = [
-//            'baseUri' => 'https://api.openai.com',  // API base URL
-//            'headers' => [
-//                'Authorization' => 'Bearer ' . env('OPENAI_API_KEY'),
-//                'Content-Type' => 'application/json',
-//            ],
-//            'queryParams' => [],  // Optional query parameters
-//            'streamHandler' => null,  // Set to null if not using streaming
-//        ];
-//
-//        // Initialize HttpTransporter with the config
-//        $transporter = new HttpTransporter(
-//            $config['baseUri'],
-//            $config['headers'],
-//            $config['queryParams'],
-//            $config['streamHandler']
-//        );
-//
-//        // Create the OpenAI Client with the transporter
-//        $client = new Client($transporter);
-//
-//        // Call the OpenAI chat method with the message
-//        $response = $client->chat()->create([
-//            'model' => 'gpt-4',
-//            'messages' => [
-//                ['role' => 'system', 'content' => 'You are an expert in PC components.'],
-//                ['role' => 'user', 'content' => $message],
-//            ],
-//        ]);
-//
-//        return response()->json([
-//            'reply' => $response['choices'][0]['message']['content'],
-//        ]);
-//    } catch (\Exception $e) {
-//        \Log::error('OpenAI API Error:', ['error' => $e->getMessage()]);
-//        return response()->json(['error' => 'Sorry, something went wrong. Please try again later.'], 500);
-//    }
-//});
-//
-
-
-//Route::post('/chatai', function (\Illuminate\Http\Request $request) {
-//    $message = $request->input('message');
-//
-//    // Example using OpenAI's GPT
-//    try {
-//        $client = new \OpenAI\Client(['api_key' => env('OPENAI_API_KEY')]);
-//
-//        $response = $client->chat()->create([
-//            'model' => 'gpt-4',
-//            'messages' => [
-//                ['role' => 'system', 'content' => 'You are an expert in PC components.'],
-//                ['role' => 'user', 'content' => $message],
-//            ],
-//        ]);
-//
-//        Log::info('OpenAI Response:', ['response' => $response]);
-//
-//        return response()->json([
-//            'reply' => $response['choices'][0]['message']['content'],
-//        ]);
-//    } catch (\Exception $e) {
-//        Log::error('OpenAI API Error:', ['error' => $e->getMessage()]);
-//        return response()->json(['error' => 'Sorry, something went wrong. Please try again later.'], 500);
-//    }
-//});
 
 //Route::post('/chatai', [OpenAIController::class, 'generate']);
 

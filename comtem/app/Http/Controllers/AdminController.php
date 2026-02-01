@@ -7,24 +7,26 @@ use App\Models\Orders;
 use App\Models\Products;
 use App\Models\User;
 use App\Models\OrderGoods;
-use App\Models\Brand;
-use App\Models\Category;
+use App\Models\Family;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Hash;
+use Carbon\Carbon;
 
 class AdminController extends Controller
 {
     public function dashboard(): \Inertia\Response
     {
         $orders = Orders::with(['user', 'orderGoods'])
-            ->select(['id', 'user_id', 'status', 'total', 'ordered_at', 'created_at'])
+            ->select(['id', 'user_id', 'status', 'total', 'ordered_at', 'created_at', 'payment_method', 'shipping_address'])
             ->latest()
+            ->limit(100)
             ->get();
 
         $products = Products::select(['id', 'name', 'price', 'description', 'image', 'category', 'admin_id', 'created_at'])
             ->latest()
+            ->limit(100)
             ->get();
 
         $ordersj = Orders::join('users', 'orders.user_id', '=', 'users.id')
@@ -43,28 +45,28 @@ class AdminController extends Controller
                 'goods_orders.total_price'
             )
             ->latest()
+            ->limit(100)
             ->get();
 
         $users = User::withCount('orders')
-            ->select(['id', 'name', 'email', 'created_at'])
+            ->select(['id', 'name', 'email', 'role', 'family_id', 'created_at', 'awards'])
             ->latest()
+            ->limit(100)
             ->get();
 
-//        $brands = Brand::select(['id', 'name', 'created_at'])
-//            ->latest()
-//            ->get();
-//
-//        $categories = Category::select(['id', 'name', 'created_at'])
-//            ->latest()
-//            ->get();
+        $families = Family::withCount('users')
+            ->with(['parent:id,name,email'])
+            ->select(['id', 'family_name', 'parent_id', 'invitation_code', 'created_at'])
+            ->latest()
+            ->limit(50)
+            ->get();
 
         return Inertia::render('Admin', [
             'orders' => $orders,
             'products' => $products,
             'ordersj' => $ordersj,
             'users' => $users,
-//            'brands' => $brands,
-//            'categories' => $categories,
+            'families' => $families,
         ]);
     }
 
@@ -99,32 +101,26 @@ class AdminController extends Controller
     public function showUsers(Request $request): \Illuminate\Http\JsonResponse
     {
         $users = User::withCount('orders')
-            ->select(['id', 'name', 'email', 'created_at'])
+            ->with(['family:id,family_name'])
+            ->select(['id', 'name', 'email', 'role', 'family_id', 'created_at', 'awards'])
             ->latest()
             ->get();
 
         return response()->json($users);
     }
 
-//    public function showBrands(Request $request): \Illuminate\Http\JsonResponse
-//    {
-//        $brands = Brand::select(['id', 'name', 'created_at'])
-//            ->latest()
-//            ->get();
-//
-//        return response()->json($brands);
-//    }
+    public function showFamilies(Request $request): \Illuminate\Http\JsonResponse
+    {
+        $families = Family::withCount('users')
+            ->with(['parent:id,name,email', 'users:id,name,email,role'])
+            ->select(['id', 'family_name', 'parent_id', 'invitation_code', 'created_at'])
+            ->latest()
+            ->get();
 
-//    public function showCategories(Request $request): \Illuminate\Http\JsonResponse
-//    {
-//        $categories = Category::select(['id', 'name', 'created_at'])
-//            ->latest()
-//            ->get();
-//
-//        return response()->json($categories);
-//    }
+        return response()->json($families);
+    }
 
-    public function storeProduct(Request $request): \Illuminate\Http\RedirectResponse
+    public function storeProduct(Request $request)
     {
         $request->validate([
             'name' => 'required|string|max:255',
@@ -149,10 +145,10 @@ class AdminController extends Controller
                 'category' => $request->category,
                 'description' => $request->description,
                 'image' => $imagePath,
-                'admin_id' => auth('admin')->id(),
+                'admin_id' => auth()->id(),
             ]);
 
-            return redirect()->route('admin.dashboard')->with('success', 'Product added successfully!');
+            return redirect()->back()->with('success', 'Product added successfully!');
 
         } catch (\Exception $e) {
             Log::error('Error adding product: ' . $e->getMessage());
@@ -160,47 +156,74 @@ class AdminController extends Controller
         }
     }
 
-//    public function storeBrand(Request $request): \Illuminate\Http\RedirectResponse
-//    {
-//        $request->validate([
-//            'name' => 'required|string|max:255|unique:brands,name',
-//        ]);
-//
-//        try {
-//            Brand::create([
-//                'name' => $request->name,
-//                'slug' => Str::slug($request->name),
-//                'admin_id' => auth('admin')->id(),
-//            ]);
-//
-//            return redirect()->route('admin.dashboard')->with('success', 'Brand added successfully!');
-//
-//        } catch (\Exception $e) {
-//            Log::error('Error adding brand: ' . $e->getMessage());
-//            return redirect()->back()->with('error', 'Failed to add brand: ' . $e->getMessage());
-//        }
-//    }
+    public function storeUser(Request $request)
+    {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255|unique:users',
+            'password' => 'required|string|min:8',
+            'role' => 'required|in:user,parent,child,admin', // CHANGED from 'standalone' to 'admin'
+            'awards' => 'nullable|integer|min:0',
+            'family_id' => 'nullable|exists:families,id',
+        ]);
 
-//    public function storeCategory(Request $request): \Illuminate\Http\RedirectResponse
-//    {
-//        $request->validate([
-//            'name' => 'required|string|max:255|unique:categories,name',
-//        ]);
-//
-//        try {
-//            Category::create([
-//                'name' => $request->name,
-//                'slug' => Str::slug($request->name),
-//                'admin_id' => auth('admin')->id(),
-//            ]);
-//
-//            return redirect()->route('admin.dashboard')->with('success', 'Category added successfully!');
-//
-//        } catch (\Exception $e) {
-//            Log::error('Error adding category: ' . $e->getMessage());
-//            return redirect()->back()->with('error', 'Failed to add category: ' . $e->getMessage());
-//        }
-//    }
+        try {
+            // Ensure role is valid for your database
+            $validRoles = ['user', 'parent', 'child', 'admin'];
+            $role = in_array($request->role, $validRoles) ? $request->role : 'user';
+
+            $userData = [
+                'name' => $request->name,
+                'email' => $request->email,
+                'password' => Hash::make($request->password),
+                'role' => $role,
+                'awards' => $request->awards ?? 0,
+                'family_id' => $request->family_id ?: null,
+                'email_verified_at' => now(),
+                'created_at' => now(),
+                'updated_at' => now(),
+            ];
+
+            \Log::info('User data to create:', $userData);
+
+            $user = User::create($userData);
+
+            return redirect()->back()->with('success', 'User added successfully!');
+
+        } catch (\Exception $e) {
+            \Log::error('Full error creating user: ' . $e->getMessage());
+            return redirect()->back()->with('error', 'Failed to add user: ' . $e->getMessage());
+        }
+    }
+
+    public function storeFamily(Request $request)
+    {
+        $request->validate([
+            'family_name' => 'required|string|max:255|unique:families,family_name',
+            'parent_id' => 'required|exists:users,id',
+        ]);
+
+        try {
+            $invitationCode = strtoupper(substr(md5(uniqid()), 0, 8));
+
+            $family = Family::create([
+                'family_name' => $request->family_name,
+                'parent_id' => $request->parent_id,
+                'invitation_code' => $invitationCode,
+            ]);
+
+            User::where('id', $request->parent_id)->update([
+                'family_id' => $family->id,
+                'role' => 'parent',
+            ]);
+
+            return redirect()->back()->with('success', 'Family created successfully! Invitation code: ' . $invitationCode);
+
+        } catch (\Exception $e) {
+            Log::error('Error creating family: ' . $e->getMessage());
+            return redirect()->back()->with('error', 'Failed to create family: ' . $e->getMessage());
+        }
+    }
 
     public function destroyProduct($id)
     {
@@ -261,40 +284,24 @@ class AdminController extends Controller
         }
     }
 
-//    public function destroyBrand($id)
-//    {
-//        try {
-//            $brand = Brand::findOrFail($id);
-//            if ($brand->products()->exists()) {
-//                return response()->json(['error' => 'Cannot delete brand with existing products.'], 400);
-//            }
-//            $brand->delete();
-//            return response()->json(['success' => 'Brand deleted successfully!']);
-//        } catch (\Exception $e) {
-//            Log::error('Error deleting brand: ' . $e->getMessage());
-//            return response()->json(['error' => 'Failed to delete brand.'], 500);
-//        }
-//    }
-
-//    public function destroyCategory($id)
-//    {
-//        try {
-//            $category = Category::findOrFail($id);
-//            if ($category->products()->exists()) {
-//                return response()->json(['error' => 'Cannot delete category with existing products.'], 400);
-//            }
-//            $category->delete();
-//            return response()->json(['success' => 'Category deleted successfully!']);
-//        } catch (\Exception $e) {
-//            Log::error('Error deleting category: ' . $e->getMessage());
-//            return response()->json(['error' => 'Failed to delete category.'], 500);
-//        }
-//    }
-
-    public function updateProduct(Request $request, $id): \Illuminate\Http\RedirectResponse
+    public function destroyFamily($id)
     {
-        Log::info('Update product request received', ['id' => $id, 'data' => $request->all()]);
+        try {
+            $family = Family::findOrFail($id);
 
+            // Remove family_id from all users in this family
+            User::where('family_id', $id)->update(['family_id' => null, 'role' => 'user']);
+
+            $family->delete();
+            return response()->json(['success' => 'Family deleted successfully!']);
+        } catch (\Exception $e) {
+            Log::error('Error deleting family: ' . $e->getMessage());
+            return response()->json(['error' => 'Failed to delete family.'], 500);
+        }
+    }
+
+    public function updateProduct(Request $request, $id)
+    {
         $request->validate([
             'name' => 'required|string|max:255',
             'price' => 'required|numeric|min:0',
@@ -305,7 +312,6 @@ class AdminController extends Controller
 
         try {
             $product = Products::findOrFail($id);
-            Log::info('Product found', ['product' => $product->toArray()]);
 
             $updateData = [
                 'name' => $request->name,
@@ -314,12 +320,8 @@ class AdminController extends Controller
                 'description' => $request->description,
             ];
 
-            // Handle new image upload
             if ($request->hasFile('image')) {
-                Log::info('New image uploaded');
-                // Delete old image if exists
                 if ($product->image && file_exists(public_path($product->image))) {
-                    Log::info('Deleting old image', ['path' => $product->image]);
                     unlink(public_path($product->image));
                 }
 
@@ -327,18 +329,11 @@ class AdminController extends Controller
                 $imageName = time() . '_' . $image->getClientOriginalName();
                 $image->move(public_path('images/front'), $imageName);
                 $updateData['image'] = 'images/front/' . $imageName;
-                Log::info('New image saved', ['path' => $updateData['image']]);
             }
 
-            // Update the product
-            $updated = $product->update($updateData);
-            Log::info('Product update result', ['updated' => $updated]);
+            $product->update($updateData);
 
-            if ($updated) {
-                return redirect()->route('admin.dashboard')->with('success', 'Product updated successfully!');
-            } else {
-                return redirect()->back()->with('error', 'Failed to update product in database.');
-            }
+            return redirect()->back()->with('success', 'Product updated successfully!');
 
         } catch (\Exception $e) {
             Log::error('Error updating product: ' . $e->getMessage());
@@ -346,25 +341,8 @@ class AdminController extends Controller
         }
     }
 
-    public function updateOrderStatus(Request $request, $id): \Illuminate\Http\RedirectResponse
-    {
-        $request->validate([
-            'status' => 'required|in:pending,processing,completed,cancelled',
-        ]);
 
-        try {
-            $order = Orders::findOrFail($id);
-            $order->update(['status' => $request->status]);
-
-            return redirect()->route('admin.dashboard')->with('success', 'Order status updated successfully!');
-
-        } catch (\Exception $e) {
-            Log::error('Error updating order status: ' . $e->getMessage());
-            return redirect()->back()->with('error', 'Failed to update order status.');
-        }
-    }
-
-    public function updateOrder(Request $request, $id): \Illuminate\Http\RedirectResponse
+    public function updateOrder(Request $request, $id)
     {
         $request->validate([
             'status' => 'required|in:pending,processing,completed,cancelled',
@@ -384,20 +362,23 @@ class AdminController extends Controller
 
             $order->update($updateData);
 
-            return redirect()->route('admin.dashboard')->with('success', 'Order updated successfully!');
+            return response()->json(['success' => true, 'message' => 'Order updated successfully!']);
 
         } catch (\Exception $e) {
             Log::error('Error updating order: ' . $e->getMessage());
-            return redirect()->back()->with('error', 'Failed to update order.');
+            return response()->json(['error' => 'Failed to update order.'], 500);
         }
     }
 
-    public function updateUser(Request $request, $id): \Illuminate\Http\RedirectResponse
+    public function updateUser(Request $request, $id)
     {
         $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users,email,' . $id,
             'password' => 'nullable|string|min:8',
+            'role' => 'required|in:user,parent,child,admin',
+            'awards' => 'nullable|integer|min:0',
+            'family_id' => 'nullable|exists:families,id',
         ]);
 
         try {
@@ -406,6 +387,9 @@ class AdminController extends Controller
             $updateData = [
                 'name' => $request->name,
                 'email' => $request->email,
+                'role' => $request->role,
+                'awards' => $request->awards ?? $user->awards,
+                'family_id' => $request->family_id,
             ];
 
             if ($request->filled('password')) {
@@ -414,57 +398,169 @@ class AdminController extends Controller
 
             $user->update($updateData);
 
-            return redirect()->route('admin.dashboard')->with('success', 'User updated successfully!');
+            return response()->json(['success' => true, 'message' => 'User updated successfully!']);
 
         } catch (\Exception $e) {
             Log::error('Error updating user: ' . $e->getMessage());
-            return redirect()->back()->with('error', 'Failed to update user.');
+            return response()->json(['error' => 'Failed to update user.'], 500);
+        }
+    }
+
+    public function updateFamily(Request $request, $id): \Illuminate\Http\JsonResponse
+    {
+        $request->validate([
+            'family_name' => 'required|string|max:255|unique:families,family_name,' . $id,
+            'parent_id' => 'required|exists:users,id',
+        ]);
+
+        try {
+            $family = Family::findOrFail($id);
+
+            // Update old parent role
+            $oldParent = User::find($family->parent_id);
+            if ($oldParent && $oldParent->id != $request->parent_id) {
+                $oldParent->update(['role' => 'user']);
+            }
+
+            // Update family
+            $family->update([
+                'family_name' => $request->family_name,
+                'parent_id' => $request->parent_id,
+            ]);
+
+            // Update new parent
+            $newParent = User::find($request->parent_id);
+            if ($newParent) {
+                $newParent->update([
+                    'family_id' => $family->id,
+                    'role' => 'parent',
+                ]);
+            }
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Family updated successfully!',
+                'family' => $family
+            ]);
+
+        } catch (\Exception $e) {
+            Log::error('Error updating family: ' . $e->getMessage());
+            return response()->json(['error' => 'Failed to update family: ' . $e->getMessage()], 500);
         }
     }
 
     public function getAnalytics(): \Illuminate\Http\JsonResponse
     {
         try {
+            // Basic stats
             $totalOrders = Orders::count();
             $totalRevenue = Orders::sum('total');
             $totalProducts = Products::count();
             $totalUsers = User::count();
+            $totalFamilies = Family::count();
 
-            // Get orders per day for last 7 days
+            // Recent orders (last 30 days)
+            $recentOrders = Orders::where('created_at', '>=', now()->subDays(30))
+                ->count();
+
+            // Recent revenue (last 30 days)
+            $recentRevenue = Orders::where('created_at', '>=', now()->subDays(30))
+                ->sum('total');
+
+            // Orders per day for last 30 days
             $ordersPerDay = Orders::selectRaw('DATE(created_at) as date, COUNT(*) as count')
-                ->where('created_at', '>=', now()->subDays(7))
+                ->where('created_at', '>=', now()->subDays(30))
                 ->groupBy('date')
                 ->orderBy('date')
                 ->get();
 
-            // Get revenue per day for last 7 days
+            // Revenue per day for last 30 days
             $revenuePerDay = Orders::selectRaw('DATE(created_at) as date, SUM(total) as revenue')
-                ->where('created_at', '>=', now()->subDays(7))
+                ->where('created_at', '>=', now()->subDays(30))
                 ->groupBy('date')
                 ->orderBy('date')
                 ->get();
 
-            // Get top products
-            $topProducts = OrderGoods::selectRaw('name, COUNT(*) as quantity_sold, SUM(total_price) as revenue')
-                ->groupBy('name')
+            // Top products by sales
+            $topProducts = OrderGoods::selectRaw('name, category, COUNT(*) as quantity_sold, SUM(total_price) as revenue')
+                ->groupBy('name', 'category')
                 ->orderByDesc('revenue')
-                ->limit(5)
+                ->limit(10)
                 ->get();
 
-            // Get order status distribution
+            // Order status distribution
             $statusDistribution = Orders::selectRaw('status, COUNT(*) as count')
                 ->groupBy('status')
                 ->get();
 
+            // Payment method distribution
+            $paymentMethodDistribution = Orders::selectRaw('payment_method, COUNT(*) as count')
+                ->whereNotNull('payment_method')
+                ->groupBy('payment_method')
+                ->get();
+
+            // Top customers by spending
+            $topCustomers = Orders::join('users', 'orders.user_id', '=', 'users.id')
+                ->selectRaw('users.id, users.name, users.email, COUNT(orders.id) as order_count, SUM(orders.total) as total_spent')
+                ->groupBy('users.id', 'users.name', 'users.email')
+                ->orderByDesc('total_spent')
+                ->limit(10)
+                ->get();
+
+            // Category performance
+            $categoryPerformance = OrderGoods::selectRaw('category, COUNT(*) as item_count, SUM(total_price) as revenue')
+                ->groupBy('category')
+                ->orderByDesc('revenue')
+                ->get();
+
+            // Monthly trends (last 6 months)
+            $monthlyTrends = Orders::selectRaw('DATE_FORMAT(created_at, "%Y-%m") as month, COUNT(*) as order_count, SUM(total) as revenue')
+                ->where('created_at', '>=', now()->subMonths(6))
+                ->groupBy('month')
+                ->orderBy('month')
+                ->get();
+
+            // User growth
+            $userGrowth = User::selectRaw('DATE(created_at) as date, COUNT(*) as new_users')
+                ->where('created_at', '>=', now()->subDays(30))
+                ->groupBy('date')
+                ->orderBy('date')
+                ->get();
+
+            // Family stats
+            $averageFamilySize = Family::withCount('users')->get()->avg('users_count');
+            $largestFamily = Family::withCount('users')->orderByDesc('users_count')->first();
+
             return response()->json([
+                // Basic stats
                 'totalOrders' => $totalOrders,
                 'totalRevenue' => $totalRevenue,
                 'totalProducts' => $totalProducts,
                 'totalUsers' => $totalUsers,
+                'totalFamilies' => $totalFamilies,
+
+                // Recent activity
+                'recentOrders' => $recentOrders,
+                'recentRevenue' => $recentRevenue,
+
+                // Time series data
                 'ordersPerDay' => $ordersPerDay,
                 'revenuePerDay' => $revenuePerDay,
+                'monthlyTrends' => $monthlyTrends,
+                'userGrowth' => $userGrowth,
+
+                // Product analytics
                 'topProducts' => $topProducts,
+                'categoryPerformance' => $categoryPerformance,
+
+                // Customer analytics
+                'topCustomers' => $topCustomers,
                 'statusDistribution' => $statusDistribution,
+                'paymentMethodDistribution' => $paymentMethodDistribution,
+
+                // Family analytics
+                'averageFamilySize' => $averageFamilySize,
+                'largestFamily' => $largestFamily,
             ]);
 
         } catch (\Exception $e) {
@@ -472,4 +568,54 @@ class AdminController extends Controller
             return response()->json(['error' => 'Failed to get analytics.'], 500);
         }
     }
+
+    public function exportOrders(Request $request)
+    {
+        $request->validate([
+            'start_date' => 'nullable|date',
+            'end_date' => 'nullable|date|after_or_equal:start_date',
+        ]);
+
+        try {
+            $query = Orders::with(['user:id,name,email', 'orderGoods']);
+
+            if ($request->has('start_date')) {
+                $query->where('created_at', '>=', $request->start_date);
+            }
+
+            if ($request->has('end_date')) {
+                $query->where('created_at', '<=', $request->end_date . ' 23:59:59');
+            }
+
+            $orders = $query->latest()->get();
+
+            // Format for CSV/Excel export
+            $exportData = [];
+            foreach ($orders as $order) {
+                $exportData[] = [
+                    'Order ID' => $order->id,
+                    'Customer' => $order->user->name ?? 'N/A',
+                    'Email' => $order->user->email ?? 'N/A',
+                    'Status' => $order->status,
+                    'Total' => $order->total,
+                    'Payment Method' => $order->payment_method ?? 'N/A',
+                    'Shipping Address' => $order->shipping_address ?? 'N/A',
+                    'Order Date' => $order->created_at,
+                    'Items Count' => $order->orderGoods->count(),
+                ];
+            }
+
+            return response()->json([
+                'success' => true,
+                'data' => $exportData,
+                'count' => count($exportData),
+            ]);
+
+        } catch (\Exception $e) {
+            Log::error('Error exporting orders: ' . $e->getMessage());
+            return response()->json(['error' => 'Failed to export orders.'], 500);
+        }
+    }
+
+
 }

@@ -102,4 +102,5 @@ class User extends Authenticatable
     {
         return $this->is_family_admin || ($this->family && $this->family->parent_id === $this->id);
     }
+
 }
