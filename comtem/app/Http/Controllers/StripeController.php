@@ -46,7 +46,7 @@ class StripeController extends Controller
             'payment_method_types' => ['card'],
             'line_items' => $lineItems,
             'mode' => 'payment',
-            'success_url' => url('/success'),
+            'success_url' => url('/'),
             'cancel_url' => url('/cart'),
         ]);
 
