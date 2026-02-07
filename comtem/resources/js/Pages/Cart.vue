@@ -108,6 +108,8 @@ export default {
         },
     },
     setup() {
+        const store = useStore();
+        const page = usePage();
 
         // Fetch user award from backend
         const fetchUserAward = async () => {
@@ -123,12 +125,10 @@ export default {
             }
         };
 
-
         const fetchUserAddress = async () => {
             try {
                 const response = await axios.get('/user/profile');
                 if (response.data && response.data.address) {
-                    // Commit the address to Vuex store
                     store.commit('SET_ADDRESS', response.data.address);
                     console.log('Fetched and stored shipping address:', response.data.address);
                 }
@@ -136,8 +136,6 @@ export default {
                 console.error("Error fetching user address:", error);
             }
         };
-
-
 
         onMounted(async () => {
             console.log('Cart component mounted, isAuthenticated:', isAuthenticated.value);
@@ -147,33 +145,10 @@ export default {
             }
         });
 
-
-
-
-
-        const store = useStore();
-
-
-
         const cartItems = computed(() => store.getters.cartItems);
-
         const cartTotal = computed(() => store.getters.cartTotal);
-
         const awardAmount = computed(() => store.getters.award ?? 0);
-
         const shippingAddress = computed(() => store.getters.address);
-
-
-        console.log('Cart items:', cartItems.value);
-        console.log('Award amount:', awardAmount.value);
-        console.log('Shipping address:', shippingAddress.value);
-
-
-
-        const page = usePage();
-
-
-
         const isAuthenticated = computed(() => {
             return !!(page.props.auth && page.props.auth.user);
         });
@@ -185,13 +160,14 @@ export default {
         });
 
         const finalTotal = computed(() => {
-            return cartTotal.value + shippingCost.value
-        })
+            return cartTotal.value + shippingCost.value;
+        });
 
         const clearCart = () => {
             store.commit('CLEAR_CART');
         };
 
+        // Main checkout method
         const proceedToCheckout = async () => {
             try {
                 console.log('Cart items before checkout:', store.state.cart, Array.isArray(store.state.cart));
@@ -208,46 +184,118 @@ export default {
                         total_price: parseFloat(item.price) * item.quantity,
                         shipping_address: shippingAddress.value,
                     }));
-                    console.log(store.state.cart)
 
                     if (!isAuthenticated.value) {
                         window.location.href = `/login`;
                         console.log("Please log in first.");
-                    } else {
+                        return;
+                    }
+
+                    // Check if user has family card available
+                    try {
+                        console.log('Checking family card availability...');
+                        const familyCardResponse = await axios.get('/family/card/available');
+                        console.log('Family card response:', familyCardResponse.data);
+
+                        const canUseFamilyCard = familyCardResponse.data.available;
+
+                        if (canUseFamilyCard) {
+                            console.log('Family card is available, asking user...');
+                            const useFamilyCard = confirm('You have a family card available. Would you like to use it? (Cancel to use regular checkout)');
+
+                            if (useFamilyCard) {
+                                console.log('User chose to use family card. Proceeding...');
+                                const response = await axios.post('/family/checkout', {
+                                    items: sanitizedCart,
+                                    shipping_address: shippingAddress.value,
+                                });
+
+                                console.log('Family checkout response:', response.data);
+
+                                if (response.data.success) {
+                                    // Clear cart and redirect - DON'T create another order
+                                    store.commit('CLEAR_CART');
+                                    alert('Payment successful using family card! Order ID: ' + response.data.order_id);
+                                    window.location.href = '/';
+                                    return;
+                                } else {
+                                    throw new Error(response.data.error || 'Family checkout failed');
+                                }
+                            }
+                        } else {
+                            console.log('Family card not available:', familyCardResponse.data.reason);
+                        }
+                    } catch (familyCardError) {
+                        console.error('Error in family card flow:', familyCardError);
+                        console.error('Full error object:', familyCardError.response?.data);
+                        alert('Family card payment unavailable. Using regular checkout.');
+                        // Continue with regular checkout
+                    }
+
+                    // REGULAR CHECKOUT FLOW (if family card not used or not available)
+                    try {
+                        // Calculate totals for regular checkout
+                        const itemsTotal = store.state.cart.reduce(
+                            (sum, item) => sum + parseFloat(item.price) * parseInt(item.quantity),
+                            0
+                        );
+
                         const userResponse = await axios.get('/user/award');
                         const currentAward = userResponse.data?.award || 0;
+                        const shipping = currentAward > 100 ? 0 : 3;
+                        const total = itemsTotal + shipping;
 
+                        // Create order first
                         const orderResponse = await axios.post('/order', {
                             items: sanitizedCart,
-                            total: store.state.cart.reduce(
-                                (sum, item) => sum + parseFloat(item.price) * parseInt(item.quantity),
-                                0
-                            ),
-                            award: awardAmount.value,
-                            shipping: shippingCost.value,
-                            shipping_address: shippingAddress.value
+                            total: itemsTotal,
+                            award: currentAward,
+                            shipping: shipping,
+                            shipping_address: shippingAddress.value,
+                            payment_method: 'stripe',
+                            status: 'pending'
                         });
 
+                        console.log('Order created:', orderResponse.data);
+
+                        // Then create Stripe checkout session
                         const response = await axios.post('/stripe/checkout', {
                             items: sanitizedCart,
                         });
 
-                        const stripeKey = import.meta.env.VITE_STRIPE_KEY;
+                        if (response.data.id) {
+                            const stripeKey = import.meta.env.VITE_STRIPE_KEY;
 
-                        if (!stripeKey) {
-                            console.error('Stripe public key is not defined in the environment variables.');
-                            return;
+                            if (!stripeKey) {
+                                console.error('Stripe public key is not defined in the environment variables.');
+                                return;
+                            }
+
+                            const stripe = await loadStripe(stripeKey);
+
+                            // Redirect to Stripe Checkout
+                            const { error } = await stripe.redirectToCheckout({
+                                sessionId: response.data.id,
+                            });
+
+                            if (error) {
+                                console.error('Stripe redirect error:', error);
+                                alert('Error redirecting to payment: ' + error.message);
+                            } else {
+                                // Clear cart only after successful redirect
+                                store.commit('CLEAR_CART');
+                            }
+                        } else {
+                            throw new Error('No session ID returned from Stripe');
                         }
-
-                        const stripe = await loadStripe(stripeKey);
-                        await stripe.redirectToCheckout({ sessionId: response.data.id });
-
-                        console.log('Order Response:', orderResponse.data);
-                        store.commit('CLEAR_CART');
+                    } catch (regularCheckoutError) {
+                        console.error("Error during regular checkout:", regularCheckoutError);
+                        alert('Payment failed: ' + (regularCheckoutError.response?.data?.error || regularCheckoutError.message));
                     }
                 }
             } catch (error) {
                 console.error("Error during checkout:", error);
+                alert('Checkout failed: ' + (error.response?.data?.error || error.message));
             }
         };
 
