@@ -255,12 +255,13 @@ export default {
                             payment_method: 'stripe',
                             status: 'pending'
                         });
-
+                        const orderId = orderResponse.data.order_id;
                         console.log('Order created:', orderResponse.data);
 
                         // Then create Stripe checkout session
                         const response = await axios.post('/stripe/checkout', {
                             items: sanitizedCart,
+                            order_id: orderId,
                         });
 
                         if (response.data.id) {

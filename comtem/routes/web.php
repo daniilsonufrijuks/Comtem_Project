@@ -413,6 +413,7 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/checkout', [StripeController::class, 'create']);
     Route::post('/stripe/checkout', [StripeController::class, 'create']);
     #Route::get('/user', [UserController::class, 'userProfile'])->name('user');
+    Route::get('/stripe/success', [StripeController::class, 'success'])->name('stripe.success');
 
     // Family routes (moved from api.php since you're not using api prefix)
     Route::prefix('family')->group(function () {

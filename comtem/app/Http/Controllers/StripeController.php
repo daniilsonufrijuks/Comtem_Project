@@ -16,6 +16,7 @@ use App\Models\User;
 use Stripe\PaymentMethod;
 use Stripe\Customer;
 use Stripe\Exception\CardException;
+use Stripe\Checkout\Session as StripeSession;
 
 class StripeController extends Controller
 {
@@ -29,13 +30,16 @@ class StripeController extends Controller
      */
     public function create(Request $request)
     {
+        $request->validate([
+            'items' => 'required|array',
+            'order_id' => 'required|integer|exists:orders,id', // ensure order exists
+        ]);
+
         $lineItems = collect($request->items)->map(function ($item) {
             return [
                 'price_data' => [
                     'currency' => 'usd',
-                    'product_data' => [
-                        'name' => $item['name'],
-                    ],
+                    'product_data' => ['name' => $item['name']],
                     'unit_amount' => intval($item['price'] * 100),
                 ],
                 'quantity' => $item['quantity'],
@@ -46,8 +50,11 @@ class StripeController extends Controller
             'payment_method_types' => ['card'],
             'line_items' => $lineItems,
             'mode' => 'payment',
-            'success_url' => url('/'),
+            'success_url' => route('stripe.success') . '?session_id={CHECKOUT_SESSION_ID}',
             'cancel_url' => url('/cart'),
+            'metadata' => [
+                'order_id' => $request->order_id,   // store order ID
+            ],
         ]);
 
         return response()->json(['id' => $session->id]);
@@ -596,6 +603,50 @@ class StripeController extends Controller
                 'error' => 'Payment failed: ' . $e->getMessage(),
                 'trace' => $e->getTraceAsString(),
             ], 500);
+        }
+    }
+
+    public function success(Request $request)
+    {
+        $sessionId = $request->get('session_id');
+
+        if (!$sessionId) {
+            return redirect('/cart')->with('error', 'Missing session ID');
+        }
+
+        try {
+            // Retrieve the session from Stripe
+            $session = StripeSession::retrieve($sessionId);
+
+            // Verify payment status
+            if ($session->payment_status !== 'paid') {
+                throw new \Exception('Payment not completed');
+            }
+
+            // Get order ID from metadata
+            $orderId = $session->metadata->order_id ?? null;
+            if (!$orderId) {
+                throw new \Exception('Order ID not found in session metadata');
+            }
+
+            // Update order status
+            $order = Orders::find($orderId);
+            if (!$order) {
+                throw new \Exception('Order not found');
+            }
+
+            $order->update([
+                'status' => 'completed',
+                'payment_intent_id' => $session->payment_intent, // store payment intent ID
+            ]);
+
+            // Optionally clear cart (done on frontend already, but you can also do it here)
+            // ...
+
+            return redirect('/')->with('success', 'Payment successful! Order #' . $orderId);
+        } catch (\Exception $e) {
+            \Log::error('Stripe success error: ' . $e->getMessage());
+            return redirect('/cart')->with('error', 'Payment verification failed: ' . $e->getMessage());
         }
     }
 }
