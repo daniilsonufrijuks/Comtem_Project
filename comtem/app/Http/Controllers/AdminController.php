@@ -41,8 +41,6 @@ class AdminController extends Controller
                 'goods_orders.name as item_name',
                 'goods_orders.price as item_price',
                 'goods_orders.status as item_status',
-                'goods_orders.category',
-                'goods_orders.total_price'
             )
             ->latest()
             ->limit(100)
@@ -83,7 +81,7 @@ class AdminController extends Controller
     public function showOrderItems(): \Illuminate\Http\JsonResponse
     {
         $orderItems = OrderGoods::select([
-            'id', 'order_id', 'name', 'price', 'status', 'category', 'total_price', 'created_at'
+            'id', 'order_id', 'name', 'price', 'status', 'created_at'
         ])->latest()->get();
 
         return response()->json($orderItems);
@@ -350,19 +348,24 @@ class AdminController extends Controller
         ]);
 
         try {
+            // Find the order
             $order = Orders::findOrFail($id);
 
-            $updateData = [
-                'status' => $request->status,
-            ];
-
+            // Update order data
+            $order->status = $request->status;
             if ($request->has('total')) {
-                $updateData['total'] = $request->total;
+                $order->total = $request->total;
             }
+            $order->save();
 
-            $order->update($updateData);
+            // Update all related order items with the same status
+            OrderGoods::where('order_id', $order->id)
+                ->update(['status' => $request->status]);
 
-            return response()->json(['success' => true, 'message' => 'Order updated successfully!']);
+            return response()->json([
+                'success' => true,
+                'message' => 'Order updated successfully!'
+            ]);
 
         } catch (\Exception $e) {
             Log::error('Error updating order: ' . $e->getMessage());
@@ -482,8 +485,8 @@ class AdminController extends Controller
                 ->get();
 
             // Top products by sales
-            $topProducts = OrderGoods::selectRaw('name, category, COUNT(*) as quantity_sold, SUM(total_price) as revenue')
-                ->groupBy('name', 'category')
+            $topProducts = OrderGoods::selectRaw('name, COUNT(*) as quantity_sold, SUM(price) as revenue')
+                ->groupBy('name')
                 ->orderByDesc('revenue')
                 ->limit(10)
                 ->get();
@@ -508,8 +511,7 @@ class AdminController extends Controller
                 ->get();
 
             // Category performance
-            $categoryPerformance = OrderGoods::selectRaw('category, COUNT(*) as item_count, SUM(total_price) as revenue')
-                ->groupBy('category')
+            $categoryPerformance = OrderGoods::selectRaw('COUNT(*) as item_count, SUM(price) as revenue')
                 ->orderByDesc('revenue')
                 ->get();
 
