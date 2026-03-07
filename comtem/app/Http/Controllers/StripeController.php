@@ -526,21 +526,6 @@ class StripeController extends Controller
                 ],
             ]);
 
-            // Log the transaction
-            FamilyTransaction::create([
-                'family_id' => $family->id,
-                'user_id' => $user->id,
-                'stripe_payment_intent_id' => $paymentIntent->id,
-                'amount' => $total,
-                'description' => 'Purchase from cart',
-                'status' => $paymentIntent->status,
-                'payment_method_used' => $defaultPaymentMethod->stripe_payment_method_id,
-                'metadata' => json_encode([
-                    'card_last_four' => $defaultPaymentMethod->card_last_four,
-                    'card_brand' => $defaultPaymentMethod->card_brand,
-//                    'items' => $request->items,
-                ]),
-            ]);
 
             // Create order WITHOUT 'items' column - match your existing structure
             $orderResponse = \App\Models\Orders::create([
@@ -563,8 +548,25 @@ class StripeController extends Controller
                     'price' => $item['price'] * $item['quantity'],
                     'quantity' => $item['quantity'],
                 ]);
-
             }
+
+            // Log the transaction
+            FamilyTransaction::create([
+                'family_id' => $family->id,
+                'user_id' => $user->id,
+                'stripe_payment_intent_id' => $paymentIntent->id,
+                'amount' => $total,
+                'description' => 'Purchase from cart',
+                'status' => $paymentIntent->status,
+                'payment_method_used' => $defaultPaymentMethod->stripe_payment_method_id,
+                'order_id' => $orderResponse->id,
+                'metadata' => json_encode([
+                    'card_last_four' => $defaultPaymentMethod->card_last_four,
+                    'card_brand' => $defaultPaymentMethod->card_brand,
+//                    'items' => $request->items,
+                ]),
+            ]);
+
 
             // Optional: Store item IDs if you need them in orders table
             // $orderResponse->update(['items' => implode(',', $itemIds)]);
