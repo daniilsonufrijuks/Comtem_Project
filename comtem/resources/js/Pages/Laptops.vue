@@ -3,8 +3,9 @@
     <Search />
     <Slider />
     <div class="main-container">
-        <Visitit />
+<!--        <Visitit />-->
         <!-- Filter Inputs -->
+        <br>
         <div class="filters">
             <input
                 v-model.number="filters.price_min"

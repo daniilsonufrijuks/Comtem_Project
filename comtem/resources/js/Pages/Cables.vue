@@ -3,8 +3,9 @@
     <Search />
     <Slider />
     <div class="main-container">
-        <Visitit />
+<!--        <Visitit />-->
         <!-- Filter Inputs -->
+        <br>
         <div class="filters">
             <input
                 v-model.number="filters.price_min"
@@ -136,7 +137,7 @@ export default {
 .filters {
     display: flex;
     justify-content: center;
-    gap: 1rem;
+    gap: 20px;
     margin-bottom: 1rem;
 }
 @media screen and (max-width: 768px) {
