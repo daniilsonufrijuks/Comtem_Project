@@ -16,9 +16,9 @@
             <button @click="activeTab = 'orderDetails'" :class="['tab-button', { active: activeTab === 'orderDetails' }]">
                 📋 Order Details
             </button>
-            <button @click="activeTab = 'orderItems'" :class="['tab-button', { active: activeTab === 'orderItems' }]">
-                📝 Order Items
-            </button>
+<!--            <button @click="activeTab = 'orderItems'" :class="['tab-button', { active: activeTab === 'orderItems' }]">-->
+<!--                📝 Order Items-->
+<!--            </button>-->
             <button @click="activeTab = 'products'" :class="['tab-button', { active: activeTab === 'products' }]">
                 🛍️ Products
             </button>

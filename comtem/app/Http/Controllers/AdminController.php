@@ -511,7 +511,13 @@ class AdminController extends Controller
                 ->get();
 
             // Category performance
-            $categoryPerformance = OrderGoods::selectRaw('COUNT(*) as item_count, SUM(price) as revenue')
+            $categoryPerformance = OrderGoods::join('products', 'goods_orders.product_id', '=', 'products.id')
+                ->selectRaw('
+                products.category,
+                COUNT(*) as item_count,
+                SUM(goods_orders.price * goods_orders.quantity) as revenue')
+                ->whereNotNull('goods_orders.product_id')
+                ->groupBy('products.category')
                 ->orderByDesc('revenue')
                 ->get();
 
