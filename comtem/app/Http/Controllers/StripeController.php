@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Models\OrderGoods;
 use App\Models\Orders;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -521,7 +522,7 @@ class StripeController extends Controller
                     'user_id' => $user->id,
                     'user_email' => $user->email,
                     'family_id' => $family->id,
-                    'items' => json_encode($request->items),
+//                    'items' => json_encode($request->items),
                 ],
             ]);
 
@@ -537,7 +538,7 @@ class StripeController extends Controller
                 'metadata' => json_encode([
                     'card_last_four' => $defaultPaymentMethod->card_last_four,
                     'card_brand' => $defaultPaymentMethod->card_brand,
-                    'items' => $request->items,
+//                    'items' => $request->items,
                 ]),
             ]);
 
@@ -551,29 +552,18 @@ class StripeController extends Controller
                 'status' => $paymentIntent->status === 'succeeded' ? 'completed' : 'pending',
             ]);
 
-            $itemIds = [];
 
             // Create order goods for each item
             foreach ($request->items as $item) {
-                $orderItem = \App\Models\OrderGoods::create([
+                OrderGoods::create([
                     'order_id' => $orderResponse->id,
-                    'status' => 'completed',
+                    'product_id' => $item['id'],
+                    'status' => 'pending',
                     'name' => $item['name'],
-                    'price' => $item['price'],
-                    'description' => $item['description'] ?? null,
-                    'image' => $item['image'] ?? null,
-                    'category' => $item['category'] ?? null,
-                    'total_price' => $item['price'] * $item['quantity'],
-                    'shipping_address' => $request->shipping_address ?? null,
-                ]);
-
-                $itemIds[] = $orderItem->id;
-
-                // Attach products to order
-                $orderResponse->products()->attach($item['id'], [
+                    'price' => $item['price'] * $item['quantity'],
                     'quantity' => $item['quantity'],
-                    'price' => $item['price'],
                 ]);
+
             }
 
             // Optional: Store item IDs if you need them in orders table
