@@ -64,7 +64,7 @@ export default {
                 {
                     id: 1,
                     question: "How do I create an account?",
-                    answer: "To create an account, click on the 'Sign Up' button at the top right corner of the page. Fill in your details including your name, email address, and a secure password. Once submitted, you'll receive a confirmation email to verify your account.",
+                    answer: "To create an account, click on the 'Login' button at the top right corner of the page and then Sign Up button. Fill in your details including your name, email address, and a secure password. Once submitted, you'll receive a confirmation email to verify your account.",
                     category: "Account"
                 },
                 {
@@ -87,24 +87,12 @@ export default {
                 },
                 {
                     id: 5,
-                    question: "How do I cancel my subscription?",
-                    answer: "You can cancel your subscription at any time from your account settings. Go to the 'Billing' section and click on 'Cancel Subscription'. Your subscription will remain active until the end of your current billing period.",
-                    category: "Billing"
-                },
-                {
-                    id: 6,
                     question: "Do you offer customer support?",
                     answer: "Yes, we offer 24/7 customer support via live chat and email. Our support team is available to help you with any questions or issues you may have. You can also check our knowledge base for answers to common questions.",
                     category: "Support"
                 },
                 {
-                    id: 7,
-                    question: "Can I upgrade or downgrade my plan?",
-                    answer: "Yes, you can change your plan at any time from your account settings. When upgrading, you'll immediately get access to the new features. When downgrading, the changes will take effect at the start of your next billing cycle.",
-                    category: "Billing"
-                },
-                {
-                    id: 8,
+                    id: 6,
                     question: "Is my data secure?",
                     answer: "We take data security very seriously. All data is encrypted in transit and at rest. We use industry-standard security practices and regularly undergo security audits to ensure your information is protected.",
                     category: "Security"
@@ -166,7 +154,7 @@ export default {
 }
 
 .faq-header {
-    background: #4a6fc7;
+    background: #8258d3;
     color: white;
     padding: 25px 30px;
     text-align: center;
