@@ -353,6 +353,12 @@ Route::middleware(['auth:admin'])->group(function () {
     Route::put('/admin/products/{id}', [AdminController::class, 'updateProduct']);
     Route::put('/admin/families/{id}', [AdminController::class, 'updateFamily']); // NEW
     Route::put('/admin/orders/{id}/status', [AdminController::class, 'updateOrderStatus'])->name('admin.orders.status');
+
+    // Comment routes
+    Route::get('/admin/comments', [AdminController::class, 'showComments'])->name('admin.comments');
+    Route::post('/admin/comments', [AdminController::class, 'storeComment'])->name('admin.comments.store');
+    Route::put('/admin/comments/{id}', [AdminController::class, 'updateComment'])->name('admin.comments.update');
+    Route::delete('/admin/comments/{id}', [AdminController::class, 'destroyComment'])->name('admin.comments.destroy');
 });
 
 
