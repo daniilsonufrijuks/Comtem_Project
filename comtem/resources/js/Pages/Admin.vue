@@ -16,9 +16,9 @@
             <button @click="activeTab = 'orderDetails'" :class="['tab-button', { active: activeTab === 'orderDetails' }]">
                 📋 Order Details
             </button>
-            <button @click="activeTab = 'orderItems'" :class="['tab-button', { active: activeTab === 'orderItems' }]">
-                📝 Order Items
-            </button>
+<!--            <button @click="activeTab = 'orderItems'" :class="['tab-button', { active: activeTab === 'orderItems' }]">-->
+<!--                📝 Order Items-->
+<!--            </button>-->
             <button @click="activeTab = 'products'" :class="['tab-button', { active: activeTab === 'products' }]">
                 🛍️ Products
             </button>
@@ -27,6 +27,9 @@
             </button>
             <button @click="activeTab = 'families'" :class="['tab-button', { active: activeTab === 'families' }]">
                 👨‍👩‍👧‍👦 Families
+            </button>
+            <button @click="activeTab = 'comments'" :class="['tab-button', { active: activeTab === 'comments' }]">
+                💬 Comments
             </button>
             <button @click="activeTab = 'addProduct'" :class="['tab-button', { active: activeTab === 'addProduct' }]">
                 ➕ Add Product
@@ -162,6 +165,18 @@
                             </table>
                         </div>
                     </div>
+
+                    <div class="analytics-cards">
+                        <h3>💬 Comment Analytics</h3>
+                        <div class="analytics-card">
+                            <div class="card-icon">📝</div>
+                            <div class="card-content">
+                                <h4>Total Comments</h4>
+                                <p class="stat">{{ commentAnalytics.totalComments || 0 }}</p>
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
             </div>
         </section>
@@ -396,6 +411,87 @@
             </div>
         </section>
 
+        <section v-if="activeTab === 'comments'" class="section">
+            <h2 class="section-title">💬 Comment Management</h2>
+
+            <!-- Add Comment Form -->
+            <div class="add-comment-section">
+                <h3>Add New Comment</h3>
+                <form @submit.prevent="addComment" class="comment-form">
+                    <div class="form-group">
+                <textarea
+                    v-model="newComment.body"
+                    placeholder="Write your comment here..."
+                    rows="3"
+                    required
+                    class="comment-input"
+                ></textarea>
+                    </div>
+                    <button type="submit" class="submit-btn" :disabled="isAddingComment">
+                        {{ isAddingComment ? 'Posting...' : '📝 Post Comment' }}
+                    </button>
+                </form>
+            </div>
+
+            <!-- Comments List -->
+            <div class="comments-list">
+                <h3>All Comments ({{ localComments.length }})</h3>
+
+                <!-- Loading State -->
+                <div v-if="loadingComments" class="loading">
+                    Loading comments...
+                </div>
+
+                <!-- Comments Grid -->
+                <div v-else class="comments-grid">
+                    <div v-for="comment in localComments" :key="comment.id" class="comment-card">
+                        <!-- Edit Mode -->
+                        <template v-if="editComment && editComment.id === comment.id">
+                            <div class="edit-comment-form">
+                        <textarea
+                            v-model="editComment.body"
+                            rows="3"
+                            class="form-input"
+                        ></textarea>
+                                <div class="edit-actions">
+                                    <button @click="updateComment" class="save-btn">💾 Save</button>
+                                    <button @click="cancelEditComment" class="cancel-btn">❌ Cancel</button>
+                                </div>
+                            </div>
+                        </template>
+
+                        <!-- View Mode -->
+                        <template v-else>
+                            <div class="comment-header">
+                                <div class="comment-user">
+                                    <div class="user-avatar">{{ comment.user?.name?.charAt(0) || '?' }}</div>
+                                    <div class="user-info">
+                                        <span class="user-name">{{ comment.user?.name || 'Unknown User' }}</span>
+                                        <span class="comment-date">{{ formatDate(comment.created_at) }}</span>
+                                    </div>
+                                </div>
+                                <div class="comment-actions">
+                                    <button @click="startEditComment(comment)" class="icon-btn edit-icon" title="Edit">✏️</button>
+                                    <button @click="deleteComment(comment.id)" class="icon-btn delete-icon" title="Delete">🗑️</button>
+                                </div>
+                            </div>
+                            <div class="comment-body">
+                                {{ comment.body }}
+                            </div>
+                            <div v-if="comment.created_at !== comment.updated_at" class="comment-edited">
+                                (edited)
+                            </div>
+                        </template>
+                    </div>
+
+                    <!-- Empty State -->
+                    <div v-if="localComments.length === 0" class="empty-state">
+                        No comments yet. Be the first to comment!
+                    </div>
+                </div>
+            </div>
+        </section>
+
         <!-- Add User Tab -->
         <section v-if="activeTab === 'addUser'" class="section">
             <h2 class="section-title">👤 Add New User</h2>
@@ -563,8 +659,6 @@
         </section>
 
         <!-- Other Tabs (Orders, Products, OrderDetails - Keep existing) -->
-        <!-- ... existing tabs code ... -->
-
         <!-- Notification -->
         <div v-if="notification.show" :class="['notification', notification.type]">
             {{ notification.message }}
@@ -583,9 +677,17 @@ export default {
         ordersj: { type: Array, default: () => [] },
         users: { type: Array, default: () => [] },
         families: { type: Array, default: () => [] },
+        comments: { type: Array, default: () => [] },
     },
     data() {
         return {
+            localComments: [],
+            newComment: {
+                body: ''
+            },
+            editComment: null,
+            isAddingComment: false,
+            loadingComments: false,
             activeTab: 'analytics',
             newUser: {
                 name: '',
@@ -604,6 +706,11 @@ export default {
                 price: '',
                 category: '',
                 description: ''
+            },
+            commentAnalytics: {
+                totalComments: 0,
+                commentsPerDay: [],
+                topCommenters: []
             },
             imageFile: null,
             imagePreview: null,
@@ -632,15 +739,20 @@ export default {
         };
     },
     mounted() {
+        this.localComments = this.comments;
         if (this.activeTab === 'analytics') {
             this.fetchAnalyticsData();
         }
         this.fetchOrderItems();
+        // this.fetchComments();
     },
     watch: {
         activeTab(newTab) {
             if (newTab === 'analytics') {
                 this.fetchAnalyticsData();
+            }
+            if (newTab === 'comments') {
+                this.fetchComments(); // Refresh comments when switching to comments tab
             }
         }
     },
@@ -790,6 +902,100 @@ export default {
             }
         },
 
+        /**
+         * Fetch comments from API
+         */
+        async fetchComments() {
+            this.loadingComments = true;
+            try {
+                const response = await axios.get('/admin/comments');
+                this.localComments = response.data;
+            } catch (error) {
+                console.error('Error fetching comments:', error);
+                this.showNotification('Failed to load comments', 'error');
+            } finally {
+                this.loadingComments = false;
+            }
+        },
+
+        /**
+         * Add a new comment
+         */
+        async addComment() {
+            if (!this.newComment.body.trim()) {
+                this.showNotification('Please enter a comment', 'error');
+                return;
+            }
+            this.isAddingComment = true;
+            try {
+                const response = await axios.post('/admin/comments', {
+                    body: this.newComment.body
+                });
+                if (response.data.success) {
+                    this.localComments.unshift(response.data.comment);
+                    this.newComment.body = '';
+                    this.showNotification('Comment added successfully!', 'success');
+                }
+            } catch (error) {
+                this.showNotification('Error adding comment: ' + error.message, 'error');
+            } finally {
+                this.isAddingComment = false;
+            }
+        },
+
+
+        /**
+         * Start editing a comment
+         */
+        startEditComment(comment) {
+            this.editComment = { ...comment };
+        },
+
+        /**
+         * Cancel comment edit
+         */
+        cancelEditComment() {
+            this.editComment = null;
+        },
+
+        /**
+         * Update a comment
+         */
+        async updateComment() {
+            if (!this.editComment || !this.editComment.body.trim()) return;
+            try {
+                const response = await axios.put(`/admin/comments/${this.editComment.id}`, {
+                    body: this.editComment.body
+                });
+                if (response.data.success) {
+                    const index = this.localComments.findIndex(c => c.id === this.editComment.id);
+                    if (index !== -1) {
+                        this.localComments[index] = response.data.comment;
+                    }
+                    this.editComment = null;
+                    this.showNotification('Comment updated successfully!', 'success');
+                }
+            } catch (error) {
+                this.showNotification('Error updating comment: ' + error.message, 'error');
+            }
+        },
+
+        /**
+         * Delete a comment
+         */
+        async deleteComment(id) {
+            if (!confirm('Are you sure you want to delete this comment?')) return;
+            try {
+                const response = await axios.delete(`/admin/comments/${id}`);
+                if (response.data.success) {
+                    this.localComments = this.localComments.filter(c => c.id !== id); // ✅ update local
+                    this.showNotification('Comment deleted successfully!', 'success');
+                }
+            } catch (error) {
+                this.showNotification('Error deleting comment: ' + error.message, 'error');
+            }
+        },
+
         formatNumber(num) {
             if (!num) return '0';
             return parseFloat(num).toLocaleString('en-US', {
@@ -804,11 +1010,21 @@ export default {
             try {
                 const response = await axios.get('/admin/analytics');
                 this.analyticsData = response.data;
+
+                // Fetch comment analytics
+                this.commentAnalytics = {
+                    totalComments: response.data.totalComments || 0,
+                    commentsPerDay: response.data.commentsPerDay || [],
+                    topCommenters: response.data.topCommenters || []
+                };
+
                 this.initCharts();
             } catch (error) {
                 console.error('Error fetching analytics:', error);
             }
         },
+
+
 
         initCharts() {
             this.destroyCharts();
@@ -2290,6 +2506,171 @@ export default {
     margin: 5px 0 0 0;
     color: #666;
     font-size: 12px;
+}
+
+/* Comments Section Styles */
+.add-comment-section {
+    background: #f8f9fa;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 30px;
+}
+
+.add-comment-section h3 {
+    margin: 0 0 15px 0;
+    color: #333;
+    font-size: 18px;
+}
+
+.comment-form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.comment-input {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 14px;
+    resize: vertical;
+    transition: border 0.3s;
+}
+
+.comment-input:focus {
+    outline: none;
+    border-color: #420d65;
+    box-shadow: 0 0 0 3px rgba(66, 13, 101, 0.1);
+}
+
+.comments-list {
+    margin-top: 20px;
+}
+
+.comments-list h3 {
+    margin: 0 0 20px 0;
+    color: #333;
+    font-size: 18px;
+}
+
+.comments-grid {
+    display: grid;
+    gap: 15px;
+}
+
+.comment-card {
+    background: white;
+    border: 1px solid #eaeaea;
+    border-radius: 8px;
+    padding: 15px;
+    transition: all 0.3s ease;
+}
+
+.comment-card:hover {
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.comment-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 10px;
+}
+
+.comment-user {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.comment-user .user-avatar {
+    width: 32px;
+    height: 32px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.comment-user .user-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.comment-user .user-name {
+    font-weight: 600;
+    color: #333;
+    font-size: 14px;
+}
+
+.comment-date {
+    font-size: 11px;
+    color: #999;
+}
+
+.comment-actions {
+    display: flex;
+    gap: 5px;
+}
+
+.icon-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 5px;
+    font-size: 16px;
+    opacity: 0.6;
+    transition: opacity 0.3s;
+}
+
+.icon-btn:hover {
+    opacity: 1;
+}
+
+.edit-icon:hover {
+    color: #2196F3;
+}
+
+.delete-icon:hover {
+    color: #e63946;
+}
+
+.comment-body {
+    color: #555;
+    font-size: 14px;
+    line-height: 1.5;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+}
+
+.comment-edited {
+    font-size: 11px;
+    color: #999;
+    margin-top: 5px;
+    font-style: italic;
+}
+
+.edit-comment-form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .comment-header {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .comment-actions {
+        align-self: flex-end;
+    }
 }
 
 @keyframes slideIn {

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Models\Comment;
 use App\Models\Orders;
 use App\Models\Products;
 use App\Models\User;
@@ -41,9 +42,12 @@ class AdminController extends Controller
                 'goods_orders.name as item_name',
                 'goods_orders.price as item_price',
                 'goods_orders.status as item_status',
-                'goods_orders.category',
-                'goods_orders.total_price'
             )
+            ->latest()
+            ->limit(100)
+            ->get();
+
+        $comments = Comment::with('user:id,name,email')
             ->latest()
             ->limit(100)
             ->get();
@@ -67,6 +71,7 @@ class AdminController extends Controller
             'ordersj' => $ordersj,
             'users' => $users,
             'families' => $families,
+            'comments' => $comments,
         ]);
     }
 
@@ -83,7 +88,7 @@ class AdminController extends Controller
     public function showOrderItems(): \Illuminate\Http\JsonResponse
     {
         $orderItems = OrderGoods::select([
-            'id', 'order_id', 'name', 'price', 'status', 'category', 'total_price', 'created_at'
+            'id', 'order_id', 'name', 'price', 'status', 'created_at'
         ])->latest()->get();
 
         return response()->json($orderItems);
@@ -350,19 +355,24 @@ class AdminController extends Controller
         ]);
 
         try {
+            // Find the order
             $order = Orders::findOrFail($id);
 
-            $updateData = [
-                'status' => $request->status,
-            ];
-
+            // Update order data
+            $order->status = $request->status;
             if ($request->has('total')) {
-                $updateData['total'] = $request->total;
+                $order->total = $request->total;
             }
+            $order->save();
 
-            $order->update($updateData);
+            // Update all related order items with the same status
+            OrderGoods::where('order_id', $order->id)
+                ->update(['status' => $request->status]);
 
-            return response()->json(['success' => true, 'message' => 'Order updated successfully!']);
+            return response()->json([
+                'success' => true,
+                'message' => 'Order updated successfully!'
+            ]);
 
         } catch (\Exception $e) {
             Log::error('Error updating order: ' . $e->getMessage());
@@ -449,6 +459,115 @@ class AdminController extends Controller
         }
     }
 
+    /**
+     * Get all comments for API
+     */
+    public function showComments(Request $request): \Illuminate\Http\JsonResponse
+    {
+        $comments = Comment::with('user:id,name,email')
+            ->select(['id', 'body', 'user_id', 'created_at', 'updated_at'])
+            ->latest()
+            ->get();
+
+        return response()->json($comments);
+    }
+
+    /**
+     * Store a new comment
+     */
+    public function storeComment(Request $request)
+    {
+        $request->validate([
+            'body' => 'required|string|max:1000',
+        ]);
+
+        try {
+            $comment = Comment::create([
+                'body' => $request->body,
+                'user_id' => auth()->id(),
+            ]);
+
+            // Load the user relationship for the response
+            $comment->load('user:id,name,email');
+
+            if ($request->wantsJson()) {
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Comment added successfully!',
+                    'comment' => $comment
+                ]);
+            }
+
+            return redirect()->back()->with('success', 'Comment added successfully!');
+
+        } catch (\Exception $e) {
+            Log::error('Error adding comment: ' . $e->getMessage());
+
+            if ($request->wantsJson()) {
+                return response()->json(['error' => 'Failed to add comment: ' . $e->getMessage()], 500);
+            }
+
+            return redirect()->back()->with('error', 'Failed to add comment: ' . $e->getMessage());
+        }
+    }
+
+    /**
+     * Update an existing comment
+     */
+    public function updateComment(Request $request, $id)
+    {
+        $request->validate([
+            'body' => 'required|string|max:1000',
+        ]);
+
+        try {
+            $comment = Comment::findOrFail($id);
+
+            // Check if user is authorized (admin or comment owner)
+            if (auth()->user()->role !== 'admin' && $comment->user_id !== auth()->id()) {
+                return response()->json(['error' => 'Unauthorized'], 403);
+            }
+
+            $comment->update([
+                'body' => $request->body,
+            ]);
+
+            $comment->load('user:id,name,email');
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Comment updated successfully!',
+                'comment' => $comment
+            ]);
+
+        } catch (\Exception $e) {
+            Log::error('Error updating comment: ' . $e->getMessage());
+            return response()->json(['error' => 'Failed to update comment: ' . $e->getMessage()], 500);
+        }
+    }
+
+    /**
+     * Delete a comment
+     */
+    public function destroyComment($id)
+    {
+        try {
+            $comment = Comment::findOrFail($id);
+
+            $comment->delete();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Comment deleted successfully!'
+            ]);
+
+        } catch (\Exception $e) {
+            Log::error('Error deleting comment: ' . $e->getMessage());
+            return response()->json(['error' => 'Failed to delete comment: ' . $e->getMessage()], 500);
+        }
+    }
+
+
     public function getAnalytics(): \Illuminate\Http\JsonResponse
     {
         try {
@@ -458,6 +577,23 @@ class AdminController extends Controller
             $totalProducts = Products::count();
             $totalUsers = User::count();
             $totalFamilies = Family::count();
+
+            $totalComments = Comment::count();
+
+            // Comments per day for last 30 days
+            $commentsPerDay = Comment::selectRaw('DATE(created_at) as date, COUNT(*) as count')
+                ->where('created_at', '>=', now()->subDays(30))
+                ->groupBy('date')
+                ->orderBy('date')
+                ->get();
+
+            // Most active commenters
+            $topCommenters = Comment::join('users', 'comments.user_id', '=', 'users.id')
+                ->selectRaw('users.id, users.name, users.email, COUNT(comments.id) as comment_count')
+                ->groupBy('users.id', 'users.name', 'users.email')
+                ->orderByDesc('comment_count')
+                ->limit(10)
+                ->get();
 
             // Recent orders (last 30 days)
             $recentOrders = Orders::where('created_at', '>=', now()->subDays(30))
@@ -482,8 +618,8 @@ class AdminController extends Controller
                 ->get();
 
             // Top products by sales
-            $topProducts = OrderGoods::selectRaw('name, category, COUNT(*) as quantity_sold, SUM(total_price) as revenue')
-                ->groupBy('name', 'category')
+            $topProducts = OrderGoods::selectRaw('name, COUNT(*) as quantity_sold, SUM(price) as revenue')
+                ->groupBy('name')
                 ->orderByDesc('revenue')
                 ->limit(10)
                 ->get();
@@ -508,8 +644,13 @@ class AdminController extends Controller
                 ->get();
 
             // Category performance
-            $categoryPerformance = OrderGoods::selectRaw('category, COUNT(*) as item_count, SUM(total_price) as revenue')
-                ->groupBy('category')
+            $categoryPerformance = OrderGoods::join('products', 'goods_orders.product_id', '=', 'products.id')
+                ->selectRaw('
+                products.category,
+                COUNT(*) as item_count,
+                SUM(goods_orders.price * goods_orders.quantity) as revenue')
+                ->whereNotNull('goods_orders.product_id')
+                ->groupBy('products.category')
                 ->orderByDesc('revenue')
                 ->get();
 
@@ -561,6 +702,10 @@ class AdminController extends Controller
                 // Family analytics
                 'averageFamilySize' => $averageFamilySize,
                 'largestFamily' => $largestFamily,
+
+                'totalComments' => $totalComments,
+                'commentsPerDay' => $commentsPerDay,
+                'topCommenters' => $topCommenters,
             ]);
 
         } catch (\Exception $e) {

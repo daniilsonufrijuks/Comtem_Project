@@ -19,6 +19,7 @@ class FamilyTransaction extends Model
         'status',
         'payment_method_used',
         'metadata',
+        'order_id',
     ];
 
     protected $casts = [
@@ -26,13 +27,27 @@ class FamilyTransaction extends Model
         'metadata' => 'array',
     ];
 
+    /**
+     * Get the family that owns the transaction.
+     */
     public function family()
     {
         return $this->belongsTo(Family::class);
     }
 
+    /**
+     * Get the user who made the transaction.
+     */
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    /**
+     * Get the order associated with this transaction.
+     */
+    public function order()
+    {
+        return $this->belongsTo(Orders::class);
     }
 }

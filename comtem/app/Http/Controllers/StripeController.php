@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Models\OrderGoods;
 use App\Models\Orders;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -521,25 +522,10 @@ class StripeController extends Controller
                     'user_id' => $user->id,
                     'user_email' => $user->email,
                     'family_id' => $family->id,
-                    'items' => json_encode($request->items),
+//                    'items' => json_encode($request->items),
                 ],
             ]);
 
-            // Log the transaction
-            FamilyTransaction::create([
-                'family_id' => $family->id,
-                'user_id' => $user->id,
-                'stripe_payment_intent_id' => $paymentIntent->id,
-                'amount' => $total,
-                'description' => 'Purchase from cart',
-                'status' => $paymentIntent->status,
-                'payment_method_used' => $defaultPaymentMethod->stripe_payment_method_id,
-                'metadata' => json_encode([
-                    'card_last_four' => $defaultPaymentMethod->card_last_four,
-                    'card_brand' => $defaultPaymentMethod->card_brand,
-                    'items' => $request->items,
-                ]),
-            ]);
 
             // Create order WITHOUT 'items' column - match your existing structure
             $orderResponse = \App\Models\Orders::create([
@@ -551,30 +537,36 @@ class StripeController extends Controller
                 'status' => $paymentIntent->status === 'succeeded' ? 'completed' : 'pending',
             ]);
 
-            $itemIds = [];
 
             // Create order goods for each item
             foreach ($request->items as $item) {
-                $orderItem = \App\Models\OrderGoods::create([
+                OrderGoods::create([
                     'order_id' => $orderResponse->id,
-                    'status' => 'completed',
+                    'product_id' => $item['id'],
+                    'status' => 'pending',
                     'name' => $item['name'],
-                    'price' => $item['price'],
-                    'description' => $item['description'] ?? null,
-                    'image' => $item['image'] ?? null,
-                    'category' => $item['category'] ?? null,
-                    'total_price' => $item['price'] * $item['quantity'],
-                    'shipping_address' => $request->shipping_address ?? null,
-                ]);
-
-                $itemIds[] = $orderItem->id;
-
-                // Attach products to order
-                $orderResponse->products()->attach($item['id'], [
+                    'price' => $item['price'] * $item['quantity'],
                     'quantity' => $item['quantity'],
-                    'price' => $item['price'],
                 ]);
             }
+
+            // Log the transaction
+            FamilyTransaction::create([
+                'family_id' => $family->id,
+                'user_id' => $user->id,
+                'stripe_payment_intent_id' => $paymentIntent->id,
+                'amount' => $total,
+                'description' => 'Purchase from cart',
+                'status' => $paymentIntent->status,
+                'payment_method_used' => $defaultPaymentMethod->stripe_payment_method_id,
+                'order_id' => $orderResponse->id,
+                'metadata' => json_encode([
+                    'card_last_four' => $defaultPaymentMethod->card_last_four,
+                    'card_brand' => $defaultPaymentMethod->card_brand,
+//                    'items' => $request->items,
+                ]),
+            ]);
+
 
             // Optional: Store item IDs if you need them in orders table
             // $orderResponse->update(['items' => implode(',', $itemIds)]);

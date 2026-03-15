@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Models\OrderGoods;
 use App\Models\Orders;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -43,6 +44,7 @@ class OrderController extends Controller
             return $item['price'] * $item['quantity'];
         });
 
+
         // FINAL TOTAL
         $finalTotal = $itemsTotal + $shippingCost;
 
@@ -57,27 +59,24 @@ class OrderController extends Controller
                 'status' => $request->status ?? 'pending',
             ]);
 
-            $itemIds = [];
+//            $itemIds = [];
 
             foreach ($request->items as $item) {
-                $orderItem = \App\Models\OrderGoods::create([
+                OrderGoods::create([
                     'order_id' => $order->id,
+                    'product_id' => $item['id'],
                     'status' => 'pending',
                     'name' => $item['name'],
-                    'price' => $item['price'],
-                    'description' => $item['description'] ?? null,
-                    'image' => $item['image'] ?? null,
-                    'category' => $item['category'] ?? null,
-                    'total_price' => $item['total_price'] ?? ($item['price'] * $item['quantity']),
-                    'shipping_address' => $item['shipping_address'] ?? null,
-                ]);
-
-                $itemIds[] = $orderItem->id;
-
-                $order->products()->attach($item['id'], [
+                    'price' => $item['price'] * $item['quantity'],
                     'quantity' => $item['quantity'],
-                    'price' => $item['price'],
                 ]);
+
+//                $itemIds[] = $orderItem->id;
+
+//                $order->products()->attach($item['id'], [
+//                    'quantity' => $item['quantity'],
+//                    'price' => $item['price'],
+//                ]);
             }
 
             return response()->json([
@@ -112,11 +111,10 @@ class OrderController extends Controller
                 'orders.total as order_total',
                 'orders.created_at',
                 'goods_orders.id as item_id',
+                'goods_orders.product_id',          // optional, if needed
+                'goods_orders.quantity',             // now available
                 'goods_orders.name as item_name',
                 'goods_orders.price as item_price',
-                'goods_orders.total_price as item_total_price',
-                'goods_orders.image',
-                'goods_orders.category'
             )
             ->orderBy('orders.ordered_at', 'desc')
             ->get();

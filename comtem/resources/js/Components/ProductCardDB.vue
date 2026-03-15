@@ -1,21 +1,14 @@
 <template>
-<!--    <div class="product-card">-->
-<!--        <img :src="product.img" alt="Product Image" class="product-img" />-->
-<!--        <h5>{{ product.name }}</h5>-->
-<!--        <p>{{ product.description }}</p>-->
-<!--        <p><strong>Price:</strong> {{ product.price }}</p>-->
-<!--    </div>-->
+    <div class="product-card">
+        <img :src="product.image" class="product-img" alt="Product">
 
-    <div class="product-cards">
-        <div class="product-card">
-            <img :src="product.image" style="justify-content: center; align-items: center" class="product-img" alt="Product 4">
-            <h5>{{ product.name }}</h5>
-            <p>{{ product.description }}.</p>
-            <p><strong>Price:</strong> {{ product.price }}</p>
-            <button  @click="goToProductPage(this.product.id)">Buy</button>
-        </div>
+        <h5>{{ product.name }}</h5>
+        <p class="description">{{ product.description }}</p>
+
+        <p class="price">{{ product.price }} €</p>
+
+        <button @click="goToProductPage(product.id)">Buy</button>
     </div>
-
 </template>
 
 <script>
@@ -76,104 +69,57 @@ export default {
 
 <style scoped>
 .product-card {
-    margin: 10px;
-    padding: 15px;
+    width: 100%;
+    background: #f9f9f9;
     border: 1px solid #ddd;
-    border-radius: 5px;
+    border-radius: 12px;
+    padding: 16px;
     text-align: center;
-}
-.product-cards {
-    display: flex;
-    justify-content: space-between;
-    margin: 20px auto;
-    width: 900px;
-    gap: 20px;
-    flex-wrap: wrap;
-    position: relative;
-}
 
-.product-card{
-    background-color: #f9f9f9;
-    border: 1px solid #ddd;
-    border-radius: 15px;
-    width: 23%;
-    text-align: center;
-    align-items: center;
-    justify-content: center;
-    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+
     transition: transform 0.2s ease, box-shadow 0.2s ease;
-    flex: 1 1 calc(50% - 10px); /* Каждая карточка занимает 50% ширины с небольшим отступом */
-    margin-bottom: 50px; /* Отступ между карточками */
-    flex-direction: column; /* Ensures the image and text stack */
 }
 
 .product-card:hover {
-    transform: scale(1.05);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    transform: translateY(-5px);
+    box-shadow: 0 6px 18px rgba(0,0,0,0.15);
 }
 
-.product-card img {
-    max-width: 100%;
-    height: fit-content;
-    border-radius: 10px;
-
-    /* Center the image */
-    display: block;
-    margin: 0 auto; /* Horizontally centers the image */
-}
-
+/* image area */
 .product-img {
-    align-self: center;
+    width: 100%;
+    height: 180px;
+    object-fit: contain;
+    margin-bottom: 10px;
 }
 
-.product-card p {
-    font-size: 0.9em;
+/* text */
+.description {
+    font-size: 14px;
     color: #666;
+}
+
+.price {
+    font-weight: bold;
     margin: 10px 0;
 }
 
+/* button */
 .product-card button {
-    padding: 10px 20px;
-    background-color: #007BFF;
-    color: #fff;
+    margin-top: auto;
+    padding: 10px;
+    background: #007BFF;
+    color: white;
     border: none;
-    border-radius: 5px;
+    border-radius: 6px;
     cursor: pointer;
 }
 
 .product-card button:hover {
-    background-color: #0056b3;
+    background: #0056b3;
 }
 
-
-/* Media query for screens 950px or less */
-@media (max-width: 950px) {
-    .product-card {
-        flex: 1 1 calc(50% - 5px);
-        margin-bottom: 15px;
-    }
-
-    .product-cards {
-        display: flex;
-        justify-content: space-between;
-        margin: 20px auto;
-        width: auto;
-        gap: 20px;
-        flex-wrap: wrap;
-        position: relative;
-    }
-}
-
-@media (min-width: 1090px) {
-    .product-cards {
-        display: flex;
-        justify-content: space-between;
-        margin: 20px auto;
-        width: 500px;
-        gap: 20px;
-        flex-wrap: wrap;
-        position: relative;
-    }
-}
-/* Cards near footer */
 </style>

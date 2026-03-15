@@ -10,20 +10,21 @@ class OrderGoods extends Model
 
     protected $fillable = [
         'order_id',
-        'order_number',
         'status',
         'name',
         'price',
-        'description',
-        'image',
-        'category',
-        'total_price',
-        'shipping_address',
+        'product_id',
+        'quantity',
     ];
 
     public function order(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
         return $this->belongsTo(Orders::class, 'order_id');
+    }
+
+    public function product()
+    {
+        return $this->belongsTo(Products::class);
     }
 
 }

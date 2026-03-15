@@ -110,16 +110,52 @@ export default {
 
 .products {
     display: grid;
-    grid-template-columns: repeat(2, 1fr); /* Two equal columns */
-    gap: 20px; /* Adjust spacing between product cards */
-    justify-content: center; /* Center product cards */
-    max-width: 1000px; /* Optional: Set a max width for better alignment */
-    margin: 0 auto; /* Center the grid */
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 25px;
+    max-width: 1200px;
+    margin: auto;
 }
 
-@media (max-width: 1120px) {
+/* laptop */
+@media (max-width: 1105px) {
     .products {
-        grid-template-columns: 1fr; /* One column on smaller screens */
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+/* tablet */
+@media (max-width: 850px) {
+    .products {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+/* mobile */
+@media (max-width: 500px) {
+    .products {
+        grid-template-columns: 1fr;
+    }
+}
+
+
+.filters {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+@media screen and (max-width: 768px) {
+    .filters {
+        flex-direction: column;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .filters input,
+    .filters select {
+        width: 100%;
+        max-width: 300px;
     }
 }
 </style>
