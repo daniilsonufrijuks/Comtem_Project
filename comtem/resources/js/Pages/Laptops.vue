@@ -129,28 +129,53 @@ export default {
     gap: 70px; /* Adjust as needed */
 }
 .products {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 20px; /* Adjust spacing between product cards */
-    justify-content: center; /* Center product cards */
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 25px;
+    max-width: 1200px;
+    margin: auto;
 }
+
+/* laptop */
+@media (max-width: 1105px) {
+    .products {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+/* tablet */
+@media (max-width: 850px) {
+    .products {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+/* mobile */
+@media (max-width: 500px) {
+    .products {
+        grid-template-columns: 1fr;
+    }
+}
+
+
 .filters {
     display: flex;
     justify-content: center;
     gap: 1rem;
     margin-bottom: 1rem;
 }
+
 @media screen and (max-width: 768px) {
     .filters {
-        flex-direction: column; /* Stack filters vertically */
-        align-items: center;   /* Center the filters horizontally */
-        gap: 0.5rem;           /* Adjust spacing between inputs */
+        flex-direction: column;
+        align-items: center;
+        gap: 0.5rem;
     }
 
     .filters input,
     .filters select {
-        width: 100%;          /* Make inputs and select dropdown full-width */
-        max-width: 300px;     /* Optionally limit the maximum width */
+        width: 100%;
+        max-width: 300px;
     }
 }
 </style>

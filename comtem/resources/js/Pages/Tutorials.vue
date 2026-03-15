@@ -5,38 +5,6 @@
     <Slider/>
     <div class="main-container">
         <Visitit />
-<!--        <div class="video-section">-->
-<!--            <h2>Watch Our Videos</h2>-->
-<!--            <div class="videos">-->
-<!--                <iframe-->
-<!--                    width="560"-->
-<!--                    height="315"-->
-<!--                    src="https://youtube.com/embed/b85h_ujZ_vg?si=TxTPv8ABd8wJOF4t"-->
-<!--                    title="YouTube video player"-->
-<!--                    frameborder="0"-->
-<!--                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"-->
-<!--                    allowfullscreen>-->
-<!--                </iframe>-->
-<!--                <iframe-->
-<!--                    width="560"-->
-<!--                    height="315"-->
-<!--                    src="https://youtube.com/embed/beW8pCezrdI?si=_6FoX2LEQJmPHtQC"-->
-<!--                    title="YouTube video player"-->
-<!--                    frameborder="0"-->
-<!--                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"-->
-<!--                    allowfullscreen>-->
-<!--                </iframe>-->
-<!--                <iframe-->
-<!--                    width="560"-->
-<!--                    height="315"-->
-<!--                    src="https://youtube.com/embed/WpnLehvOM6E?si=kWKwhcBmqfGb-j0O"-->
-<!--                    title="YouTube video player"-->
-<!--                    frameborder="0"-->
-<!--                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"-->
-<!--                    allowfullscreen>-->
-<!--                </iframe>-->
-<!--            </div>-->
-<!--        </div>-->
         <VideosTutor />
         <BooksLibrary />
         <!--        <Productsintro />-->
