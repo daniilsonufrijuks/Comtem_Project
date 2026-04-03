@@ -319,6 +319,7 @@ export default {
     display: flex;
     flex-direction: column;
     gap: 70px;
+    padding-bottom: 80px;
 }
 
 .cart-container {

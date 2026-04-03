@@ -40,7 +40,7 @@ export default {
         return {
             comments: [],
             newComment: '',
-            user: null // you can get this from props or global store
+            user: null
         };
     },
     mounted() {
@@ -53,7 +53,7 @@ export default {
                 .then(res => this.comments = res.data);
         },
         fetchUser() {
-            axios.get('/user') // requires Sanctum login session
+            axios.get('/user') // requires Sanctum
                 .then(res => this.user = res.data)
                 .catch(() => this.user = null);
         },

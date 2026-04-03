@@ -58,6 +58,7 @@ export default {
     display: flex;
     flex-direction: column;
     gap: 70px; /* Adjust as needed */
+    padding-bottom: 80px;
 }
 .video-section {
     text-align: center;

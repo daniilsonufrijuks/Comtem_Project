@@ -136,44 +136,7 @@ export default {
                 });
         },
     }
-    // data() {
-    //     return {
-    //         products: [] // The array of products
-    //     };
-    // },
-    // mounted() {
-    //     this.fetchProducts();
-    // },
-    // methods: {
-    //     fetchProducts() {
-    //         fetch('/products/${this.productId}') // Or the appropriate endpoint
-    //             .then((response) => response.json())
-    //             .then((data) => {
-    //                 this.products = data;
-    //                 console.log('Fetched products:', this.products);  // Log the products array
-    //             })
-    //             .catch((error) => console.error('Error fetching products:', error));
-    //     }
-    // }
-    // mounted() {
-    //     this.fetchProducts();
-    // },
-    // methods: {
-    //     fetchProducts() {
-    //         fetch('/products/{id}') // Or the appropriate endpoint
-    //             .then((response) => response.json())
-    //             .then((data) => {
-    //                 this.products = data;
-    //                 console.log('Fetched products:', this.products);  // Log the products array
-    //             })
-    //             .catch((error) => console.error('Error fetching products:', error));
-    //     }
-    // },
-    // data() {
-    //     return {
-    //         products: [] // The array of products
-    //     };
-    // },
+
 }
 </script>
 
@@ -181,15 +144,16 @@ export default {
 .main-container {
     display: flex;
     flex-direction: column;
-    gap: 70px; /* Adjust as needed */
+    gap: 70px;
+    padding-bottom: 80px;
 }
 
 .products {
     display: grid;
     grid-template-columns: repeat(2, 1fr); /* Two equal columns */
-    gap: 20px; /* Adjust spacing between product cards */
+    gap: 20px;
     justify-content: center; /* Center product cards */
-    max-width: 1000px; /* Optional: Set a max width for better alignment */
+    max-width: 1000px;
     margin: 0 auto; /* Center the grid */
 }
 
