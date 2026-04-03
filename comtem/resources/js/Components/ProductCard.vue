@@ -16,7 +16,13 @@
             <h2 class="product-price">${{ product.price }}</h2>
 
             <div class="quantity-add">
-                <input type="number" v-model="quantity" min="1" />
+                <input
+                    type="number"
+                    v-model="quantity"
+                    min="1"
+                    step="1"
+                    @input="validateQuantity"
+                />
                 <button class="add-btn" @click="addToCart(product)">
                     🛒 Add to Cart
                 </button>
@@ -77,6 +83,16 @@ export default {
         //     selectedVariation.value = props.product.variations[0];
         // }
 
+        const validateQuantity = () => {
+            let raw = quantity.value;
+            // Convert to number, then integer, then ensure >= 1
+            let intValue = parseInt(raw, 10);
+            if (isNaN(intValue) || intValue < 1) {
+                intValue = 1;
+            }
+            quantity.value = intValue;
+        };
+
         const displayPrice = computed(() => {
             const variationPrice = parseFloat(selectedVariation.value?.price || 0);
             const basePrice = parseFloat(props.product.price || 0);
@@ -88,6 +104,7 @@ export default {
         };
 
         const addToCart = (product) => {
+            validateQuantity();
             store.commit("ADD_TO_CART", { ...product,  variation_id: selectedVariation.value?.id || null,
                 variation_name: selectedVariation.value?.name || null, quantity: quantity.value, price: displayPrice.value, });
             showNotification.value = true;
@@ -95,7 +112,7 @@ export default {
         };
 
         return {
-            quantity, addToCart, showNotification, openModal, selectVariation,  selectedVariation,
+            quantity, addToCart, showNotification, openModal, selectVariation,  selectedVariation, validateQuantity,
         };
     },
 };

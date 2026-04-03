@@ -230,7 +230,7 @@
                 </div>
             </div>
         </div>
-        <Visitit />
+<!--        <Visitit />-->
         <Roulette />
         <OrdersHistory />
         <div class="products">
@@ -586,6 +586,7 @@ export default {
     flex-direction: column;
     align-items: center;
     gap: 70px;
+    padding-bottom: 60px;
 }
 
 .user-card-full {
@@ -598,6 +599,17 @@ export default {
     box-shadow: 0 1px 20px 0 rgba(69, 90, 100, 0.08);
     border: none;
     margin-bottom: 30px;
+}
+
+.products {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 16px 60px;
+
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 20px;
 }
 
 .m-r-0 {

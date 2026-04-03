@@ -87,23 +87,17 @@ const clearFilter = () => {
                 <thead>
                 <tr>
                     <th>#</th>
-                    <th>Order ID</th>
                     <th>Date</th>
                     <th>Name</th>
                     <th>Total ($)</th>
-                    <th>Status</th>
-                    <th>Shipping Address</th>
                 </tr>
                 </thead>
                 <tbody>
                 <tr v-for="(order, index) in filteredOrders" :key="order.id">
                     <td>{{ index + 1 }}</td>
-                    <td>{{ order.order_id }}</td>
                     <td>{{ formatDate(order.created_at) }}</td>
                     <td>{{ order.item_name }}</td>
                     <td>{{ Number(order.order_total).toFixed(2) }}</td>
-                    <td>{{ order.status }}</td>
-                    <td>{{ order.shipping_address }}</td>
                 </tr>
                 </tbody>
             </table>
@@ -195,5 +189,46 @@ const clearFilter = () => {
 
 .error p {
     color: #d9534f;
+}
+
+@media (max-width: 600px) {
+    .order-table thead {
+        display: none;
+    }
+
+    .order-table,
+    .order-table tbody,
+    .order-table tr,
+    .order-table td {
+        display: block;
+        width: 100%;
+    }
+
+    .order-table tr {
+        margin-bottom: 1rem;
+        border: 1px solid #eee;
+        border-radius: 8px;
+        padding: 0.5rem;
+    }
+
+    .order-table td {
+        text-align: right;
+        padding-left: 50%;
+        position: relative;
+    }
+
+    .order-table td::before {
+        position: absolute;
+        left: 10px;
+        top: 50%;
+        transform: translateY(-50%);
+        font-weight: bold;
+        text-align: left;
+    }
+
+    .order-table td:nth-child(1)::before { content: "#"; }
+    .order-table td:nth-child(2)::before { content: "Date"; }
+    .order-table td:nth-child(3)::before { content: "Name"; }
+    .order-table td:nth-child(4)::before { content: "Total"; }
 }
 </style>
