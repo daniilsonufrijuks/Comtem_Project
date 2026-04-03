@@ -44,18 +44,18 @@ const submit = () => {
                 </div>
             </div>
             <div class="line"></div>
-            <div class="media-options">
-                <a href="#" class="field facebook">
-                    <i class='bx bxl-facebook facebook-icon'></i>
-                    <span>Login with Facebook</span>
-                </a>
-            </div>
-            <div class="media-options">
-                <a href="#" class="field google">
-                    <img src="#" alt="" class="google-img">
-                    <span>Login with Google</span>
-                </a>
-            </div>
+<!--            <div class="media-options">-->
+<!--                <a href="#" class="field facebook">-->
+<!--                    <i class='bx bxl-facebook facebook-icon'></i>-->
+<!--                    <span>Login with Facebook</span>-->
+<!--                </a>-->
+<!--            </div>-->
+<!--            <div class="media-options">-->
+<!--                <a href="#" class="field google">-->
+<!--                    <img src="#" alt="" class="google-img">-->
+<!--                    <span>Login with Google</span>-->
+<!--                </a>-->
+<!--            </div>-->
         </div>
     </section>
 </template>
@@ -170,16 +170,6 @@ form{
     width: 100%;
     margin: 36px 0;
     background-color: #d4d4d4;
-}
-.line::before{
-    content: 'Or';
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background-color: #FFF;
-    color: #8b8b8b;
-    padding: 0 15px;
 }
 .media-options a{
     display: flex;
