@@ -46,60 +46,101 @@
 <style scoped>
 .contact-section {
     max-width: 1200px;
-    margin: 0 auto;
+    margin: 40px auto;
+    padding: 0 16px;
     text-align: center;
 }
 
 .contact-section h1 {
-    font-size: 36px;
-    margin-bottom: 20px;
+    font-size: 2.2rem;
+    font-weight: 700;
+    margin-bottom: 30px;
+    color: #222;
 }
 
+/* GRID */
 .contact-container {
     display: grid;
-    grid-template-columns: repeat(2, 1fr); /* Two columns for the table-like layout */
-    gap: 20px;
-    margin-top: 20px;
+    grid-template-columns: repeat(4, 1fr); /* ✅ 4 cards desktop */
+    gap: 24px;
 }
 
+/* CARD */
 .contact-box {
-    background-color: white;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    background: #ffffff;
+    padding: 24px 20px;
+    border-radius: 16px;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.06);
     text-align: left;
+    transition: all 0.25s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
 }
 
+/* HOVER EFFECT */
+.contact-box:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+
+/* ICON */
 .contact-box img {
-    display: block;
-    margin: 0 auto 10px auto;
-    width: 50px;
+    width: 55px;
+    margin-bottom: 12px;
 }
 
+/* TITLE */
 .contact-box h3 {
-    font-size: 24px;
+    font-size: 1.2rem;
+    font-weight: 700;
     margin-bottom: 10px;
+    color: #333;
 }
 
+/* TEXT */
 .contact-box p {
-    margin-bottom: 8px;
-    font-size: 14px;
-    color: #555;
+    font-size: 0.9rem;
+    color: #666;
+    margin-bottom: 6px;
+    line-height: 1.4;
 }
 
+/* LINKS */
 .contact-box a {
-    color: #007bff;
+    color: #4f46e5;
     text-decoration: none;
+    font-weight: 500;
 }
 
 .contact-box a:hover {
     text-decoration: underline;
 }
 
-/* Responsive Design */
-@media (max-width: 768px) {
+/* BADGE STYLE (optional for labels) */
+.contact-box strong {
+    color: #111;
+}
+
+/*  TABLET */
+@media (max-width: 992px) {
     .contact-container {
-        grid-template-columns: 1fr; /* Single column layout for smaller screens */
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+/*  MOBILE */
+@media (max-width: 576px) {
+    .contact-container {
+        grid-template-columns: 1fr;
+    }
+
+    .contact-section h1 {
+        font-size: 1.6rem;
+    }
+
+    .contact-box {
+        padding: 20px;
     }
 }
 </style>
