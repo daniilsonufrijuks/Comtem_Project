@@ -47,4 +47,9 @@ return [
         'api_key' => env('DEEPSEEK_API_KEY'),
     ],
 
+    'mailjet' => [
+        'key' => env('MAILJET_APIKEY'),
+        'secret' => env('MAILJET_SECRET'),
+    ],
+
 ];

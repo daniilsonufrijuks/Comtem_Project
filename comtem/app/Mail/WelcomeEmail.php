@@ -42,14 +42,14 @@ class WelcomeEmail extends Mailable
         );
     }
 
-    /**
-     * Build the message.
-     */
-    public function build()
-    {
-        return $this->subject('Welcome to COMTEM')
-            ->view('emails.welcome');
-    }
+//    /**
+//     * Build the message.
+//     */
+//    public function build()
+//    {
+//        return $this->subject('Welcome to COMTEM')
+//            ->view('emails.welcome');
+//    }
     /**
      * Get the attachments for the message.
      *
