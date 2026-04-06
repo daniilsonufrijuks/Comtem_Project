@@ -36,7 +36,7 @@ class ContactController extends Controller
 
     public function __invoke(ContactRequest $request)
     {
-        Mail::to('monolithabout@gmail.com')->send(new ContactMail($request->name, $request->email, $request->body));
+        Mail::to('comtemshop@gmail.com')->send(new ContactMail($request->name, $request->email, $request->body));
         return redirect()->back();
     }
 }
