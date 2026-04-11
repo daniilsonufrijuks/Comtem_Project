@@ -22,9 +22,18 @@ const submit = () => {
         <div class="form login">
             <div class="form-content">
                 <header>Login</header>
+
+                <div v-if="form.errors.email" class="error-message">
+                    {{ form.errors.email }}
+                </div>
+
                 <form @submit.prevent="submit"  autocomplete="off">
                     <div class="field input-field">
                         <input type="email" v-model="form.email" placeholder="Email" class="input" required autocomplete="off">
+
+                        <span v-if="form.errors.email" class="field-error">
+                            {{ form.errors.email }}
+                        </span>
                     </div>
                     <div class="field input-field">
                         <input type="password" v-model="form.password" placeholder="Password" class="password" required autocomplete="off">
@@ -234,6 +243,27 @@ a.google span{
     cursor: pointer;
 }
 
+.error-message {
+    color: #e53e3e;
+    background-color: #fff5f5;
+    border: 1px solid #fc8181;
+    padding: 10px;
+    border-radius: 6px;
+    margin-bottom: 15px;
+    font-size: 14px;
+    text-align: center;
+}
+
+.field-error {
+    color: #e53e3e;
+    font-size: 12px;
+    margin-top: 4px;
+    display: block;
+}
+
+.input.error {
+    border-color: #e53e3e !important;
+}
 
 @media screen and (max-width: 400px) {
     .form{
