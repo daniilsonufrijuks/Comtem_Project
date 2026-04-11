@@ -48,6 +48,14 @@ const submit = () => {
             <div class="form-content">
                 <header>Registration</header>
 
+                <!-- General Error Banner -->
+                <div v-if="Object.keys(form.errors).length > 0" class="error-banner">
+                    <p v-for="(error, field) in form.errors" :key="field">
+                        <strong>{{ field }}:</strong> {{ error }}
+                    </p>
+                </div>
+
+
                 <!-- Account Type Selection -->
                 <div class="account-type-selector">
                     <div class="account-type-option"
@@ -84,10 +92,12 @@ const submit = () => {
                 <form @submit.prevent="submit">
                     <div class="field input-field">
                         <input type="email" v-model="form.email" placeholder="Email" class="input" required>
+                        <span v-if="form.errors.email" class="field-error">{{ form.errors.email }}</span>
                     </div>
 
                     <div class="field input-field">
                         <input type="text" v-model="form.address" placeholder="Address" class="input" required>
+                        <span v-if="form.errors.address" class="field-error">{{ form.errors.address }}</span>
                     </div>
 
                     <!-- Family Name (only for create_family) -->
@@ -99,6 +109,7 @@ const submit = () => {
                             class="input"
                             :required="accountType === 'create_family'"
                         >
+                        <span v-if="form.errors.family_name" class="field-error">{{ form.errors.family_name }}</span>
                         <small style="display: block; margin-top: 5px; color: #666;">
                             Choose a name for your family
                         </small>
@@ -113,6 +124,7 @@ const submit = () => {
                             class="input"
                             :required="accountType === 'join_family'"
                         >
+                        <span v-if="form.errors.invitation_code" class="field-error">{{ form.errors.invitation_code }}</span>
                         <small style="display: block; margin-top: 5px; color: #666;">
                             Get this code from your family admin
                         </small>
@@ -120,6 +132,7 @@ const submit = () => {
 
                     <div class="field input-field">
                         <input type="password" v-model="form.password" placeholder="Password" class="password" required>
+                        <span v-if="form.errors.password" class="field-error">{{ form.errors.password }}</span>
                     </div>
 
                     <!-- Password Requirements -->
@@ -135,6 +148,7 @@ const submit = () => {
 
                     <div class="field input-field">
                         <input type="password" v-model="form.password_confirmation" placeholder="Repeat password" class="password" required>
+                        <span v-if="form.errors.password_confirmation" class="field-error">{{ form.errors.password_confirmation }}</span>
                     </div>
 
                     <div class="field button-field">
@@ -443,6 +457,34 @@ a.google span {
 .password-requirements li.met {
     color: #28a745;
     text-decoration: line-through;
+}
+
+/* Error Styles */
+.error-banner {
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+    border-radius: 6px;
+    padding: 12px;
+    margin-bottom: 20px;
+    font-size: 14px;
+}
+
+.error-banner p {
+    margin: 5px 0;
+}
+
+.field-error {
+    color: #e53e3e;
+    font-size: 12px;
+    margin-top: 4px;
+    display: block;
+    padding-left: 5px;
+}
+
+.input.error {
+    border-color: #e53e3e !important;
+    background-color: #fffafa;
 }
 
 
