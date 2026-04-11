@@ -122,6 +122,17 @@ const submit = () => {
                         <input type="password" v-model="form.password" placeholder="Password" class="password" required>
                     </div>
 
+                    <!-- Password Requirements -->
+                    <div class="password-requirements">
+                        <p>Password must contain:</p>
+                        <ul>
+                            <li :class="{ 'met': form.password.length >= 8 }">At least 8 characters</li>
+                            <li :class="{ 'met': /[a-zA-Z]/.test(form.password) }">At least one letter</li>
+                            <li :class="{ 'met': /\d/.test(form.password) }">At least one number</li>
+                            <li :class="{ 'met': /[@$!%*?&]/.test(form.password) }">At least one symbol (@$!%*?&)</li>
+                        </ul>
+                    </div>
+
                     <div class="field input-field">
                         <input type="password" v-model="form.password_confirmation" placeholder="Repeat password" class="password" required>
                     </div>
@@ -400,6 +411,40 @@ a.google span {
     font-size: 12px;
     color: #666;
 }
+
+/* ========== Password Requirements ========== */
+.password-requirements {
+    margin-top: 10px;
+    padding: 10px;
+    background-color: #f8f9fa;
+    border-radius: 4px;
+    border-left: 4px solid #5824a5;
+}
+
+.password-requirements p {
+    margin: 0 0 8px 0;
+    font-size: 15px;
+    font-weight: 600;
+    color: #495057;
+}
+
+.password-requirements ul {
+    margin: 0;
+    padding-left: 20px;
+}
+
+.password-requirements li {
+    font-size: 14px;
+    color: #6c757d;
+    margin-bottom: 4px;
+    transition: color 0.3s ease;
+}
+
+.password-requirements li.met {
+    color: #28a745;
+    text-decoration: line-through;
+}
+
 
 @media screen and (max-width: 400px) {
     .form {
