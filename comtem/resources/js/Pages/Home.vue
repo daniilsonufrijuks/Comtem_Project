@@ -15,6 +15,7 @@
         <chatwithai />
         <SectionCom />
         <Contact />
+        <BetaPopUp />
     </div>
     <Footer />
 </template>
@@ -34,6 +35,7 @@ import chatwithai from "@/Components/chatwithai.vue";
 import Banner from "@/Components/Banner.vue";
 import SectionCom from "@/Components/SectionCom.vue";
 import RobotAssistant from "@/Components/Robot.vue";
+import BetaPopUp from "@/Components/BetaPopUp.vue";
 
 export default {
     name: 'Home',
@@ -51,7 +53,8 @@ export default {
         AboutUsText,
         Footer,
         chatwithai,
-        Banner
+        Banner,
+        BetaPopUp,
     },
     props: {
         routes: Object
