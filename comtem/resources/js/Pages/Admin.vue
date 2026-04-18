@@ -31,6 +31,12 @@
             <button @click="activeTab = 'comments'" :class="['tab-button', { active: activeTab === 'comments' }]">
                 💬 Comments
             </button>
+            <button @click="activeTab = 'auctions'" :class="['tab-button', { active: activeTab === 'auctions' }]">
+                🏷️ Auctions
+            </button>
+            <button @click="activeTab = 'bids'" :class="['tab-button', { active: activeTab === 'bids' }]">
+                💰 Bids
+            </button>
             <button @click="activeTab = 'addProduct'" :class="['tab-button', { active: activeTab === 'addProduct' }]">
                 ➕ Add Product
             </button>
@@ -492,6 +498,131 @@
             </div>
         </section>
 
+        <!-- Auctions Tab -->
+        <section v-if="activeTab === 'auctions'" class="section">
+            <h2 class="section-title">🏷️ Auction Management</h2>
+            <div class="table-controls">
+                <button @click="showAddAuctionModal = true" class="submit-btn" style="width: auto;">➕ Add Auction</button>
+                <input v-model="auctionSearch" type="text" placeholder="Search auctions..." class="search-input" />
+            </div>
+            <div class="scrollable-container">
+                <div class="card-grid">
+                    <div class="auction-card" v-for="auction in filteredAuctions" :key="auction.id">
+                        <template v-if="editAuction && editAuction.id === auction.id">
+                            <div class="edit-form">
+                                <input v-model="editAuction.name" placeholder="Name" class="form-input" />
+                                <textarea v-model="editAuction.description" placeholder="Description" class="form-input"></textarea>
+                                <input v-model="editAuction.starting_bid" type="number" step="0.01" placeholder="Starting Bid" class="form-input" />
+                                <input v-model="editAuction.start_time" type="datetime-local" class="form-input" />
+                                <input v-model="editAuction.end_time" type="datetime-local" class="form-input" />
+                                <div v-if="editAuction.img" class="current-image">
+                                    <p><strong>Current Image:</strong></p>
+                                    <img :src="'/' + editAuction.img" style="max-width:100px;" />
+                                </div>
+                                <div class="file-upload">
+                                    <label>Update Image (optional):</label>
+                                    <input type="file" @change="handleEditAuctionImageUpload" accept="image/*" />
+                                </div>
+                                <div class="edit-actions">
+                                    <button @click="updateAuction" class="save-btn">💾 Save</button>
+                                    <button @click="cancelEditAuction" class="cancel-btn">❌ Cancel</button>
+                                </div>
+                            </div>
+                        </template>
+                        <template v-else>
+                            <div class="auction-header">
+                                <div class="auction-image" v-if="auction.img">
+                                    <img :src="'/' + auction.img" alt="Auction image" />
+                                </div>
+                                <div class="auction-info">
+                                    <h4>{{ auction.name }}</h4>
+                                    <p class="starting-bid">Starting: ${{ auction.starting_bid }}</p>
+                                    <p class="dates">📅 {{ formatDate(auction.start_time) }} → {{ formatDate(auction.end_time) }}</p>
+                                    <p class="description">{{ auction.description.substring(0, 100) }}...</p>
+                                </div>
+                            </div>
+                            <div class="actions">
+                                <button @click="viewBids(auction.id)" class="edit-btn">💰 View Bids</button>
+                                <button @click="startEditAuction(auction)" class="edit-btn">✏️ Edit</button>
+                                <button @click="deleteAuction(auction.id)" class="delete-btn">🗑️ Delete</button>
+                            </div>
+                        </template>
+                    </div>
+                </div>
+                <div v-if="filteredAuctions.length === 0" class="empty-state">No auctions found</div>
+            </div>
+
+            <!-- Add Auction Modal -->
+            <div v-if="showAddAuctionModal" class="modal" @click.self="showAddAuctionModal = false">
+                <div class="modal-content">
+                    <h3>Add New Auction</h3>
+                    <form @submit.prevent="createAuction">
+                        <div class="form-group">
+                            <label>Name *</label>
+                            <input v-model="newAuction.name" required />
+                        </div>
+                        <div class="form-group">
+                            <label>Description *</label>
+                            <textarea v-model="newAuction.description" required></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label>Starting Bid ($) *</label>
+                            <input type="number" step="0.01" v-model="newAuction.starting_bid" required />
+                        </div>
+                        <div class="form-group">
+                            <label>Start Date & Time *</label>
+                            <input type="datetime-local" v-model="newAuction.start_time" required />
+                        </div>
+                        <div class="form-group">
+                            <label>End Date & Time *</label>
+                            <input type="datetime-local" v-model="newAuction.end_time" required />
+                        </div>
+                        <div class="form-group">
+                            <label>Image (optional)</label>
+                            <input type="file" @change="handleNewAuctionImageUpload" accept="image/*" />
+                            <div v-if="newAuctionImagePreview" class="image-preview">
+                                <img :src="newAuctionImagePreview" style="max-width:100px;" />
+                            </div>
+                        </div>
+                        <div class="edit-actions">
+                            <button type="submit" class="save-btn" :disabled="isAddingAuction">Create</button>
+                            <button type="button" @click="showAddAuctionModal = false" class="cancel-btn">Cancel</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </section>
+
+        <!-- Bids Tab -->
+        <section v-if="activeTab === 'bids'" class="section">
+            <h2 class="section-title">💰 All Bids</h2>
+            <div class="table-controls">
+                <input v-model="bidSearch" type="text" placeholder="Search by auction or user..." class="search-input" />
+                <select v-model="bidAuctionFilter" class="filter-select">
+                    <option value="">All Auctions</option>
+                    <option v-for="auction in auctions" :key="auction.id" :value="auction.id">{{ auction.name }}</option>
+                </select>
+            </div>
+            <div class="scrollable-table">
+                <table class="data-table">
+                    <thead>
+                    <tr><th>Auction</th><th>Bidder</th><th>Bid Amount</th><th>Date</th><th>Actions</th></tr>
+                    </thead>
+                    <tbody>
+                    <tr v-for="bid in filteredBids" :key="bid.id">
+                        <td>{{ bid.auction?.name || 'N/A' }}</td>
+                        <td>{{ bid.user?.name || 'Unknown' }}<br><small>{{ bid.user?.email }}</small></td>
+                        <td><strong>${{ bid.bid_amount }}</strong></td>
+                        <td>{{ formatDate(bid.created_at) }}</td>
+                        <td><button @click="deleteBid(bid.id)" class="delete-btn">🗑️</button></td>
+                    </tr>
+                    <tr v-if="filteredBids.length === 0"><td colspan="5" class="empty-state">No bids found</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+
         <!-- Add User Tab -->
         <section v-if="activeTab === 'addUser'" class="section">
             <h2 class="section-title">👤 Add New User</h2>
@@ -697,6 +828,18 @@ export default {
                 awards: 0,
                 family_id: null
             },
+            auctions: [],
+            auctionSearch: '',
+            editAuction: null,
+            showAddAuctionModal: false,
+            newAuction: { name: '', description: '', starting_bid: '', start_time: '', end_time: '' },
+            newAuctionImageFile: null,
+            newAuctionImagePreview: null,
+            isAddingAuction: false,
+
+            bids: [],
+            bidSearch: '',
+            bidAuctionFilter: '',
             newFamily: {
                 family_name: '',
                 parent_id: null
@@ -754,6 +897,8 @@ export default {
             if (newTab === 'comments') {
                 this.fetchComments(); // Refresh comments when switching to comments tab
             }
+            if (newTab === 'auctions') this.fetchAuctions();
+            if (newTab === 'bids') this.fetchBids();
         }
     },
     computed: {
@@ -806,6 +951,26 @@ export default {
                 );
             }
 
+            return filtered;
+        },
+
+        filteredAuctions() {
+            if (!this.auctionSearch) return this.auctions;
+            const s = this.auctionSearch.toLowerCase();
+            return this.auctions.filter(a => a.name.toLowerCase().includes(s));
+        },
+        filteredBids() {
+            let filtered = this.bids;
+            if (this.bidSearch) {
+                const s = this.bidSearch.toLowerCase();
+                filtered = filtered.filter(b =>
+                    (b.auction?.name || '').toLowerCase().includes(s) ||
+                    (b.user?.name || '').toLowerCase().includes(s)
+                );
+            }
+            if (this.bidAuctionFilter) {
+                filtered = filtered.filter(b => b.item_id === this.bidAuctionFilter);
+            }
             return filtered;
         }
     },
@@ -941,6 +1106,130 @@ export default {
             } finally {
                 this.isAddingComment = false;
             }
+        },
+
+        async fetchAuctions() {
+            try {
+                const res = await axios.get('/admin/auctions');
+                this.auctions = res.data;
+            } catch (error) {
+                this.showNotification('Failed to load auctions', 'error');
+            }
+        },
+        async fetchBids() {
+            try {
+                const res = await axios.get('/admin/bids');
+                this.bids = res.data;
+            } catch (error) {
+                this.showNotification('Failed to load bids', 'error');
+            }
+        },
+        async createAuction() {
+            const formData = new FormData();
+            formData.append('name', this.newAuction.name);
+            formData.append('description', this.newAuction.description);
+            formData.append('starting_bid', this.newAuction.starting_bid);
+            formData.append('start_time', this.newAuction.start_time);
+            formData.append('end_time', this.newAuction.end_time);
+            if (this.newAuctionImageFile) formData.append('img', this.newAuctionImageFile);
+
+            this.isAddingAuction = true;
+            try {
+                await axios.post('/admin/auctions', formData);
+                this.showNotification('Auction created!', 'success');
+                this.showAddAuctionModal = false;
+                this.resetNewAuctionForm();
+                this.fetchAuctions();
+            } catch (error) {
+                this.showNotification('Error creating auction', 'error');
+            } finally {
+                this.isAddingAuction = false;
+            }
+        },
+        resetNewAuctionForm() {
+            this.newAuction = { name: '', description: '', starting_bid: '', start_time: '', end_time: '' };
+            this.newAuctionImageFile = null;
+            this.newAuctionImagePreview = null;
+        },
+        handleNewAuctionImageUpload(e) {
+            const file = e.target.files[0];
+            if (file) {
+                this.newAuctionImageFile = file;
+                const reader = new FileReader();
+                reader.onload = ev => this.newAuctionImagePreview = ev.target.result;
+                reader.readAsDataURL(file);
+            }
+        },
+        startEditAuction(auction) {
+            this.editAuction = { ...auction };
+            this.editAuction.start_time = this.formatDateTimeLocal(auction.start_time);
+            this.editAuction.end_time = this.formatDateTimeLocal(auction.end_time);
+            this.editAuctionImageFile = null;
+            this.editAuctionImagePreview = null;
+        },
+        cancelEditAuction() {
+            this.editAuction = null;
+        },
+        handleEditAuctionImageUpload(e) {
+            const file = e.target.files[0];
+            if (file) {
+                this.editAuctionImageFile = file;
+                const reader = new FileReader();
+                reader.onload = ev => this.editAuctionImagePreview = ev.target.result;
+                reader.readAsDataURL(file);
+            }
+        },
+        async updateAuction() {
+            const formData = new FormData();
+            formData.append('name', this.editAuction.name);
+            formData.append('description', this.editAuction.description);
+            formData.append('starting_bid', this.editAuction.starting_bid);
+            formData.append('start_time', this.editAuction.start_time);
+            formData.append('end_time', this.editAuction.end_time);
+            formData.append('_method', 'PUT');
+            if (this.editAuctionImageFile) formData.append('img', this.editAuctionImageFile);
+
+            try {
+                await axios.post(`/admin/auctions/${this.editAuction.id}`, formData);
+                this.showNotification('Auction updated!', 'success');
+                this.editAuction = null;
+                this.fetchAuctions();
+            } catch (error) {
+                this.showNotification('Error updating auction', 'error');
+            }
+        },
+        async deleteAuction(id) {
+            if (confirm('Delete this auction? All bids will be removed.')) {
+                try {
+                    await axios.delete(`/admin/auctions/${id}`);
+                    this.showNotification('Auction deleted', 'success');
+                    this.fetchAuctions();
+                    this.fetchBids(); // refresh bids if needed
+                } catch (error) {
+                    this.showNotification('Error deleting auction', 'error');
+                }
+            }
+        },
+        async viewBids(auctionId) {
+            this.activeTab = 'bids';
+            this.bidAuctionFilter = auctionId;
+            await this.fetchBids();
+        },
+        async deleteBid(id) {
+            if (confirm('Delete this bid?')) {
+                try {
+                    await axios.delete(`/admin/bids/${id}`);
+                    this.showNotification('Bid deleted', 'success');
+                    this.fetchBids();
+                } catch (error) {
+                    this.showNotification('Error deleting bid', 'error');
+                }
+            }
+        },
+        formatDateTimeLocal(dateString) {
+            if (!dateString) return '';
+            const date = new Date(dateString);
+            return date.toISOString().slice(0, 16);
         },
 
 
@@ -2659,6 +2948,48 @@ export default {
     display: flex;
     flex-direction: column;
     gap: 10px;
+}
+
+.auction-card {
+    background: white;
+    border: 1px solid #eaeaea;
+    border-radius: 8px;
+    padding: 20px;
+    transition: all 0.3s ease;
+}
+.auction-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+.auction-header {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 15px;
+}
+.auction-image img {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 8px;
+}
+.auction-info h4 {
+    margin: 0 0 5px 0;
+}
+.starting-bid {
+    font-weight: bold;
+    color: #420d65;
+    margin: 5px 0;
+}
+.dates {
+    font-size: 12px;
+    color: #666;
+}
+.modal-content {
+    background: white;
+    padding: 20px;
+    border-radius: 12px;
+    max-width: 500px;
+    margin: 50px auto;
 }
 
 /* Responsive adjustments */

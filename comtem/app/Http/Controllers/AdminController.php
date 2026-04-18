@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Models\Auction;
+use App\Models\Bids;
 use App\Models\Comment;
 use App\Models\Orders;
 use App\Models\Products;
@@ -65,6 +67,11 @@ class AdminController extends Controller
             ->limit(50)
             ->get();
 
+        $auctions = Auction::with(['user:id,name,email'])
+            ->latest()
+            ->limit(100)
+            ->get();
+
         return Inertia::render('Admin', [
             'orders' => $orders,
             'products' => $products,
@@ -72,7 +79,17 @@ class AdminController extends Controller
             'users' => $users,
             'families' => $families,
             'comments' => $comments,
+            'auctions' => $auctions,
         ]);
+    }
+
+    // Get all auctions (API)
+    public function indexAuctions(): \Illuminate\Http\JsonResponse
+    {
+        $auctions = Auction::with(['user:id,name,email'])
+            ->latest()
+            ->get();
+        return response()->json($auctions);
     }
 
     public function showOrders(Request $request): \Illuminate\Http\JsonResponse
@@ -123,6 +140,27 @@ class AdminController extends Controller
             ->get();
 
         return response()->json($families);
+    }
+
+    // Get bids for a specific auction
+    public function showBids($auctionId): \Illuminate\Http\JsonResponse
+    {
+        $bids = Bids::with('user:id,name,email')
+            ->where('item_id', $auctionId)
+            ->orderBy('bid_amount', 'desc')
+            ->get();
+
+        return response()->json($bids);
+    }
+
+    // Get all bids (optional)
+    public function indexBids(): \Illuminate\Http\JsonResponse
+    {
+        $bids = Bids::with(['user:id,name,email', 'auction:id,name'])
+            ->latest()
+            ->get();
+
+        return response()->json($bids);
     }
 
     public function storeProduct(Request $request)
@@ -229,6 +267,110 @@ class AdminController extends Controller
             return redirect()->back()->with('error', 'Failed to create family: ' . $e->getMessage());
         }
     }
+
+    // Store new auction
+    public function storeAuction(Request $request): \Illuminate\Http\JsonResponse
+    {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'description' => 'required|string',
+            'starting_bid' => 'required|numeric|min:0',
+            'img' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'start_time' => 'required|date',
+            'end_time' => 'required|date|after:start_time',
+        ]);
+
+        try {
+            $imgPath = null;
+            if ($request->hasFile('img')) {
+                $img = $request->file('img');
+                $imgName = time() . '_' . $img->getClientOriginalName();
+                $img->move(public_path('images/auctions'), $imgName);
+                $imgPath = 'images/auctions/' . $imgName;
+            }
+
+            $auction = Auction::create([
+                'name' => $request->name,
+                'description' => $request->description,
+                'starting_bid' => $request->starting_bid,
+                'img' => $imgPath,
+                'start_time' => $request->start_time,
+                'end_time' => $request->end_time,
+                'user_id' => auth()->id(),
+            ]);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Auction created successfully!',
+                'auction' => $auction->load('user:id,name,email')
+            ]);
+        } catch (\Exception $e) {
+            Log::error('Error creating auction: ' . $e->getMessage());
+            return response()->json(['error' => 'Failed to create auction.'], 500);
+        }
+    }
+
+    // Update auction
+    public function updateAuction(Request $request, $id): \Illuminate\Http\JsonResponse
+    {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'description' => 'required|string',
+            'starting_bid' => 'required|numeric|min:0',
+            'img' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'start_time' => 'required|date',
+            'end_time' => 'required|date|after:start_time',
+        ]);
+
+        try {
+            $auction = Auction::findOrFail($id);
+
+            $updateData = $request->only(['name', 'description', 'starting_bid', 'start_time', 'end_time']);
+
+            if ($request->hasFile('img')) {
+                // Delete old image
+                if ($auction->img && file_exists(public_path($auction->img))) {
+                    unlink(public_path($auction->img));
+                }
+                $img = $request->file('img');
+                $imgName = time() . '_' . $img->getClientOriginalName();
+                $img->move(public_path('images/auctions'), $imgName);
+                $updateData['img'] = 'images/auctions/' . $imgName;
+            }
+
+            $auction->update($updateData);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Auction updated successfully!',
+                'auction' => $auction->load('user:id,name,email')
+            ]);
+        } catch (\Exception $e) {
+            Log::error('Error updating auction: ' . $e->getMessage());
+            return response()->json(['error' => 'Failed to update auction.'], 500);
+        }
+    }
+
+    // Delete auction
+    public function destroyAuction($id): \Illuminate\Http\JsonResponse
+    {
+        try {
+            $auction = Auction::findOrFail($id);
+            // Delete associated bids first
+            Bid::where('item_id', $id)->delete();
+            // Delete image if exists
+            if ($auction->img && file_exists(public_path($auction->img))) {
+                unlink(public_path($auction->img));
+            }
+            $auction->delete();
+
+            return response()->json(['success' => 'Auction deleted successfully!']);
+        } catch (\Exception $e) {
+            Log::error('Error deleting auction: ' . $e->getMessage());
+            return response()->json(['error' => 'Failed to delete auction.'], 500);
+        }
+    }
+
 
     public function destroyProduct($id)
     {

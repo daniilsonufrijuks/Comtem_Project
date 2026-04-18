@@ -359,6 +359,14 @@ Route::middleware(['auth:admin'])->group(function () {
     Route::post('/admin/comments', [AdminController::class, 'storeComment'])->name('admin.comments.store');
     Route::put('/admin/comments/{id}', [AdminController::class, 'updateComment'])->name('admin.comments.update');
     Route::delete('/admin/comments/{id}', [AdminController::class, 'destroyComment'])->name('admin.comments.destroy');
+
+    // Auction management
+    Route::get('/admin/auctions', [AdminController::class, 'indexAuctions']);
+    Route::post('/admin/auctions', [AdminController::class, 'storeAuction']);
+    Route::put('/admin/auctions/{id}', [AdminController::class, 'updateAuction']);
+    Route::delete('/admin/auctions/{id}', [AdminController::class, 'destroyAuction']);
+    Route::get('/admin/auctions/{id}/bids', [AdminController::class, 'showBids']);
+    Route::get('/admin/bids', [AdminController::class, 'indexBids']);
 });
 
 
