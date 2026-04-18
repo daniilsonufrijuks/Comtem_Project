@@ -9,7 +9,7 @@
 <!--            <h1>Auction Listings</h1>-->
             <!-- Add Auction Button -->
             <div class="add-auction-container">
-                <button @click="goToAddAuction" class="add-auction-btn">+</button>
+                <button @click="goToAddAuction" class="add-auction-btn">Add new auction</button>
             </div>
 
             <!-- Auction items list -->
@@ -36,21 +36,13 @@ export default {
     components: {AuctionCardDB, Contact, Visitit, Search, Slider, Footer, Navbar, ProductCardDB},
     data() {
         return {
-            auctionItems: [], // This will hold the auction items
+            auctionItems: [],
         };
     },
     mounted() {
         this.fetchAuctionItems();
     },
     methods: {
-        // async fetchAuctionItems() {
-        //     try {
-        //         const response = await axios.get('/auctionitems');
-        //         this.auctionItems = response.data;
-        //     } catch (error) {
-        //         console.error('Error fetching auction items:', error);
-        //     }
-        // },
         fetchAuctionItems() {
             fetch(`/auction/items`)
                 .then((response) => {
@@ -71,7 +63,6 @@ export default {
             window.location.href = `/auction/add`; // Redirect to the add auction page
         },
         placeBid(itemId) {
-            // Handle the placing bid logic (You may want to handle this with a modal or a form)
             console.log(`Placing a bid on item ${itemId}`);
         }
     },
@@ -101,43 +92,36 @@ export default {
     height: 100px;
 }
 
-.auction-item button {
-    margin-top: 10px;
+.auction-item img {
+    width: 100px;
+    height: 100px;
+}
+
+.add-auction-container {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 30px;
 }
 
 .add-auction-btn {
-    align-items: center;
-    appearance: none;
-    border-radius: 4px;
-    border-style: none;
-    box-shadow: rgba(0, 0, 0, .2) 0 3px 1px -2px,rgba(0, 0, 0, .14) 0 2px 2px 0,rgba(0, 0, 0, .12) 0 1px 5px 0;
-    box-sizing: border-box;
+    background-color: #7a3a7b;
     color: #fff;
-    background-color: #6a0dad;
-    cursor: pointer;
-    display: inline-flex;
-    font-family: Roboto,sans-serif;
-    font-size: .875rem;
-    font-weight: 500;
-    height: 36px;
-    justify-content: center;
-    letter-spacing: .0892857em;
-    line-height: normal;
-    min-width: 64px;
-    outline: none;
-    overflow: visible;
-    padding: 0 16px;
-    position: relative;
-    text-align: center;
-    text-decoration: none;
+    border: none;
+    padding: 12px 24px;
+    font-size: 16px;
+    font-weight: 600;
     text-transform: uppercase;
-    transition: box-shadow 280ms cubic-bezier(.4, 0, .2, 1);
-    user-select: none;
-    -webkit-user-select: none;
-    touch-action: manipulation;
-    vertical-align: middle;
-    will-change: transform,opacity;
+    letter-spacing: 0.5px;
+    border-radius: 40px;
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.2s ease;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    font-family: Roboto, sans-serif;
 }
 
+.add-auction-btn:hover {
+    background-color: #8e4b8f;
+    transform: scale(1.02);
+}
 
 </style>
