@@ -233,6 +233,7 @@
 <!--        <Visitit />-->
         <Roulette />
         <OrdersHistory />
+        <BidsHistory />
         <div class="products">
             <ProductCardDB v-for="product in products" :key="product.id" :product="product" />
         </div>
@@ -254,10 +255,12 @@ import ProductCardDB from "@/Components/ProductCardDB.vue";
 import Roulette from "@/Components/Roulette.vue";
 import OrdersHistory from "@/Components/OrdersHistory.vue";
 import { loadStripe } from '@stripe/stripe-js';
+import BidsHistory from "@/Components/BidsHistory.vue";
 
 export default {
     name: 'Home',
     components: {
+        BidsHistory,
         OrdersHistory,
         Roulette,
         ProductCardDB,

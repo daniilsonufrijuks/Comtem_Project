@@ -103,4 +103,9 @@ class User extends Authenticatable
         return $this->is_family_admin || ($this->family && $this->family->parent_id === $this->id);
     }
 
+    public function bids()
+    {
+        return $this->hasMany(Bids::class);
+    }
+
 }

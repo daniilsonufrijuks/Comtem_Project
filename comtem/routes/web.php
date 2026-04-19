@@ -373,6 +373,11 @@ Route::middleware(['auth:admin'])->group(function () {
 
 
 
+# bids history for user profile
+Route::get('/user/bids', [BidController::class, 'userBids']);
+
+
+
 
 
 

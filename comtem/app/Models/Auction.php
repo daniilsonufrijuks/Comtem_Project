@@ -20,7 +20,7 @@ class Auction extends Model
         'user_id',
     ];
     public function bids(): \Illuminate\Database\Eloquent\Relations\HasMany
-    { return $this->hasMany(Bid::class, 'item_id'); }
+    { return $this->hasMany(Bids::class, 'item_id'); }
     public function user(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     { return $this->belongsTo(User::class); }
 

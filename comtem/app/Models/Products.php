@@ -22,4 +22,10 @@ class Products extends Model
             ->withPivot('quantity', 'price')
             ->withTimestamps();
     }
+
+    public function bids()
+    {
+        return $this->hasMany(Bids::class);
+    }
+
 }

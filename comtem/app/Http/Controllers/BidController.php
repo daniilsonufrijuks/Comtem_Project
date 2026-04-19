@@ -23,12 +23,6 @@ class BidController extends Controller
 //            'item_id' => 'required',
         ]);
 
-        // Find the auction item
-//        $auction = Auction::find($item);
-//        if (!$auction) {
-//            return response()->json(['error' => 'Item not found'], 404);
-//        }
-
         Bids::create([
             'bid_amount' => $request ->bid_amount,
             'user_id' => auth()->id(),
@@ -36,5 +30,52 @@ class BidController extends Controller
         ]);
 
         return response()->json(['success' => 'Bid placed successfully'], 200);
+    }
+
+    /**
+     * Get the authenticated user's bid history with item details.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function userBids(Request $request)
+    {
+        $user = Auth::user();
+
+        $bids = Bids::with('auction')
+        ->where('user_id', $user->id)
+            ->orderBy('created_at', 'desc')
+            ->get()
+            ->map(function ($bid) {
+                $auction = $bid->auction;
+
+                if (!$auction) {
+                    return $bid;
+                }
+
+                // Auction ended?
+                $auctionEnded = $auction->end_time && now()->gt($auction->end_time);
+
+                // Higher bid exists?
+                $higherBidExists = Bids::where('item_id', $bid->item_id)
+                    ->where('bid_amount', '>', $bid->bid_amount)
+                    ->exists();
+
+                $isWinning = !$auctionEnded && !$higherBidExists;
+
+                // Attach computed fields
+                $bid->is_winning = $isWinning;
+                $bid->auction_ended = $auctionEnded;
+
+                $bid->product = (object) [
+                    'name' => $auction->name,
+                    'img' => $auction->img,
+                    'starting_bid' => $auction->starting_bid,
+                ];
+
+                return $bid;
+            });
+
+        return response()->json(['data' => $bids]);
     }
 }
