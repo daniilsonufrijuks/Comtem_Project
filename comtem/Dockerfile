@@ -1,6 +1,9 @@
-FROM php:8.2-fpm
+# ============================================
+# Stage 1: Build assets (Node + Composer)
+# ============================================
+FROM php:8.2-cli AS builder
 
-# Install dependencies
+# Install system packages needed for build
 RUN apt-get update && apt-get install -y \
     curl \
     git \
@@ -8,45 +11,77 @@ RUN apt-get update && apt-get install -y \
     libjpeg-dev \
     libfreetype6-dev \
     zip \
-    apache2 \
-    libapache2-mod-fcgid && \
-    docker-php-ext-configure gd --with-freetype --with-jpeg && \
-    docker-php-ext-install gd && \
-    docker-php-ext-install pdo pdo_mysql && \
-    docker-php-ext-install bcmath
+    unzip \
+    && rm -rf /var/lib/apt/lists/*
 
-# Add NodeSource repository for Node.js 18.x
-RUN curl -fsSL https://deb.nodesource.com/setup_18.x | bash -
-
-# Install Node.js and npm
-RUN apt-get install -y nodejs
-
-# Install Node.js and npm
-#RUN curl -fsSL https://deb.nodesource.com/setup_18.x | bash - && \
- #   apt-get install -y nodejs \
+# Install PHP extensions used by Laravel
+RUN docker-php-ext-configure gd --with-freetype --with-jpeg \
+    && docker-php-ext-install -j$(nproc) gd pdo pdo_mysql bcmath
 
 # Install Composer
-RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
-# Set working directory
+# Install Node 18 (for Vue / Vite build)
+RUN curl -fsSL https://deb.nodesource.com/setup_18.x | bash - \
+    && apt-get install -y nodejs \
+    && rm -rf /var/lib/apt/lists/*
+
 WORKDIR /var/www
 
-# Copy the code into the container
+# Copy dependency manifests first (better cache usage)
+COPY composer.json composer.lock package.json package-lock.json ./
+RUN composer install --no-dev --no-scripts --prefer-dist --no-interaction --optimize-autoloader
+RUN npm ci
+
+# Copy the rest of the source code
 COPY . .
 
-# Install dependencies
-RUN composer install
-RUN npm install
+# Build frontend (Vite / Vue)
 RUN npm run build
 
-# Configure Apache to use PHP-FPM
+# Remove node_modules to keep final image small (optional)
+RUN rm -rf node_modules
+
+# Run any necessary artisan commands that can be done at build time
+RUN php artisan event:cache \
+    && php artisan route:cache \
+    && php artisan config:cache \
+    && php artisan view:cache
+
+# ============================================
+# Stage 2: Production runtime image
+# ============================================
+FROM php:8.2-fpm
+
+# Install runtime system packages
+RUN apt-get update && apt-get install -y \
+    apache2 \
+    libapache2-mod-fcgid \
+    libpng16-16 \
+    libjpeg62-turbo \
+    libfreetype6 \
+    && rm -rf /var/lib/apt/lists/*
+
+# PHP extensions needed at runtime
+RUN docker-php-ext-configure gd --with-freetype --with-jpeg \
+    && docker-php-ext-install -j$(nproc) gd pdo pdo_mysql bcmath
+
+# Copy the built application from the builder stage
+WORKDIR /var/www
+COPY --from=builder /var/www /var/www
+
+# Set correct permissions (Laravel requires storage & bootstrap/cache writable)
+RUN chown -R www-data:www-data storage bootstrap/cache \
+    && chmod -R 775 storage bootstrap/cache
+
+# Configure Apache to serve Laravel's public/ folder and use PHP-FPM
 COPY apache.conf /etc/apache2/sites-available/000-default.conf
+RUN a2enmod actions fcgid alias proxy_fcgi \
+    && a2ensite 000-default
 
-# Enable required Apache modules
-RUN a2enmod actions fcgid alias proxy_fcgi
+# Use a startup script to run Apache & PHP-FPM simultaneously
+COPY start.sh /start.sh
+RUN chmod +x /start.sh
 
-# Expose the port
 EXPOSE 80
-
-# Start Apache and PHP-FPM
-CMD ["sh", "-c", "service apache2 start && php-fpm"]
+CMD ["/start.sh"]
