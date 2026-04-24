@@ -185,6 +185,10 @@
       <excludeFolder url="file://$MODULE_DIR$/comtem/vendor/grpc/grpc" />
       <excludeFolder url="file://$MODULE_DIR$/comtem/vendor/psr/cache" />
       <excludeFolder url="file://$MODULE_DIR$/comtem/vendor/rize/uri-template" />
+      <excludeFolder url="file://$MODULE_DIR$/comtem/vendor/mailjet/laravel-mailjet" />
+      <excludeFolder url="file://$MODULE_DIR$/comtem/vendor/mailjet/mailjet-apiv3-php" />
+      <excludeFolder url="file://$MODULE_DIR$/comtem/vendor/symfony/mailjet-mailer" />
+      <excludeFolder url="file://$MODULE_DIR$/comtem/vendor/symfony/validator" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
