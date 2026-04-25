@@ -54,6 +54,7 @@ RUN php artisan event:cache \
 # ============================================
 FROM php:8.2-fpm
 
+# Install runtime + temporary build dependencies for GD
 RUN apt-get update && apt-get install -y \
     apache2 \
     libapache2-mod-fcgid \
@@ -66,9 +67,11 @@ RUN apt-get update && apt-get install -y \
     zlib1g-dev \
     && rm -rf /var/lib/apt/lists/*
 
+# Compile GD and other PHP extensions
 RUN docker-php-ext-configure gd --with-freetype --with-jpeg \
     && docker-php-ext-install -j$(nproc) gd pdo pdo_mysql bcmath
 
+# Remove dev packages
 RUN apt-get purge -y libpng-dev libjpeg-dev libfreetype6-dev zlib1g-dev \
     && apt-get autoremove -y \
     && rm -rf /var/lib/apt/lists/*
