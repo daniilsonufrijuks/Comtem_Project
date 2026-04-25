@@ -82,10 +82,10 @@ COPY --from=builder /var/www /var/www
 RUN chown -R www-data:www-data storage bootstrap/cache \
     && chmod -R 775 storage bootstrap/cache
 
-# Apache configuration
+# --- Apache: clear all default sites, use our config ---
+RUN rm -rf /etc/apache2/sites-enabled/* /etc/apache2/sites-available/*
 COPY apache.conf /etc/apache2/sites-available/000-default.conf
-RUN a2dissite 000-default && \
-    a2ensite 000-default && \
+RUN a2ensite 000-default && \
     a2enmod actions fcgid alias proxy_fcgi
 
 COPY start.sh /start.sh
