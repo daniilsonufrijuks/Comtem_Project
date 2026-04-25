@@ -54,7 +54,6 @@ RUN php artisan event:cache \
 # ============================================
 FROM php:8.2-fpm
 
-# Install runtime system packages
 RUN apt-get update && apt-get install -y \
     apache2 \
     libapache2-mod-fcgid \
@@ -67,35 +66,25 @@ RUN apt-get update && apt-get install -y \
     zlib1g-dev \
     && rm -rf /var/lib/apt/lists/*
 
-# PHP extensions needed at runtime
 RUN docker-php-ext-configure gd --with-freetype --with-jpeg \
     && docker-php-ext-install -j$(nproc) gd pdo pdo_mysql bcmath
 
-
-# Remove the development packages to keep the image slim
-RUN apt-get purge -y \
-    libpng-dev \
-    libjpeg-dev \
-    libfreetype6-dev \
-    zlib1g-dev \
+RUN apt-get purge -y libpng-dev libjpeg-dev libfreetype6-dev zlib1g-dev \
     && apt-get autoremove -y \
     && rm -rf /var/lib/apt/lists/*
 
-
-# Copy the built application from the builder stage
 WORKDIR /var/www
 COPY --from=builder /var/www /var/www
 
-# Set correct permissions (Laravel requires storage & bootstrap/cache writable)
 RUN chown -R www-data:www-data storage bootstrap/cache \
     && chmod -R 775 storage bootstrap/cache
 
-# Configure Apache to serve Laravel's public/ folder and use PHP-FPM
+# Apache configuration
 COPY apache.conf /etc/apache2/sites-available/000-default.conf
-RUN a2enmod actions fcgid alias proxy_fcgi \
-    && a2ensite 000-default
+RUN a2dissite 000-default && \
+    a2ensite 000-default && \
+    a2enmod actions fcgid alias proxy_fcgi
 
-# Use a startup script to run Apache & PHP-FPM simultaneously
 COPY start.sh /start.sh
 RUN chmod +x /start.sh
 
