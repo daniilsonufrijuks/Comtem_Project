@@ -16,7 +16,7 @@ class AuctionController extends Controller
     }
     public function getitems()
     {
-        // Fetch auction items from the database (you can modify this to match your actual table structure)
+        // Fetch auction items from the database
         $auctionItems = Auction::all();
 
         return response()->json($auctionItems);
@@ -51,10 +51,6 @@ class AuctionController extends Controller
             'end_time' => 'required|date|after:start_time'
         ]);
 
-//        $imagePath = null;
-//        if ($request->hasFile('img')) {
-//            $imagePath = $request->file('img');
-//        }
 
         $imagePath = null;
         if ($request->hasFile('img')) {

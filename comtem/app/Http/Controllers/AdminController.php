@@ -153,7 +153,7 @@ class AdminController extends Controller
         return response()->json($bids);
     }
 
-    // Get all bids (optional)
+    // Get all bids
     public function indexBids(): \Illuminate\Http\JsonResponse
     {
         $bids = Bids::with(['user:id,name,email', 'auction:id,name'])
@@ -163,6 +163,7 @@ class AdminController extends Controller
         return response()->json($bids);
     }
 
+    // store products
     public function storeProduct(Request $request)
     {
         $request->validate([
@@ -199,6 +200,7 @@ class AdminController extends Controller
         }
     }
 
+    // store users
     public function storeUser(Request $request)
     {
         $request->validate([
@@ -239,6 +241,7 @@ class AdminController extends Controller
         }
     }
 
+    // store families
     public function storeFamily(Request $request)
     {
         $request->validate([
@@ -371,7 +374,7 @@ class AdminController extends Controller
         }
     }
 
-
+    // delete products
     public function destroyProduct($id)
     {
         try {
@@ -389,6 +392,7 @@ class AdminController extends Controller
         }
     }
 
+    // delete orders
     public function destroyOrder($id)
     {
         try {
@@ -404,6 +408,7 @@ class AdminController extends Controller
         }
     }
 
+    // delete products = orders
     public function destroyOrderItem($id)
     {
         try {
@@ -416,6 +421,7 @@ class AdminController extends Controller
         }
     }
 
+    // deleet user
     public function destroyUser($id)
     {
         try {
@@ -431,6 +437,7 @@ class AdminController extends Controller
         }
     }
 
+    // delete family
     public function destroyFamily($id)
     {
         try {
@@ -447,6 +454,7 @@ class AdminController extends Controller
         }
     }
 
+    // update product
     public function updateProduct(Request $request, $id)
     {
         $request->validate([
@@ -489,6 +497,7 @@ class AdminController extends Controller
     }
 
 
+    // update orders
     public function updateOrder(Request $request, $id)
     {
         $request->validate([
@@ -522,6 +531,7 @@ class AdminController extends Controller
         }
     }
 
+    // update user
     public function updateUser(Request $request, $id)
     {
         $request->validate([
@@ -558,6 +568,7 @@ class AdminController extends Controller
         }
     }
 
+    // update families
     public function updateFamily(Request $request, $id): \Illuminate\Http\JsonResponse
     {
         $request->validate([

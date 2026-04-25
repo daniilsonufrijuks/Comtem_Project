@@ -233,7 +233,7 @@ class ProductsController extends Controller
 
     }
 
-
+    // show products based on product id
     public function show($id): \Illuminate\Http\JsonResponse
     {
 //        $query = Products::find($id);

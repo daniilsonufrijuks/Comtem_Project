@@ -59,7 +59,6 @@ class OrderController extends Controller
                 'status' => $request->status ?? 'pending',
             ]);
 
-//            $itemIds = [];
 
             foreach ($request->items as $item) {
                 OrderGoods::create([
@@ -71,12 +70,6 @@ class OrderController extends Controller
                     'quantity' => $item['quantity'],
                 ]);
 
-//                $itemIds[] = $orderItem->id;
-
-//                $order->products()->attach($item['id'], [
-//                    'quantity' => $item['quantity'],
-//                    'price' => $item['price'],
-//                ]);
             }
 
             return response()->json([
@@ -111,8 +104,8 @@ class OrderController extends Controller
                 'orders.total as order_total',
                 'orders.created_at',
                 'goods_orders.id as item_id',
-                'goods_orders.product_id',          // optional, if needed
-                'goods_orders.quantity',             // now available
+                'goods_orders.product_id',
+                'goods_orders.quantity',
                 'goods_orders.name as item_name',
                 'goods_orders.price as item_price',
             )

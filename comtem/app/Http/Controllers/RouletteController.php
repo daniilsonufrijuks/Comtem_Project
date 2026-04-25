@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Auth;
 
 class RouletteController extends Controller
 {
+    // for awards
     public function spin(Request $request)
     {
         $request->validate([
