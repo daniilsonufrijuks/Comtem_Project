@@ -10,6 +10,7 @@ RUN apt-get update && apt-get install -y \
     libpng-dev \
     libjpeg-dev \
     libfreetype6-dev \
+    zlib1g-dev \
     zip \
     unzip \
     && rm -rf /var/lib/apt/lists/*
@@ -60,11 +61,26 @@ RUN apt-get update && apt-get install -y \
     libpng16-16 \
     libjpeg62-turbo \
     libfreetype6 \
+    libpng-dev \
+    libjpeg-dev \
+    libfreetype6-dev \
+    zlib1g-dev \
     && rm -rf /var/lib/apt/lists/*
 
 # PHP extensions needed at runtime
 RUN docker-php-ext-configure gd --with-freetype --with-jpeg \
     && docker-php-ext-install -j$(nproc) gd pdo pdo_mysql bcmath
+
+
+# Remove the development packages to keep the image slim
+RUN apt-get purge -y \
+    libpng-dev \
+    libjpeg-dev \
+    libfreetype6-dev \
+    zlib1g-dev \
+    && apt-get autoremove -y \
+    && rm -rf /var/lib/apt/lists/*
+
 
 # Copy the built application from the builder stage
 WORKDIR /var/www
