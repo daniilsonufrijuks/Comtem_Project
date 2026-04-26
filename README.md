@@ -54,12 +54,6 @@ which ensures high performance and scalability.
 
 
 
-1. Clone repo to xampp/htdocs/..
-2. Install npm and composer
-3. Install other needed packages (vue)
-4. Run php artisan migrate
-5. Run php artisan serve
-
 ## Project Setup Guide
 
 ### 1. Clone the Repository
@@ -93,7 +87,7 @@ php artisan migrate --path=database/migrations/2026_04_25_092457_import_initial_
 php artisan serve
 
 
-
+<br/>
 (You need to open xampp and run apache and mysql servers, then 
 create new db in the phpmyadmin and connect it in the env file)
 
