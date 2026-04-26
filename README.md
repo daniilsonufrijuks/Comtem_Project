@@ -43,6 +43,7 @@ user support. The project uses Laravel(PHP) and Vue.js,
 MySQL as a technological base,
 which ensures high performance and scalability.
 
+<br/>
 
 ### Gallery
 ![img_1.png](img_1.png)
@@ -53,6 +54,7 @@ which ensures high performance and scalability.
 ![img_7.png](img_7.png)
 
 
+<br/>
 
 ## Project Setup Guide
 
