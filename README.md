@@ -48,9 +48,11 @@ which ensures high performance and scalability.
 ![img_1.png](img_1.png)
 ![img_2.png](img_2.png)
 ![img_3.png](img_3.png)
-![img_4.png](img_4.png)
+![img_5.png](img_5.png)
+![img_6.png](img_6.png)
+![img_7.png](img_7.png)
 
-### How to use
+
 
 1. Clone repo to xampp/htdocs/..
 2. Install npm and composer
@@ -58,7 +60,41 @@ which ensures high performance and scalability.
 4. Run php artisan migrate
 5. Run php artisan serve
 
-(You need to open xampp and run apache and mesql servers, then 
+## Project Setup Guide
+
+### 1. Clone the Repository
+Clone the project into your XAMPP directory:
+   * xampp/htdocs/your-project-folder
+
+### 2. Start XAMPP Services
+Open XAMPP Control Panel and start:
+- Apache
+- MySQL
+
+### 3. Create a Database
+1. Go to http://localhost/phpmyadmin
+2. Create a new database
+3. Open the `.env` file and update database credentials:
+   * DB_DATABASE=your_db_name
+   * DB_USERNAME=root
+   * DB_PASSWORD=""
+
+
+### 4. Install Dependencies
+Run the following commands in the project root:
+   * npm install
+   * composer install
+
+### 5. Run Migrations
+php artisan migrate --path=database/migrations/2026_04_25_092457_import_initial_data_from_sql_dump.php
+
+
+### 6. Start Development Server
+php artisan serve
+
+
+
+(You need to open xampp and run apache and mysql servers, then 
 create new db in the phpmyadmin and connect it in the env file)
 
 **Authors: Daniils Onufrijuks aka daniilsonufrijuks **
