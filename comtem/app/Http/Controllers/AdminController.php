@@ -11,6 +11,7 @@ use App\Models\Products;
 use App\Models\User;
 use App\Models\OrderGoods;
 use App\Models\Family;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Log;
@@ -913,6 +914,47 @@ class AdminController extends Controller
             Log::error('Error exporting orders: ' . $e->getMessage());
             return response()->json(['error' => 'Failed to export orders.'], 500);
         }
+    }
+
+
+//    export data to pdf
+    public function exportAllToPdf()
+    {
+        // Fetch data (limit to 1000 rows per table to avoid memory issues)
+        $users = User::select('id', 'name', 'email', 'role', 'awards', 'created_at')
+            ->orderBy('id')->limit(1000)->get();
+
+        $products = Products::select('id', 'name', 'price', 'category', 'created_at')
+            ->orderBy('id')->limit(1000)->get();
+
+        $orders = Orders::select('id', 'user_id', 'status', 'total', 'created_at')
+            ->with('user:id,name')
+            ->orderBy('id')->limit(1000)->get();
+
+        $orderGoods = OrderGoods::select('id', 'order_id', 'name', 'price', 'quantity', 'status', 'created_at')
+            ->orderBy('id')->limit(1000)->get();
+
+        $families = Family::select('id', 'family_name', 'parent_id', 'invitation_code', 'created_at')
+            ->with('parent:id,name')
+            ->orderBy('id')->limit(1000)->get();
+
+        $comments = Comment::select('id', 'user_id', 'body', 'created_at')
+            ->with('user:id,name')
+            ->orderBy('id')->limit(1000)->get();
+
+        $auctions = Auction::select('id', 'name', 'starting_bid', 'start_time', 'end_time', 'created_at')
+            ->orderBy('id')->limit(1000)->get();
+
+        $bids = Bids::select('id', 'item_id', 'user_id', 'bid_amount', 'created_at')
+            ->with(['user:id,name', 'auction:id,name'])
+            ->orderBy('id')->limit(1000)->get();
+
+        $data = compact('users', 'products', 'orders', 'orderGoods', 'families', 'comments', 'auctions', 'bids');
+
+        $pdf = Pdf::loadView('export-all', $data);
+        $pdf->setPaper('A4', 'landscape'); // landscape fits more columns
+
+        return $pdf->download('database_export_' . now()->format('Y-m-d_His') . '.pdf');
     }
 
 

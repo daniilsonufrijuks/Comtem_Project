@@ -367,6 +367,8 @@ Route::middleware(['auth:admin'])->group(function () {
     Route::delete('/admin/auctions/{id}', [AdminController::class, 'destroyAuction']);
     Route::get('/admin/auctions/{id}/bids', [AdminController::class, 'showBids']);
     Route::get('/admin/bids', [AdminController::class, 'indexBids']);
+
+    Route::get('/admin/export-all-pdf', [AdminController::class, 'exportAllToPdf'])->name('admin.export.pdf');
 });
 
 

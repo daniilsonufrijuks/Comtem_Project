@@ -3,6 +3,7 @@
         <div class="admin-header">
             <button @click="$inertia.visit('/')" class="back-button">Back to Home</button>
             <h1 class="title">Admin Dashboard</h1>
+            <ExportDatabasePdf @notify="showNotification" />
         </div>
 
         <!-- Navigation Tabs -->
@@ -799,9 +800,11 @@
 
 <script>
 import { Chart, registerables } from 'chart.js';
+import ExportDatabasePdf from "@/Components/ExportDatabasePdf.vue";
 Chart.register(...registerables);
 
 export default {
+    components: {ExportDatabasePdf},
     props: {
         orders: { type: Array, default: () => [] },
         products: { type: Array, default: () => [] },
