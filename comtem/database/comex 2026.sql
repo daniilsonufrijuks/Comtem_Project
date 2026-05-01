@@ -451,6 +451,37 @@ CREATE TABLE `job_batches` (
 
 -- --------------------------------------------------------
 
+--
+-- Table structure for table `migrations`
+--
+
+CREATE TABLE `migrations` (
+  `id` int(10) UNSIGNED NOT NULL,
+  `migration` varchar(255) NOT NULL,
+  `batch` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `migrations`
+--
+
+INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
+(1, '0001_01_01_000000_create_users_table', 1),
+(2, '0001_01_01_000001_create_cache_table', 1),
+(3, '0001_01_01_000002_create_jobs_table', 1),
+(4, '2024_07_20_000000_create_gpt_traces_table', 1),
+(5, '2024_12_03_125041_create_orders_table', 1),
+(6, '2025_01_16_123853_create_admins_table', 1),
+(7, '2025_01_19_161211_create_auctions_table', 1),
+(8, '2025_02_09_144714_create_bids_table', 1),
+(9, '2025_02_26_164946_create_books_table', 1),
+(10, '2025_04_05_083849_create_goods_orders_table', 1),
+(11, '2025_04_20_145505_create_products_table', 1),
+(12, '2025_04_20_145528_create_poincluded_table', 1),
+(13, '2025_06_26_080743_create_comments_table', 2),
+(14, '2025_08_30_144912_add_admin_id_to_books_table', 3);
+
+-- --------------------------------------------------------
 
 --
 -- Table structure for table `orders`
