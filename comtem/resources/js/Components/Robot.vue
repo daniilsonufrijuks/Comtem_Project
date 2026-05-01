@@ -1,6 +1,6 @@
 <template>
     <div class="fixed bottom-14 right-4 z-50">
-        <div class="w-24 h-24 animate-wave">
+        <div class="w-14 h-14 sm:w-20 sm:h-20 animate-wave">
             <img src="/images/front/robot.png" alt="Robot Assistant" class="w-full h-full" />
         </div>
     </div>
