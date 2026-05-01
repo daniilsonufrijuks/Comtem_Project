@@ -110,4 +110,38 @@
     }
 }
 /* Cards near top */
+
+
+@media (max-width: 768px) {
+
+    .product-cards-top {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+        padding: 0 10px;
+    }
+
+    .product-card-top {
+        width: 100%;
+        min-height: auto;
+        padding: 10px;
+        border-radius: 8px;
+    }
+
+    .product-card-top img {
+        max-height: 120px;
+        object-fit: contain;
+    }
+
+    .product-card-top p {
+        font-size: 12px;
+        margin: 8px 0;
+    }
+
+    .product-card-top button {
+        padding: 6px 12px;
+        font-size: 13px;
+        border-radius: 4px;
+    }
+}
 </style>
