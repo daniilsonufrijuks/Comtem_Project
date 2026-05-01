@@ -170,4 +170,41 @@ export default {
 .suggestions-list li:hover {
     background-color: #f0f0f0;
 }
+
+
+@media screen and (max-width: 480px) {
+
+    .container_search {
+        padding: 10px !important;
+    }
+
+    .search {
+        box-shadow: 0 0 20px rgba(51, 51, 51, .08);
+    }
+
+    .search input {
+        height: 40px;
+        font-size: 13px;
+        text-indent: 15px;
+    }
+
+    .search button {
+        height: 32px;
+        width: 70px;
+        top: 4px;
+        right: 4px;
+        font-size: 12px;
+    }
+
+    .search i.fa {
+        width: 35px;
+        font-size: 14px;
+        padding-left: 5px;
+    }
+
+    .suggestions-list li {
+        padding: 6px;
+        font-size: 13px;
+    }
+}
 </style>
