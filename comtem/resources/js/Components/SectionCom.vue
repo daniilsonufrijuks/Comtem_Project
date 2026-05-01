@@ -69,3 +69,33 @@ export default {
     }
 };
 </script>
+
+<style>
+@media (max-width: 640px) {
+
+    .comment-box {
+        padding: 10px !important;
+    }
+
+    .comment-title {
+        font-size: 18px !important;
+        margin-bottom: 10px !important;
+    }
+
+    textarea {
+        padding: 8px !important;
+        font-size: 13px !important;
+    }
+
+    button {
+        padding: 6px 12px !important;
+        font-size: 13px !important;
+    }
+
+    .comments-list {
+        max-height: 200px !important;
+    }
+}
+
+</style>
+
