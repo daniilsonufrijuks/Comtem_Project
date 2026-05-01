@@ -70,6 +70,7 @@ export default {
 <style scoped>
 .product-card {
     width: 100%;
+    height: 100%;
     background: #f9f9f9;
     border: 1px solid #ddd;
     border-radius: 12px;
@@ -88,38 +89,72 @@ export default {
     box-shadow: 0 6px 18px rgba(0,0,0,0.15);
 }
 
-/* image area */
 .product-img {
     width: 100%;
-    height: 180px;
+    height: 160px;
     object-fit: contain;
     margin-bottom: 10px;
 }
 
-/* text */
+.product-card h5 {
+    font-size: 15px;
+    margin: 6px 0;
+}
+
 .description {
-    font-size: 14px;
+    font-size: 13px;
     color: #666;
+    margin: 6px 0;
+    flex-grow: 1;
 }
 
 .price {
     font-weight: bold;
     margin: 10px 0;
+    font-size: 15px;
 }
 
-/* button */
 .product-card button {
     margin-top: auto;
-    padding: 10px;
+    padding: 8px 12px;
     background: #007BFF;
     color: white;
     border: none;
     border-radius: 6px;
     cursor: pointer;
+    font-size: 14px;
 }
 
 .product-card button:hover {
     background: #0056b3;
 }
 
+/* MOBILE */
+@media (max-width: 768px) {
+    .product-card {
+        padding: 12px;
+        border-radius: 10px;
+    }
+
+    .product-img {
+        height: 110px;
+    }
+
+    .product-card h5 {
+        font-size: 13px;
+    }
+
+    .description {
+        font-size: 11px;
+    }
+
+    .price {
+        font-size: 13px;
+    }
+
+    .product-card button {
+        padding: 6px 10px;
+        font-size: 12px;
+    }
+}
 </style>
