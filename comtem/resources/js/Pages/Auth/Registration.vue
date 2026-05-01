@@ -172,17 +172,17 @@ const submit = () => {
 
 <style scoped>
 .container {
-    height: 100vh;
+    min-height: 100vh;
     width: 100%;
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     justify-content: center;
     background-color: #420d65;
-    column-gap: 30px;
+    padding: 20px 0;
 }
 
 .form {
-    position: absolute;
+    position: relative;
     max-width: 430px;
     width: 100%;
     padding: 30px;
@@ -488,19 +488,72 @@ a.google span {
 }
 
 
-@media screen and (max-width: 400px) {
+@media screen and (max-width: 480px) {
+
     .form {
-        padding: 20px 10px;
+        width: 80%;
+        max-width: 340px;
+        padding: 15px;
+    }
+
+    header {
+        font-size: 22px;
     }
 
     .account-type-option {
-        padding: 12px;
+        padding: 10px;
+    }
+
+    .password-requirements {
+        font-size: 13px;
+    }
+
+    .container {
+        padding-top: 75px;
+    }
+
+    .account-type-option {
+        padding: 8px 10px;
     }
 
     .option-icon {
-        font-size: 20px;
-        margin-right: 10px;
-        width: 30px;
+        font-size: 16px;
+        width: 24px;
+        margin-right: 8px;
+    }
+
+    .option-title {
+        font-size: 13px;
+    }
+
+    .option-description {
+        font-size: 10px;
+    }
+
+    .form .field {
+        height: 38px;
+        margin-top: 10px;
+    }
+
+    .field input {
+        font-size: 13px;
+        padding: 0 8px;
+    }
+
+    .field button {
+        font-size: 13px;
+    }
+
+    .password-requirements {
+        padding: 6px;
+    }
+
+    .password-requirements p {
+        font-size: 12px;
+    }
+
+    .password-requirements li {
+        font-size: 11px;
     }
 }
 </style>

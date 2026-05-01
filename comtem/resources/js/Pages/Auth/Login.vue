@@ -265,10 +265,27 @@ a.google span{
     border-color: #e53e3e !important;
 }
 
-@media screen and (max-width: 400px) {
+@media screen and (max-width: 480px) {
     .form{
         padding: 20px 10px;
+        width: 80%;
+    }
+    .form .field{
+        height: 38px;
+        margin-top: 10px;
     }
 
+    .field input,
+    .field button{
+        font-size: 13px;
+    }
+
+    .field input{
+        padding: 0 8px;
+    }
+
+    .eye-icon{
+        font-size: 14px;
+    }
 }
 </style>
