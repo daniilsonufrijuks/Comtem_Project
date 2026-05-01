@@ -178,7 +178,7 @@ const submit = () => {
     align-items: flex-start;
     justify-content: center;
     background-color: #420d65;
-    padding: 20px 0;
+    padding: 60px 0;
 }
 
 .form {
