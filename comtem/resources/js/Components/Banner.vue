@@ -20,27 +20,6 @@ export default {
             localStorage.setItem("bannerDismissed", "true");
         }
     },
-    mounted() {
-        // if (localStorage.getItem("bannerDismissed") === "true") {
-        //     this.showBanner = false;
-        // }
-        // Ensure this is checked after the page is fully loaded
-        // setTimeout(() => {
-        //     if (localStorage.getItem("bannerDismissed") === "true") {
-        //         this.showBanner = false;
-        //     }
-        // }, 10000); // Add a small delay for better reliability
-        // console.log("Component mounted"); // Debugging log
-        // // Check localStorage after the component is mounted
-        // this.$nextTick(() => {
-        //     if (localStorage.getItem("bannerDismissed") === "true") {
-        //         this.showBanner = false;
-        //         console.log("Banner already dismissed"); // Debugging log
-        //     } else {
-        //         console.log("Banner will be shown"); // Debugging log
-        //     }
-        // });
-    }
 };
 </script>
 
@@ -50,8 +29,7 @@ export default {
     bottom: 0;
     left: 0;
     width: 100%;
-    /*background: red;*/
-    background: linear-gradient(135deg, #ed5f7f, #9a1b06); /* Gradient from red to a lighter shade */
+    background: linear-gradient(135deg, #ed5f7f, #9a1b06);
     color: white;
     text-align: center;
     padding: 10px;
@@ -73,5 +51,29 @@ button {
     padding: 5px 10px;
     font-size: 16px;
     cursor: pointer;
+}
+
+@media screen and (max-width: 480px) {
+
+    .banner {
+        padding: 6px 8px;
+        font-size: 13px;
+    }
+
+    .banner-content {
+        max-width: 95%;
+        gap: 8px;
+    }
+
+    .banner p {
+        margin: 0;
+        line-height: 1.2;
+    }
+
+    button {
+        padding: 3px 6px;
+        font-size: 12px;
+        border-radius: 4px;
+    }
 }
 </style>
