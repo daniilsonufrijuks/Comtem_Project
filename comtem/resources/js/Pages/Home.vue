@@ -1,7 +1,7 @@
 <template>
 <!--    <Navbar :routes="routes" />-->
     <Banner/>
-    <RobotAssistant />
+<!--    <RobotAssistant />-->
     <Navbar :routes="routes"/>
     <Search />
     <Slider/>
