@@ -12,6 +12,10 @@ const router = useRouter();  // For redirecting after logout
 // Toggle navigation menu state
 const toggleNav = () => {
     isMenuActive.value = !isMenuActive.value;
+
+    document.body.style.overflow = isMenuActive.value
+        ? 'hidden'
+        : 'auto';
 };
 
 // Logout function
@@ -19,6 +23,9 @@ const logout = async () => {
     try {
         // Send a POST request to the Laravel logout route
         await axios.post('/logout');
+
+        isMenuActive.value = false;
+        document.body.style.overflow = 'auto';
 
         // After successful logout, update the login state
         if (isLoggedIn?.value !== undefined) isLoggedIn.value = false;
@@ -121,6 +128,12 @@ const goToUserPage = () => {
             </li>
         </ul>
     </div>
+
+    <div
+        v-if="isMenuActive"
+        class="overlay"
+        @click="toggleNav"
+    ></div>
 </template>
 
 
@@ -267,6 +280,16 @@ nav ul li a:hover {
     border-radius: 5px;
 }
 
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.3);
+    z-index: 1;
+}
+
 .icon {
     font-size: 1.2rem;
 }
@@ -281,11 +304,24 @@ nav ul li a:hover {
 
 /* Media Query for Mobile */
 @media screen and (max-width: 790px) {
+    nav ul {
+        display: none;
+    }
+
     .hamburger {
         display: block;
     }
-    nav ul {
-        display: none;
+
+    nav {
+        padding: 10px 20px;
+    }
+
+    nav .logo h1 {
+        font-size: 1.2rem;
+    }
+
+    nav .logo img {
+        height: 25px;
     }
 }
 </style>
