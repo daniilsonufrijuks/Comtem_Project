@@ -101,7 +101,7 @@ export default {
 }
 
 .comments-card {
-    max-width: 780px;
+    max-width: 1100px;
     margin: 0 auto;
     background: #fff;
     border-radius: 16px;
