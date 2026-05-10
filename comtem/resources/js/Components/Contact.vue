@@ -1,4 +1,3 @@
-
 <script setup>
 import { ref } from 'vue';
 import axios from 'axios';
@@ -12,45 +11,67 @@ const form = useForm({
 });
 
 const submit = () => {
-    form.post(route('contact'), {
-
-    });
+    form.post(route('contact'), {});
 };
 </script>
 
-
 <template>
+    <section class="contact_section">
+        <div class="contact-card">
+            <div class="map-side">
+                <div class="map-wrapper">
+                    <iframe
+                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2175.752002814705!2d24.101903377117267!3d56.95305007355204!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x46eecf7bac058ce9%3A0x96a8a0e931b27448!2z0KDQuNC20YHQutC40Lkg0LPQvtGB0YPQtNCw0YDRgdGC0LLQtdC90L3Ri9C5INGC0LXRhdC90LjQutGD0Lc!5e0!3m2!1sru!2slv!4v1725731560133!5m2!1sen!2slv"
+                        frameborder="0"
+                        allowfullscreen
+                    ></iframe>
+                </div>
+            </div>
 
-    <!-- contact section -->
-    <section class="contact_section ">
-        <div class="container container-bg">
-            <div class="row">
-                <div class="col-lg-7 col-md-6 px-0">
-                    <div class="map_container">
-                        <div class="map-responsive">
-                            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2175.752002814705!2d24.101903377117267!3d56.95305007355204!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x46eecf7bac058ce9%3A0x96a8a0e931b27448!2z0KDQuNC20YHQutC40Lkg0LPQvtGB0YPQtNCw0YDRgdGC0LLQtdC90L3Ri9C5INGC0LXRhdC90LjQutGD0Lw!5e0!3m2!1sru!2slv!4v1725731560133!5m2!1sen!2slv"  width="600" height="300" frameborder="0" style="border:0; width: 100%; height:100%" allowfullscreen></iframe>
-                        </div>
+            <div class="form-side">
+                <div class="form-header">
+                    <h2>Get in Touch</h2>
+                    <p>We'd love to hear from you. Send us a message!</p>
+                </div>
+
+                <form @submit.prevent="submit">
+                    <div class="field">
+                        <label for="name">Name</label>
+                        <input
+                            id="name"
+                            v-model="form.name"
+                            type="text"
+                            placeholder="Your name"
+                            required
+                        />
                     </div>
-                </div>
-                <div class="col-md-6 col-lg-5 px-0">
-                    <form @submit.prevent="submit">
-                        <div>
-                            <input v-model="form.name" type="text" name="name" placeholder="Name" required />
-                        </div>
-                        <div>
-                            <input v-model="form.email" type="email" name="email" placeholder="Email" required />
-                        </div>
-<!--                        <div>-->
-<!--                            <input v-model="form.subject" type="text" name="subject" placeholder="Phone" required />-->
-<!--                        </div>-->
-                        <div>
-                            <textarea v-model="form.body" name="message" class="message-box" placeholder="Message" required ></textarea>
-                        </div>
-                        <div class="d-flex">
-                            <button type="submit">SEND</button>
-                        </div>
-                    </form>
-                </div>
+                    <div class="field">
+                        <label for="email">Email</label>
+                        <input
+                            id="email"
+                            v-model="form.email"
+                            type="email"
+                            placeholder="your@email.com"
+                            required
+                        />
+                    </div>
+                    <div class="field">
+                        <label for="message">Message</label>
+                        <textarea
+                            id="message"
+                            v-model="form.body"
+                            placeholder="Write your message here…"
+                            required
+                        ></textarea>
+                    </div>
+                    <button type="submit" :disabled="form.processing">
+                        <span v-if="form.processing">Sending…</span>
+                        <span v-else>Send Message <i class="fa fa-paper-plane"></i></span>
+                    </button>
+                    <p v-if="form.recentlySuccessful" class="success-msg">
+                        <i class="fa fa-check-circle"></i> Message sent successfully!
+                    </p>
+                </form>
             </div>
         </div>
     </section>
@@ -58,129 +79,226 @@ const submit = () => {
 
 <style scoped>
 .contact_section {
-    padding: 80px 20px;
+    padding: 60px 16px;
     width: 100%;
+    box-sizing: border-box;
 }
 
-/* Container */
-.contact_section .container-bg {
-    max-width: 1200px; /* ⬅️ bigger, fixes "too small" */
-    width: 100%;
-    margin: 0 auto; /* center it */
+/* Card wrapper — side by side on desktop, stacked on mobile */
+.contact-card {
+    max-width: 1100px;
+    margin: 0 auto;
     background: #fff;
-    border-radius: 12px;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+    border-radius: 16px;
+    box-shadow: 0 8px 32px rgba(66, 13, 101, 0.10);
     overflow: hidden;
-}
-
-/* Row fix (important) */
-.contact_section .row {
     display: flex;
-    flex-wrap: wrap;
-    margin: 0;
+    flex-direction: row;
 }
 
-/* Columns */
-.contact_section .col-lg-6 {
-    flex: 0 0 50%;
-    max-width: 50%;
+/* ── Map ── */
+.map-side {
+    flex: 1 1 45%;
+    min-height: 300px;
 }
 
-/* MAP FIX */
-.contact_section .map_container {
+.map-wrapper {
     width: 100%;
     height: 100%;
-    min-height: 400px; /* ⬅️ prevents tiny map */
+    min-height: 300px;
 }
 
-.map-responsive {
+.map-wrapper iframe {
     width: 100%;
     height: 100%;
-}
-
-.map-responsive iframe {
-    width: 100%;
-    height: 100%;
+    min-height: 300px;
+    display: block;
     border: 0;
 }
 
-/* FORM */
-.contact_section form {
-    padding: 40px;
+/* ── Form ── */
+.form-side {
+    flex: 1 1 55%;
+    padding: 44px 40px;
     display: flex;
     flex-direction: column;
     justify-content: center;
+    box-sizing: border-box;
 }
 
-/* INPUTS */
-.contact_section input,
-.contact_section textarea {
+.form-header {
+    margin-bottom: 28px;
+}
+
+.form-header h2 {
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: #2d0845;
+    margin: 0 0 6px;
+    letter-spacing: -0.01em;
+}
+
+.form-header p {
+    color: #7a6a8a;
+    font-size: 0.92rem;
+    margin: 0;
+}
+
+/* Fields */
+.field {
+    margin-bottom: 16px;
+}
+
+.field label {
+    display: block;
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: #4a3060;
+    margin-bottom: 6px;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+}
+
+.field input,
+.field textarea {
     width: 100%;
-    border: 1px solid #ddd;
-    height: 50px;
-    margin-bottom: 18px;
-    padding: 0 15px;
-    border-radius: 8px;
-    background-color: #f9f9f9;
+    border: 1.5px solid #e2d5ee;
+    padding: 12px 14px;
+    border-radius: 10px;
+    background: #faf8fc;
+    font-size: 0.95rem;
+    color: #2d0845;
     outline: none;
-    transition: 0.2s;
+    transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+    box-sizing: border-box;
+    -webkit-appearance: none;
+    appearance: none;
 }
 
-.contact_section textarea {
-    height: 130px;
-    padding-top: 10px;
+.field textarea {
+    height: 120px;
+    resize: vertical;
+    line-height: 1.5;
 }
 
-.contact_section input:focus,
-.contact_section textarea:focus {
-    border-color: #420d65;
+.field input:focus,
+.field textarea:focus {
+    border-color: #7c28a8;
     background: #fff;
+    box-shadow: 0 0 0 3px rgba(124, 40, 168, 0.12);
 }
 
-/* BUTTON */
-.contact_section button {
+/* Button */
+button[type="submit"] {
+    width: 100%;
     padding: 14px;
     background: #420d65;
     color: #fff;
     border: none;
-    border-radius: 8px;
-    font-weight: 600;
+    border-radius: 10px;
+    font-size: 0.95rem;
+    font-weight: 700;
+    letter-spacing: 0.03em;
     cursor: pointer;
-    transition: 0.3s;
+    transition: background 0.25s, transform 0.15s, box-shadow 0.2s;
+    margin-top: 4px;
+    box-shadow: 0 4px 14px rgba(66,13,101,0.25);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
 }
 
-.contact_section button:hover {
-    background: #5c1a85;
+button[type="submit"]:hover:not(:disabled) {
+    background: #6a1fa0;
+    box-shadow: 0 6px 20px rgba(66,13,101,0.32);
+    transform: translateY(-1px);
 }
 
-/* MOBILE */
-@media (max-width: 992px) {
-    .contact_section .col-lg-6 {
-        flex: 0 0 100%;
-        max-width: 100%;
+button[type="submit"]:active:not(:disabled) {
+    transform: translateY(0);
+}
+
+button[type="submit"]:disabled {
+    opacity: 0.65;
+    cursor: not-allowed;
+}
+
+.success-msg {
+    margin-top: 12px;
+    color: #2a8a4a;
+    font-size: 0.88rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+/* ── Tablet ── */
+@media (max-width: 900px) {
+    .contact-card {
+        flex-direction: column;
     }
 
-    .contact_section .map_container {
-        min-height: 300px;
+    .map-side {
+        flex: none;
+        height: 240px;
+        min-height: 0;
     }
 
-    .contact_section form {
-        padding: 25px;
+    .map-wrapper,
+    .map-wrapper iframe {
+        min-height: 240px;
+        height: 240px;
+    }
+
+    .form-side {
+        padding: 32px 28px;
     }
 }
 
-@media (max-width: 576px) {
+/* ── Mobile ── */
+@media (max-width: 480px) {
     .contact_section {
-        padding: 40px 10px;
+        padding: 24px 12px 40px;
     }
 
-    .contact_section .container-bg {
-        border-radius: 8px;
+    .contact-card {
+        border-radius: 14px;
+        box-shadow: 0 4px 20px rgba(66,13,101,0.12);
     }
 
-    .contact_section input,
-    .contact_section textarea {
-        font-size: 14px;
+    .map-side {
+        height: 200px;
+    }
+
+    .map-wrapper,
+    .map-wrapper iframe {
+        min-height: 200px;
+        height: 200px;
+    }
+
+    .form-side {
+        padding: 24px 18px 28px;
+    }
+
+    .form-header h2 {
+        font-size: 1.3rem;
+    }
+
+    .field input,
+    .field textarea {
+        font-size: 1rem; /* prevents iOS zoom on focus */
+        padding: 13px 14px;
+    }
+
+    .field textarea {
+        height: 110px;
+    }
+
+    button[type="submit"] {
+        padding: 15px;
+        font-size: 1rem;
     }
 }
 </style>
