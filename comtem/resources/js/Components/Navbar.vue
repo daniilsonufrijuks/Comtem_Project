@@ -2,37 +2,23 @@
 import { ref } from 'vue';
 import { useUser } from '../Composables/useUser';
 import axios from 'axios';
-import { useRouter } from 'vue-router';  // For navigation after logout
+import { useRouter } from 'vue-router';
 
-const { isLoggedIn, user } = useUser(); // Use your custom composable to check login status
+const { isLoggedIn, user } = useUser();
 const isMenuActive = ref(false);
-const router = useRouter();  // For redirecting after logout
+const router = useRouter();
 
-//console.log('User Data:', user.value);
-// Toggle navigation menu state
 const toggleNav = () => {
     isMenuActive.value = !isMenuActive.value;
-
-    document.body.style.overflow = isMenuActive.value
-        ? 'hidden'
-        : 'auto';
+    document.body.style.overflow = isMenuActive.value ? 'hidden' : 'auto';
 };
 
-// Logout function
 const logout = async () => {
     try {
-        // Send a POST request to the Laravel logout route
         await axios.post('/logout');
-
         isMenuActive.value = false;
         document.body.style.overflow = 'auto';
-
-        // After successful logout, update the login state
         if (isLoggedIn?.value !== undefined) isLoggedIn.value = false;
-        //user.value = null; // Clear user data
-
-        // Optionally redirect to the login page or homepage
-        //await router.push('/login');  // Or use '/home' or another route
     } catch (error) {
         console.error('Error logging out:', error);
     }
@@ -41,10 +27,7 @@ const logout = async () => {
 const goToUserPage = () => {
     window.location.href = "/user";
 };
-
-
 </script>
-
 
 <template>
     <nav>
@@ -52,8 +35,7 @@ const goToUserPage = () => {
             <h1><a href="/">COMTEM</a></h1>
             <img class="imglogo" src="/m.png"/>
         </div>
-        <ul>
-<!--            <li><a href="/quiz">Quiz</a></li>-->
+        <ul class="desktop-nav">
             <li><a href="/">Home</a></li>
             <li><a href="/about">About</a></li>
             <li><a href="/contacts">Contacts</a></li>
@@ -61,20 +43,11 @@ const goToUserPage = () => {
             <li><a href="/market">Market</a></li>
             <li><a href="/login">Login</a></li>
             <li v-if="isLoggedIn">
-                <!-- User is logged in: show user avatar -->
-                <i class="fa fa-user icon"
-                   :style="{color: 'white', cursor: 'pointer'}"
-                   :title="user?.name || 'User'"
-                   @click="goToUserPage"
-                ></i>
+                <i class="fa fa-user icon" :style="{color: 'white', cursor: 'pointer'}" :title="user?.name || 'User'" @click="goToUserPage"></i>
             </li>
             <li v-else>
-                <!-- User is not logged in: show login icon -->
-                <i class="fa fa-user-circle icon"
-                   :style="{ color: 'white' }"
-                ></i> <!-- FontAwesome icon -->
+                <i class="fa fa-user-circle icon" :style="{ color: 'white' }"></i>
             </li>
-<!--            <li @click="logout" style="color:white">Logout</li>-->
             <li @click="logout" style="cursor: pointer;">
                 <i class="fa fa-sign-out icon" style="color: white;" title="Logout"></i>
             </li>
@@ -85,243 +58,313 @@ const goToUserPage = () => {
                 </a>
             </li>
         </ul>
-        <!-- Hamburger Menu -->
-        <div class="hamburger" @click="toggleNav">
-            <span class="line"></span>
-            <span class="line"></span>
-            <span class="line"></span>
-        </div>
-    </nav>
-    <!-- Menubar for Mobile -->
-    <div class="menubar" :class="{ active: isMenuActive }">
-        <ul>
-            <li><a href="/">Home</a></li>
-            <li><a href="/about">About</a></li>
-            <li><a href="/contacts">Contacts</a></li>
-            <li><a href="/tutor">Blog</a></li>
-            <li><a href="/market">Market</a></li>
-            <li><a href="/login">Login</a></li>
-<!--            <li><a :href="routes.login">Login</a></li>-->
-            <li v-if="isLoggedIn">
-                <!-- User is logged in: show user avatar -->
-                <i class="fa fa-user icon"
-                   :style="{color: 'black', cursor: 'pointer'}"
-                   :title="user?.name || 'User'"
-                   @click="goToUserPage"
-                ></i>
-            </li>
-            <li v-else>
-                <!-- User is not logged in: show login icon -->
-                <i class="fa fa-user-circle icon"
-                   :style="{ color: 'black' }"
-                ></i> <!-- FontAwesome icon -->
-            </li>
-            <!--            <li @click="logout" style="color:white">Logout</li>-->
-            <li @click="logout" style="cursor: pointer;">
-                <i class="fa fa-sign-out icon" style="color: black;" title="Logout"></i>
-            </li>
-            <li>
-                <a href="/cart" style="position: relative;">
-                    <i class="fa fa-shopping-cart icon" style="color: black;"></i>
-                    <span v-if="cartCount > 0" class="cart-badge">{{ cartCount }}</span>
-                </a>
-            </li>
-        </ul>
-    </div>
 
-    <div
-        v-if="isMenuActive"
-        class="overlay"
-        @click="toggleNav"
-    ></div>
+        <!-- Hamburger -->
+        <button class="hamburger" :class="{ 'is-active': isMenuActive }" @click="toggleNav" aria-label="Toggle menu">
+            <span class="bar"></span>
+            <span class="bar"></span>
+            <span class="bar"></span>
+        </button>
+    </nav>
+
+    <!-- Mobile Drawer -->
+    <Transition name="drawer">
+        <div v-if="isMenuActive" class="menubar">
+            <div class="menubar-header">
+                <span class="menubar-brand">COMTEM</span>
+                <button class="close-btn" @click="toggleNav" aria-label="Close menu">
+                    <i class="fa fa-times"></i>
+                </button>
+            </div>
+
+            <ul class="menubar-nav">
+                <li><a href="/" @click="toggleNav"><i class="fa fa-home nav-icon"></i>Home</a></li>
+                <li><a href="/about" @click="toggleNav"><i class="fa fa-info-circle nav-icon"></i>About</a></li>
+                <li><a href="/contacts" @click="toggleNav"><i class="fa fa-envelope nav-icon"></i>Contacts</a></li>
+                <li><a href="/tutor" @click="toggleNav"><i class="fa fa-book nav-icon"></i>Blog</a></li>
+                <li><a href="/market" @click="toggleNav"><i class="fa fa-store nav-icon"></i>Market</a></li>
+                <li><a href="/login" @click="toggleNav"><i class="fa fa-lock nav-icon"></i>Login</a></li>
+            </ul>
+
+            <div class="menubar-footer">
+                <a href="/cart" class="footer-action">
+                    <i class="fa fa-shopping-cart"></i>
+                    <span>Cart</span>
+                    <span v-if="cartCount > 0" class="cart-badge-mobile">{{ cartCount }}</span>
+                </a>
+
+                <button v-if="isLoggedIn" class="footer-action" @click="goToUserPage">
+                    <i class="fa fa-user"></i>
+                    <span>{{ user?.name || 'Profile' }}</span>
+                </button>
+
+                <button class="footer-action logout-btn" @click="logout">
+                    <i class="fa fa-sign-out"></i>
+                    <span>Logout</span>
+                </button>
+            </div>
+        </div>
+    </Transition>
+
+    <Transition name="fade">
+        <div v-if="isMenuActive" class="overlay" @click="toggleNav"></div>
+    </Transition>
 </template>
 
-
-
 <style scoped>
-.menubar ul {
-    list-style-type: none; /* Remove bullet points */
-    padding: 0;
-    margin: 0;
-    display: flex; /* Use flexbox for layout */
-    flex-direction: column; /* Stack items vertically */
-    align-items: center; /* Center items horizontally */
-    justify-content: center; /* Center items vertically */
-}
-
-.menubar li {
-    margin: 10px 0; /* Add some spacing between menu items */
-}
-
-.menubar i.icon {
-    font-size: 24px; /* Adjust icon size */
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
+/* ── Base nav ── */
 nav {
     background-color: #420d65;
-    padding: 5px 2%;
+    padding: 0 2%;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px,
-    rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
-    z-index: 1;
-    height: 55px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.35);
+    z-index: 100;
+    height: 58px;
+    position: relative;
 }
+
 nav .logo {
     display: flex;
     align-items: center;
+    gap: 8px;
 }
 nav .logo img {
-    height: 25px;
+    height: 26px;
     width: auto;
-    margin-right: 10px;
 }
 nav .logo h1 {
-    font-size: 1.5rem;
+    font-size: 1.4rem;
+    margin: 0;
     background: linear-gradient(to right, #c593dc 0%, #e0cae4 100%);
     -webkit-background-clip: text;
     background-clip: text;
     -webkit-text-fill-color: transparent;
+    letter-spacing: 0.04em;
+}
+nav .logo h1 a {
+    color: inherit;
+    text-decoration: none;
+    -webkit-text-fill-color: transparent;
+    background: linear-gradient(to right, #c593dc 0%, #e0cae4 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
 }
 
-nav ul {
+/* ── Desktop nav ── */
+.desktop-nav {
     list-style: none;
     display: flex;
-}
-nav ul li {
-    margin-left: 0.5rem;
-}
-nav ul li a {
-    text-decoration: none;
-    color: #ffffff;
-    font-size: 95%;
-    font-weight: 400;
-    padding: 4px 8px;
-    border-radius: 5px;
-}
-
-nav ul li a:hover {
-    background-color: #a34faf;
-}
-
-.hamburger {
-    display: none;
-    cursor: pointer;
-}
-
-.hamburger .line {
-    width: 25px;
-    height: 2px;
-    background-color: #ffffff;
-    display: block;
-    margin: 7px auto;
-    transition: all 0.3s ease-in-out;
-}
-
-.hamburger-active {
-    transition: all 0.3s ease-in-out;
-    transition-delay: 0.6s;
-    transform: rotate(45deg);
-}
-
-.hamburger-active .line:nth-child(2) {
-    width: 0px;
-}
-
-.hamburger-active .line:nth-child(1),
-.hamburger-active .line:nth-child(3) {
-    transition-delay: 0.3s;
-}
-
-.hamburger-active .line:nth-child(1) {
-    transform: translateY(12px);
-}
-
-.hamburger-active .line:nth-child(3) {
-    transform: translateY(-5px) rotate(90deg);
-}
-
-.menubar {
-    position: absolute;
-    top: 0;
-    left: -60%;
-    display: flex;
-    justify-content: center;
-    align-items: flex-start;
-    width: 60%;
-    height: 100vh;
-    padding: 20% 0;
-    background: rgba(255, 255, 255);
-    transition: all 0.5s ease-in;
-    z-index: 2;
-}
-.menubar.active {
-    left: 0;
-    box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
-}
-
-.menubar ul {
+    align-items: center;
+    gap: 2px;
+    margin: 0;
     padding: 0;
-    list-style: none;
 }
-.menubar ul li {
-    margin-bottom: 32px;
-}
-
-.menubar ul li a {
+.desktop-nav li a {
     text-decoration: none;
-    color: #000;
-    font-size: 95%;
+    color: #fff;
+    font-size: 0.9rem;
     font-weight: 400;
     padding: 5px 10px;
-    border-radius: 5px;
+    border-radius: 6px;
+    transition: background 0.2s;
 }
+.desktop-nav li a:hover {
+    background-color: #a34faf;
+}
+.icon { font-size: 1.1rem; }
 
-.overlay {
+/* ── Hamburger ── */
+.hamburger {
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    gap: 5px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 6px;
+    border-radius: 8px;
+    transition: background 0.2s;
+}
+.hamburger:hover { background: rgba(255,255,255,0.1); }
+.hamburger .bar {
+    display: block;
+    width: 24px;
+    height: 2px;
+    background: #fff;
+    border-radius: 2px;
+    transition: transform 0.3s ease, opacity 0.3s ease;
+}
+/* X state */
+.hamburger.is-active .bar:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+.hamburger.is-active .bar:nth-child(2) { opacity: 0; transform: scaleX(0); }
+.hamburger.is-active .bar:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+/* ── Mobile Drawer ── */
+.menubar {
     position: fixed;
     top: 0;
     left: 0;
+    width: min(320px, 85vw);
+    height: 100dvh;
+    background: #fff;
+    z-index: 200;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 4px 0 24px rgba(66,13,101,0.18);
+    overflow-y: auto;
+}
+
+.menubar-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 20px;
+    height: 58px;
+    background: #420d65;
+    flex-shrink: 0;
+}
+.menubar-brand {
+    font-size: 1.1rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    background: linear-gradient(to right, #c593dc, #e0cae4);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+.close-btn {
+    background: rgba(255,255,255,0.12);
+    border: none;
+    color: #fff;
+    width: 34px;
+    height: 34px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s;
+}
+.close-btn:hover { background: rgba(255,255,255,0.25); }
+
+/* Nav links */
+.menubar-nav {
+    list-style: none;
+    margin: 0;
+    padding: 16px 0;
+    flex: 1;
+}
+.menubar-nav li a {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 14px 24px;
+    text-decoration: none;
+    color: #2d0845;
+    font-size: 1rem;
+    font-weight: 500;
+    border-left: 3px solid transparent;
+    transition: background 0.18s, border-color 0.18s, color 0.18s;
+}
+.menubar-nav li a:hover,
+.menubar-nav li a:active {
+    background: #f5edf9;
+    border-left-color: #8a2caf;
+    color: #420d65;
+}
+.nav-icon {
+    width: 20px;
+    text-align: center;
+    font-size: 1rem;
+    color: #a050c0;
+    flex-shrink: 0;
+}
+
+/* Footer actions */
+.menubar-footer {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    padding: 12px 16px 28px;
+    border-top: 1px solid #ede0f5;
+}
+.footer-action {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 14px;
+    border-radius: 10px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #2d0845;
+    font-size: 0.95rem;
+    font-weight: 500;
+    text-decoration: none;
+    transition: background 0.18s;
     width: 100%;
-    height: 100%;
-    background: rgba(0,0,0,0.3);
-    z-index: 1;
+    text-align: left;
+}
+.footer-action:hover { background: #f5edf9; }
+.footer-action i { font-size: 1rem; color: #a050c0; width: 20px; text-align: center; }
+
+.logout-btn { color: #b0254a; }
+.logout-btn i { color: #b0254a; }
+.logout-btn:hover { background: #fdeef2; }
+
+.cart-badge-mobile {
+    margin-left: auto;
+    background: #420d65;
+    color: #fff;
+    font-size: 0.7rem;
+    font-weight: 700;
+    border-radius: 99px;
+    padding: 1px 7px;
+    min-width: 20px;
+    text-align: center;
 }
 
-.icon {
-    font-size: 1.2rem;
+/* Desktop badge */
+.cart-badge {
+    position: absolute;
+    top: -6px;
+    right: -8px;
+    background: #e040a0;
+    color: #fff;
+    font-size: 0.65rem;
+    font-weight: 700;
+    border-radius: 99px;
+    padding: 1px 5px;
+    min-width: 16px;
+    text-align: center;
 }
 
-.menubar ul li a:hover {
-    background-color: #ac60bf;
+/* ── Overlay ── */
+.overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.45);
+    backdrop-filter: blur(2px);
+    z-index: 199;
 }
 
-.imglogo {
-    margin-left: 10px;
-}
+/* ── Transitions ── */
+.drawer-enter-active { transition: transform 0.32s cubic-bezier(0.22,1,0.36,1); }
+.drawer-leave-active { transition: transform 0.26s cubic-bezier(0.55,0,1,0.45); }
+.drawer-enter-from, .drawer-leave-to { transform: translateX(-100%); }
 
-/* Media Query for Mobile */
+.fade-enter-active { transition: opacity 0.28s ease; }
+.fade-leave-active { transition: opacity 0.22s ease; }
+.fade-enter-from, .fade-leave-to { opacity: 0; }
+
+/* ── Responsive ── */
 @media screen and (max-width: 790px) {
-    nav ul {
-        display: none;
-    }
-
-    .hamburger {
-        display: block;
-    }
-
-    nav {
-        padding: 10px 20px;
-    }
-
-    nav .logo h1 {
-        font-size: 1.2rem;
-    }
-
-    nav .logo img {
-        height: 25px;
-    }
+    .desktop-nav { display: none; }
+    .hamburger { display: flex; }
+    nav { padding: 0 16px; }
 }
 </style>
