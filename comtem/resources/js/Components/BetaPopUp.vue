@@ -1,4 +1,3 @@
-
 <script>
 export default {
     name: "BetaModal",
@@ -23,87 +22,124 @@ export default {
 
 <template>
     <transition name="fade">
-        <div v-if="visible" class="beta-overlay">
+        <div v-if="visible" class="beta-overlay" @click.self="close">
             <div class="beta-card">
-                <div class="beta-icon">⚠</div>
-
+                <div class="beta-icon">⚠️</div>
                 <h2>Beta Version</h2>
-
-                <p>
-                    This website is currently in beta testing. Some features may not work as expected.
-                </p>
-
+                <p>This website is currently in beta testing. Some features may not work as expected.</p>
                 <button @click="close">Got it</button>
             </div>
         </div>
     </transition>
 </template>
 
-
-
 <style scoped>
-/* Overlay */
 .beta-overlay {
     position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(15, 23, 42, 0.65);
+    inset: 0;
+    background: rgba(15, 5, 30, 0.7);
     backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
     display: flex;
     justify-content: center;
     align-items: center;
     z-index: 9999;
+    padding: 16px;
+    box-sizing: border-box;
 }
 
-/* Card */
 .beta-card {
-    background: #ffffff;
-    padding: 30px 25px;
-    border-radius: 16px;
+    background: #fff;
+    border-radius: 20px;
     text-align: center;
-    max-width: 420px;
-    width: 90%;
-    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
-    animation: scaleIn 0.3s ease;
+    width: 100%;
+    max-width: 400px;
+    box-shadow: 0 24px 64px rgba(66, 13, 101, 0.22);
+    animation: scaleIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    overflow: hidden;
 }
 
-/* Icon */
+.beta-card::before {
+    content: '';
+    display: block;
+    height: 5px;
+    background: linear-gradient(to right, #420d65, #a34faf);
+}
+
 .beta-icon {
-    font-size: 32px;
-    margin-bottom: 10px;
+    font-size: 2.4rem;
+    margin: 28px 0 10px;
+    display: block;
 }
 
-/* Title */
 .beta-card h2 {
-    margin-bottom: 10px;
-    font-size: 22px;
-    font-weight: 600;
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: #2d0845;
+    margin: 0 0 10px;
+    padding: 0 24px;
 }
 
-/* Text */
 .beta-card p {
-    color: #555;
-    font-size: 15px;
-    margin-bottom: 20px;
+    color: #6b5a7a;
+    font-size: 0.92rem;
+    line-height: 1.6;
+    margin: 0 0 24px;
+    padding: 0 24px;
 }
 
-/* Button */
 .beta-card button {
-    background: #4f46e5;
-    color: white;
+    display: block;
+    width: calc(100% - 48px);
+    margin: 0 24px 24px;
+    padding: 13px;
+    background: #420d65;
+    color: #fff;
     border: none;
-    padding: 10px 18px;
-    border-radius: 8px;
-    font-weight: 500;
+    border-radius: 10px;
+    font-size: 0.95rem;
+    font-weight: 700;
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
+    box-shadow: 0 4px 14px rgba(66, 13, 101, 0.28);
+    box-sizing: border-box;
 }
 
 .beta-card button:hover {
-    background: #4338ca;
+    background: #6a1fa0;
     transform: translateY(-1px);
+    box-shadow: 0 6px 18px rgba(66, 13, 101, 0.36);
 }
 
+.beta-card button:active {
+    transform: translateY(0);
+}
+
+/* Transition */
+.fade-enter-active { transition: opacity 0.25s ease; }
+.fade-leave-active { transition: opacity 0.2s ease; }
+.fade-enter-from, .fade-leave-to { opacity: 0; }
+
+@keyframes scaleIn {
+    from { opacity: 0; transform: scale(0.88) translateY(12px); }
+    to   { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+/* Mobile */
+@media (max-width: 480px) {
+    .beta-card {
+        border-radius: 16px;
+    }
+
+    .beta-icon { font-size: 2rem; margin-top: 24px; }
+
+    .beta-card h2 { font-size: 1.15rem; }
+
+    .beta-card p { font-size: 0.88rem; }
+
+    .beta-card button {
+        padding: 14px;
+        font-size: 1rem;
+    }
+}
 </style>
