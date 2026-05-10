@@ -16,7 +16,7 @@ const submit = () => {
 
 <template>
     <section class="container forms">
-        <Link :href="route('home')" class="back-button">
+        <Link href="/" class="back-button">
             {{ 'Back Home' }}
         </Link>
         <div class="form login">
