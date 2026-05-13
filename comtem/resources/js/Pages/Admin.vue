@@ -3171,6 +3171,16 @@ export default {
         width: 100%;
         height: auto;
     }
+
+    .table-container h3 {
+        font-size: 16px;
+    }
+
+    .data-table th,
+    .data-table td {
+        padding: 6px 8px;
+        font-size: 12px;
+    }
 }
 
 /* Extra small devices (phones, < 480px) */
