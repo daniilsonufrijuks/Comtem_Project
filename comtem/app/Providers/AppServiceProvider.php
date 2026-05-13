@@ -32,9 +32,9 @@ class AppServiceProvider extends ServiceProvider
         );
 
         #URL::forceScheme('https');
-        if ($this->app->environment('production')) {
-            URL::forceScheme('https');
-        }
+//       0 if ($this->app->environment('production')) {
+        URL::forceScheme('https');
+//        }
 
         Vite::prefetch(concurrency: 3);
     }
