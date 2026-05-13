@@ -155,25 +155,110 @@ export default {
     }
 }
 
-
 .filters {
     display: flex;
     justify-content: center;
-    gap: 1rem;
-    margin-bottom: 1rem;
+    align-items: end;
+    gap: 16px;
+
+    max-width: 1200px;
+    margin: 0 auto 20px auto;
+    padding: 16px;
+
+    background: #fff;
+    border-radius: 18px;
+
+    box-shadow:
+        0 4px 12px rgba(0, 0, 0, 0.05);
+
+    position: sticky;
+    top: 10px;
+    z-index: 50;
 }
 
+.filters input,
+.filters select {
+    height: 48px;
+
+    padding: 0 14px;
+
+    border: 1px solid #ddd;
+    border-radius: 12px;
+
+    font-size: 15px;
+    font-weight: 500;
+
+    background: #fafafa;
+
+    transition: all 0.2s ease;
+}
+
+.filters input:focus,
+.filters select:focus {
+    outline: none;
+
+    border-color: #111;
+
+    background: #fff;
+
+    box-shadow:
+        0 0 0 3px rgba(0, 0, 0, 0.08);
+}
+
+.filters input::placeholder {
+    color: #999;
+}
+
+/* tablet */
 @media screen and (max-width: 768px) {
+
     .filters {
         flex-direction: column;
-        align-items: center;
-        gap: 0.5rem;
+
+        align-items: stretch;
+
+        gap: 12px;
+
+        width: calc(100% - 20px);
+
+        padding: 14px;
+
+        border-radius: 16px;
+
+        top: 5px;
     }
 
     .filters input,
     .filters select {
         width: 100%;
-        max-width: 300px;
+
+        height: 50px;
+
+        font-size: 16px;
+    }
+}
+
+/* phones */
+@media screen and (max-width: 480px) {
+
+    .filters {
+        padding: 8px;
+        gap: 8px;
+
+        width: calc(100% - 12px);
+
+        border-radius: 12px;
+    }
+
+    .filters input,
+    .filters select {
+        height: 40px;
+
+        padding: 0 10px;
+
+        font-size: 14px;
+
+        border-radius: 8px;
     }
 }
 </style>
