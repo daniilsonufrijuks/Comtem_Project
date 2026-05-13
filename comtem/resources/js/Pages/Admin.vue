@@ -2995,17 +2995,6 @@ export default {
     margin: 50px auto;
 }
 
-/* Responsive adjustments */
-@media (max-width: 768px) {
-    .comment-header {
-        flex-direction: column;
-        gap: 10px;
-    }
-
-    .comment-actions {
-        align-self: flex-end;
-    }
-}
 
 @keyframes slideIn {
     from {
@@ -3018,39 +3007,220 @@ export default {
     }
 }
 
-/* Responsive Design */
-@media (max-width: 1200px) {
-    .charts-grid,
-    .tables-grid {
-        grid-template-columns: 1fr;
-    }
-}
+/* Enhanced Mobile Responsiveness */
 
 @media (max-width: 768px) {
     .admin-dashboard {
         padding: 10px;
     }
 
-    .navigation-tabs {
+    .admin-header {
         flex-direction: column;
+        align-items: stretch;
+        gap: 10px;
+    }
+
+    .back-button {
+        width: 100%;
+        text-align: center;
+    }
+
+    .title {
+        font-size: 24px;
+    }
+
+    .navigation-tabs {
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        white-space: nowrap;
+        padding: 10px;
+        gap: 8px;
+        -webkit-overflow-scrolling: touch;
     }
 
     .tab-button {
-        width: 100%;
-        justify-content: center;
+        flex-shrink: 0;
+        padding: 10px 16px;
+        font-size: 12px;
+        gap: 4px;
     }
 
     .summary-cards {
         grid-template-columns: 1fr;
+        gap: 12px;
+    }
+
+    .charts-grid,
+    .tables-grid {
+        grid-template-columns: 1fr;
+        gap: 16px;
+    }
+
+    .chart-container {
+        padding: 10px;
+        overflow-x: auto;
+    }
+
+    .chart-container canvas {
+        max-width: 100% !important;
+        height: auto !important;
+        width: 100% !important;
+    }
+
+    .table-controls {
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .search-input,
+    .filter-select {
+        width: 100%;
+        font-size: 14px;
     }
 
     .card-grid {
         grid-template-columns: 1fr;
     }
 
+    .scrollable-container {
+        max-height: 400px;
+        padding: 10px;
+    }
+
+    .data-table {
+        font-size: 12px;
+    }
+
+    .data-table th,
+    .data-table td {
+        padding: 6px 8px;
+        white-space: nowrap;
+    }
+
+    .data-table th {
+        font-size: 11px;
+    }
+
+    .form {
+        max-width: 100%;
+        padding: 20px;
+    }
+
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+        font-size: 14px;
+    }
+
+    .submit-btn {
+        padding: 12px;
+        font-size: 14px;
+    }
+
+    .actions {
+        flex-direction: column;
+        gap: 5px;
+    }
+
+    .edit-actions {
+        flex-wrap: wrap;
+    }
+
+    .modal-content {
+        margin: 20px;
+        padding: 15px;
+        max-width: 90vw;
+    }
+
     .export-controls {
         flex-direction: column;
         align-items: stretch;
+    }
+
+    .date-range {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 8px;
+    }
+
+    .date-range input {
+        width: 100%;
+    }
+
+    .notification {
+        top: 10px;
+        right: 10px;
+        left: 10px;
+        font-size: 14px;
+        padding: 12px;
+    }
+
+    .comments-grid {
+        gap: 10px;
+    }
+
+    .comment-card {
+        padding: 12px;
+    }
+
+    .auction-header {
+        flex-direction: column;
+    }
+
+    .auction-image img {
+        width: 100%;
+        height: auto;
+    }
+}
+
+/* Extra small devices (phones, < 480px) */
+@media (max-width: 480px) {
+    .title {
+        font-size: 20px;
+    }
+
+    .tab-button {
+        padding: 8px 12px;
+        font-size: 11px;
+    }
+
+    .summary-card {
+        padding: 16px;
+    }
+
+    .card-icon {
+        font-size: 24px;
+    }
+
+    .card-content .stat {
+        font-size: 22px;
+    }
+
+    .chart-container h3 {
+        font-size: 14px;
+    }
+
+    .table-container h3 {
+        font-size: 14px;
+    }
+
+    .edit-btn,
+    .delete-btn,
+    .save-btn,
+    .cancel-btn {
+        padding: 6px 10px;
+        font-size: 12px;
+    }
+
+    .form-group label {
+        font-size: 13px;
+    }
+
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+        padding: 8px 10px;
+        font-size: 13px;
     }
 }
 </style>
