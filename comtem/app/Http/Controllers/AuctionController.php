@@ -75,9 +75,7 @@ class AuctionController extends Controller
 
     public function destroy()
     {
-        $today = now()->toDateString(); // Get today's date
-
-        $deleted = Auction::whereDate('end_time', $today)->delete();
+        $deleted = Auction::where('end_time', '<', now())->delete();
 
         return response()->json([
             'message' => $deleted > 0 ? "$deleted expired auctions deleted." : "No expired auctions found."

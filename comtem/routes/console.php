@@ -10,6 +10,8 @@ Artisan::command('inspire', function () {
     $this->comment(Inspiring::quote());
 })->purpose('Display an inspiring quote')->hourly();
 
+Schedule::command('auctions:clean')->hourly();
+
 //Schedule::call(function () {
 //    $today = Carbon::now()->toDateString();
 //    $deleted = Auction::whereDate('end_time', $today)->delete();
