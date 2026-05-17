@@ -2,102 +2,104 @@
     <Navbar :routes="routes"/>
     <Search />
     <div class="main-container">
-        <div class="col-xl-6 col-md-12">
-            <div class="card user-card-full">
-                <div class="row m-l-0 m-r-0">
-                    <div class="col-sm-4 bg-c-lite-green user-profile">
-                        <div class="card-block text-center text-white">
-                            <div class="m-b-25">
-                                <img src="https://img.icons8.com/bubbles/100/000000/user.png" class="img-radius" alt="User-Profile-Image">
+        <div class="user-div">
+            <div class="col-12">
+                <div class="card user-card-full">
+                    <div class="row m-l-0 m-r-0">
+                        <div class="col-sm-4 bg-c-lite-green user-profile">
+                            <div class="card-block text-center text-white">
+                                <div class="m-b-25">
+                                    <img src="https://img.icons8.com/bubbles/100/000000/user.png" class="img-radius" alt="User-Profile-Image">
+                                </div>
+                                <h6 class="f-w-600">{{ user.name }}</h6>
+                                <i class="fas fa-edit edit-icon m-t-10 f-16" @click="toggleEditMode"></i>
+                                <p class="m-t-10">{{ isEditing ? 'Editing Mode' : 'Click pencil to edit' }}</p>
                             </div>
-                            <h6 class="f-w-600">{{ user.name }}</h6>
-                            <i class="fas fa-edit edit-icon m-t-10 f-16" @click="toggleEditMode"></i>
-                            <p class="m-t-10">{{ isEditing ? 'Editing Mode' : 'Click pencil to edit' }}</p>
                         </div>
-                    </div>
-                    <div class="col-sm-8">
-                        <div class="card-block">
-                            <h6 class="m-b-20 p-b-5 b-b-default f-w-600">Information</h6>
+                        <div class="col-sm-8">
+                            <div class="card-block">
+                                <h6 class="m-b-20 p-b-5 b-b-default f-w-600">Information</h6>
 
-                            <!-- Success/Error Messages -->
-                            <div v-if="successMessage" class="alert alert-success">
-                                <i class="fas fa-check-circle"></i> {{ successMessage }}
-                            </div>
-                            <div v-if="errorMessage" class="alert alert-error">
-                                <i class="fas fa-exclamation-circle"></i> {{ errorMessage }}
-                            </div>
+                                <!-- Success/Error Messages -->
+                                <div v-if="successMessage" class="alert alert-success">
+                                    <i class="fas fa-check-circle"></i> {{ successMessage }}
+                                </div>
+                                <div v-if="errorMessage" class="alert alert-error">
+                                    <i class="fas fa-exclamation-circle"></i> {{ errorMessage }}
+                                </div>
 
-                            <div class="row">
-                                <div class="col-sm-6">
-                                    <p class="m-b-10 f-w-600">Email</p>
-                                    <div v-if="!isEditing">
-                                        <h6 class="text-muted f-w-400">{{ user.email }}</h6>
-                                    </div>
-                                    <div v-else>
-                                        <input type="email" v-model="editForm.email" class="form-control">
-                                    </div>
-                                </div>
-                                <div class="col-sm-6">
-                                    <p class="m-b-10 f-w-600">Name</p>
-                                    <div v-if="!isEditing">
-                                        <h6 class="text-muted f-w-400">{{ user.name }}</h6>
-                                    </div>
-                                    <div v-else>
-                                        <input type="text" v-model="editForm.name" class="form-control">
-                                    </div>
-                                </div>
-                                <div class="col-sm-6">
-                                    <p class="m-b-10 f-w-600">Address</p>
-                                    <div v-if="!isEditing">
-                                        <h6 class="text-muted f-w-400">{{ user.address }}</h6>
-                                    </div>
-                                    <div v-else>
-                                        <input type="text" v-model="editForm.address" class="form-control">
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Edit buttons -->
-                            <div class="row m-t-20" v-if="isEditing">
-                                <div class="col-sm-12">
-                                    <button class="btn btn-primary btn-sm" @click="updateProfile" :disabled="loading">
-                                        <span v-if="loading">Updating...</span>
-                                        <span v-else>Save Changes</span>
-                                    </button>
-                                    <button class="btn btn-secondary btn-sm m-l-10" @click="cancelEdit">Cancel</button>
-                                </div>
-                            </div>
-                            <!-- Delete Account Section -->
-                            <div class="row m-t-30">
-                                <div class="col-sm-12">
-                                    <h6 class="m-b-20 p-b-5 b-b-default f-w-600 text-danger">Danger Zone</h6>
-                                    <p class="text-muted m-b-15">Once you delete your account, there is no going back. Please be certain.</p>
-                                    <button class="btn btn-danger btn-sm" @click="confirmDelete" :disabled="deleting">
-                                        <span v-if="deleting">Deleting...</span>
-                                        <span v-else>Delete Account</span>
-                                    </button>
-                                </div>
-                            </div>
-
-                            <!-- Delete Confirmation Modal -->
-                            <div v-if="showDeleteModal" class="modal-backdrop">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h5 class="modal-title">Confirm Account Deletion</h5>
-                                    </div>
-                                    <div class="modal-body">
-                                        <p>Are you sure you want to delete your account? This action cannot be undone.</p>
-                                        <div class="form-group">
-                                            <label for="password">Enter your password to confirm:</label>
-                                            <input type="password" v-model="deletePassword" class="form-control" id="password" placeholder="Your password">
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                        <p class="m-b-10 f-w-600">Email</p>
+                                        <div v-if="!isEditing">
+                                            <h6 class="text-muted f-w-400">{{ user.email }}</h6>
+                                        </div>
+                                        <div v-else>
+                                            <input type="email" v-model="editForm.email" class="form-control">
                                         </div>
                                     </div>
-                                    <div class="modal-footer">
-                                        <button type="button" class="btn btn-secondary" @click="cancelDelete">Cancel</button>
-                                        <button type="button" class="btn btn-danger" @click="deleteAccount" :disabled="!deletePassword || deleting">
+                                    <div class="col-sm-6">
+                                        <p class="m-b-10 f-w-600">Name</p>
+                                        <div v-if="!isEditing">
+                                            <h6 class="text-muted f-w-400">{{ user.name }}</h6>
+                                        </div>
+                                        <div v-else>
+                                            <input type="text" v-model="editForm.name" class="form-control">
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <p class="m-b-10 f-w-600">Address</p>
+                                        <div v-if="!isEditing">
+                                            <h6 class="text-muted f-w-400">{{ user.address }}</h6>
+                                        </div>
+                                        <div v-else>
+                                            <input type="text" v-model="editForm.address" class="form-control">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Edit buttons -->
+                                <div class="row m-t-20" v-if="isEditing">
+                                    <div class="col-sm-12">
+                                        <button class="btn btn-primary btn-sm" @click="updateProfile" :disabled="loading">
+                                            <span v-if="loading">Updating...</span>
+                                            <span v-else>Save Changes</span>
+                                        </button>
+                                        <button class="btn btn-secondary btn-sm m-l-10" @click="cancelEdit">Cancel</button>
+                                    </div>
+                                </div>
+                                <!-- Delete Account Section -->
+                                <div class="row m-t-30">
+                                    <div class="col-sm-12">
+                                        <h6 class="m-b-20 p-b-5 b-b-default f-w-600 text-danger">Danger Zone</h6>
+                                        <p class="text-muted m-b-15">Once you delete your account, there is no going back. Please be certain.</p>
+                                        <button class="btn btn-danger btn-sm" @click="confirmDelete" :disabled="deleting">
                                             <span v-if="deleting">Deleting...</span>
                                             <span v-else>Delete Account</span>
                                         </button>
+                                    </div>
+                                </div>
+
+                                <!-- Delete Confirmation Modal -->
+                                <div v-if="showDeleteModal" class="modal-backdrop">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title">Confirm Account Deletion</h5>
+                                        </div>
+                                        <div class="modal-body">
+                                            <p>Are you sure you want to delete your account? This action cannot be undone.</p>
+                                            <div class="form-group">
+                                                <label for="password">Enter your password to confirm:</label>
+                                                <input type="password" v-model="deletePassword" class="form-control" id="password" placeholder="Your password">
+                                            </div>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" @click="cancelDelete">Cancel</button>
+                                            <button type="button" class="btn btn-danger" @click="deleteAccount" :disabled="!deletePassword || deleting">
+                                                <span v-if="deleting">Deleting...</span>
+                                                <span v-else>Delete Account</span>
+                                            </button>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -590,9 +592,19 @@ export default {
     align-items: center;
     gap: 70px;
     padding-bottom: 60px;
+
 }
 
 .user-card-full {
+    overflow: hidden;
+}
+
+.user-div {
+    padding: 28px 24px;
+    width: 100%;
+    max-width: 900px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12);
+    text-align: center;
     overflow: hidden;
 }
 

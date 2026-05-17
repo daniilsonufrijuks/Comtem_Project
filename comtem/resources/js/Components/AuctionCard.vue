@@ -24,10 +24,16 @@
                     :min="minBid"
                     step="1"
                     @input="validateBidAmount"
+                    :disabled="!isAuctionActive"
                 />
-                <button class="add-btn" @click="placeBid(item.id)" :disabled="isBidding">
+                <button class="add-btn" @click="placeBid(item.id)" :disabled="isBidding || !isAuctionActive">
                     {{ isBidding ? 'Placing bid...' : 'Place Bid' }}
                 </button>
+            </div>
+
+            <!-- Auction closed banner -->
+            <div v-if="!isAuctionActive" class="auction-closed-banner">
+                {{ getAuctionStatus === 'Not started yet' ? '⏳ Bidding has not started yet' : '🔒 This auction has ended — bidding is closed' }}
             </div>
 
             <!-- Auction details -->
@@ -116,9 +122,22 @@ export default {
             return 'Active - Bidding open';
         });
 
+        const isAuctionActive = computed(() => {
+            if (!props.item?.start_time || !props.item?.end_time) return false;
+            const now = new Date();
+            return now >= new Date(props.item.start_time) && now <= new Date(props.item.end_time);
+        });
+
         const placeBid = async (itemId) => {
             if (!props.item) {
                 notificationMessage.value = '❌ Auction item not loaded';
+                showNotification.value = true;
+                setTimeout(() => (showNotification.value = false), 3000);
+                return;
+            }
+
+            if (!isAuctionActive.value) {
+                notificationMessage.value = '❌ This auction is not currently accepting bids';
                 showNotification.value = true;
                 setTimeout(() => (showNotification.value = false), 3000);
                 return;
@@ -168,6 +187,7 @@ export default {
             formattedStartDate,
             formattedEndDate,
             getAuctionStatus,
+            isAuctionActive,
             placeBid,
         };
     },
@@ -385,5 +405,22 @@ export default {
     .quantity-add input {
         width: 100%;
     }
+}
+
+.auction-closed-banner {
+    background: #fff3cd;
+    color: #856404;
+    border: 1px solid #ffc107;
+    border-radius: 8px;
+    padding: 12px 16px;
+    margin-bottom: 20px;
+    font-weight: 600;
+    font-size: 15px;
+}
+
+.add-btn:disabled {
+    background: #b08bb1;
+    cursor: not-allowed;
+    opacity: 0.6;
 }
 </style>

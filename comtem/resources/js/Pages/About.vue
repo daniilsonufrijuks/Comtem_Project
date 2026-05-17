@@ -3,8 +3,9 @@
     <Search />
     <Slider/>
     <div class="main-container">
-        <Visitit />
+<!--        <Visitit />-->
 <!--        <Productsintro />-->
+        <h1 class="aboutus">About us</h1>
         <AboutUsText />
         <Contact />
     </div>
@@ -47,5 +48,24 @@ export default {
     flex-direction: column;
     gap: 70px;
     padding-bottom: 80px;
+    justify-content: center;
+}
+
+h1 {
+    max-width: 1200px;
+    margin: 40px auto 0;
+    padding: 0 16px;
+    text-align: center;
+    font-size: 2.2rem;
+    font-weight: 700;
+    color: #222;
+}
+
+/*  MOBILE */
+@media (max-width: 576px) {
+    h1 {
+        font-size: 1.6rem;
+    }
+
 }
 </style>

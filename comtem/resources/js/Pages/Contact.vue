@@ -3,7 +3,7 @@
     <Search />
     <Slider/>
     <div class="main-container">
-        <Visitit />
+<!--        <Visitit />-->
 <!--        <Productsintro />-->
         <Contacts />
         <Contact />
