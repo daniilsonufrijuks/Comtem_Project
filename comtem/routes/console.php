@@ -10,7 +10,7 @@ Artisan::command('inspire', function () {
     $this->comment(Inspiring::quote());
 })->purpose('Display an inspiring quote')->hourly();
 
-Schedule::command('auctions:clean')->hourly();
+Schedule::command('auctions:clean')->everyThirtyMinutes();
 
 //Schedule::call(function () {
 //    $today = Carbon::now()->toDateString();
