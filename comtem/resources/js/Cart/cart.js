@@ -49,6 +49,11 @@ const store = createStore({
             state.address = address;
             localStorage.setItem('user_address', JSON.stringify(address));
         },
+        REMOVE_FROM_CART(state, itemId) {
+            state.cart = state.cart.filter(item => item.id !== itemId);
+            localStorage.setItem('cart', JSON.stringify(state.cart));
+        },
+
     },
     getters: {
         cartItems: (state) => state.cart,

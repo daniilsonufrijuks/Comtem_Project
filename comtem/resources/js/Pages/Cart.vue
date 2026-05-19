@@ -26,6 +26,7 @@
                                     <span class="subtotal-value">${{ (item.price * item.quantity).toFixed(2) }}</span>
                                 </div>
                             </div>
+                            <button class="btn-remove" @click="removeItem(item.id)">Remove</button>
                         </div>
                     </div>
                 </div>
@@ -110,6 +111,10 @@ export default {
     setup() {
         const store = useStore();
         const page = usePage();
+
+        const removeItem = (itemId) => {
+            store.commit('REMOVE_FROM_CART', itemId);
+        };
 
         // Fetch user award from backend
         const fetchUserAward = async () => {
@@ -273,7 +278,7 @@ export default {
                             }
 
                             const stripe = await loadStripe(stripeKey);
-
+                            store.commit('CLEAR_CART');
                             // Redirect to Stripe Checkout
                             const { error } = await stripe.redirectToCheckout({
                                 sessionId: response.data.id,
@@ -308,6 +313,7 @@ export default {
             finalTotal,
             shippingCost,
             awardAmount,
+            removeItem,
             shippingAddress,
         };
     }
@@ -494,6 +500,26 @@ export default {
     padding: 60px 20px;
     font-size: 18px;
     color: #666;
+}
+
+.btn-remove {
+    margin-top: 12px;
+    width: 100%;
+    padding: 8px;
+    background-color: #fff0f0;
+    color: #cc0000;
+    border: 1px solid #ffcccc;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.btn-remove:hover {
+    background-color: #cc0000;
+    color: white;
+    border-color: #cc0000;
 }
 
 @media (max-width: 768px) {
