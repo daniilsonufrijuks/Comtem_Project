@@ -129,20 +129,20 @@ select {
     text-align: center;
 }
 
-@media (min-width: 600px) {
+@media (max-width: 728px) {
     .h1c {
-        font-size: 1.5rem;
-        margin: 20px;
+        font-size: 1.1rem;
+        margin: 14px;
     }
 
     .component {
         flex-direction: row;
         align-items: center;
-        margin-bottom: 15px;
+        margin-bottom: 12px;
     }
 
     label {
-        font-size: 1rem;
+        font-size: 0.85rem;
         margin-right: 10px;
         width: 60px;
         flex-shrink: 0;
@@ -150,16 +150,12 @@ select {
 
     select {
         width: 200px;
-        font-size: 16px;
+        font-size: 0.85rem;
     }
 
-    .price-result {
-        font-size: 15px;
-        margin-top: 20px;
-    }
-
-    h1 {
-        font-size: 15px;
+    .price-result, .fps-result {
+        font-size: 1.1rem;
+        margin-top: 16px;
     }
 }
 </style>
