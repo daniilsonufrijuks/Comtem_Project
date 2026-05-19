@@ -1,5 +1,6 @@
 <template>
     <!-- visit this -->
+    <h1 class="aboutus">Our partners</h1>
     <div class="product-cards-top">
         <div class="product-card-top">
             <img src="/images/front/prod1.png" alt="Product 1">
@@ -111,6 +112,24 @@
 }
 /* Cards near top */
 
+h1 {
+    max-width: 1200px;
+    margin: 40px auto 0;
+    padding: 0 16px;
+    text-align: center;
+    font-size: 2.2rem;
+    font-weight: 700;
+    color: #222;
+}
+
+/*  MOBILE */
+@media (max-width: 576px) {
+    h1 {
+        font-size: 1.6rem;
+    }
+
+}
+
 
 @media (max-width: 768px) {
 
@@ -145,3 +164,5 @@
     }
 }
 </style>
+<script setup lang="ts">
+</script>
