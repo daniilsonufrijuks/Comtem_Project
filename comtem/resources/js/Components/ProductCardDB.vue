@@ -1,14 +1,21 @@
 <template>
-    <div class="product-card">
-        <img :src="product.image" class="product-img" alt="Product">
+<!--    <div class="product-card">-->
+<!--        <img :src="product.image" class="product-img" alt="Product">-->
 
+<!--        <h5>{{ product.name }}</h5>-->
+<!--        <p class="description">{{ product.description }}</p>-->
+
+<!--        <p class="price">{{ product.price }} €</p>-->
+
+<!--        <button @click="goToProductPage(product.id)">Buy</button>-->
+<!--    </div>-->
+    <a class="product-card" :href="`/product?id=${product.id}`">
+        <img :src="product.image" class="product-img" alt="Product">
         <h5>{{ product.name }}</h5>
         <p class="description">{{ product.description }}</p>
-
         <p class="price">{{ product.price }} €</p>
-
-        <button @click="goToProductPage(product.id)">Buy</button>
-    </div>
+        <span class="buy-btn">Buy</span>
+    </a>
 </template>
 
 <script>
@@ -125,7 +132,22 @@ export default {
     font-size: 14px;
 }
 
+.buy-btn {
+    margin-top: auto;
+    padding: 8px 12px;
+    background: #007BFF;
+    color: white;
+    border-radius: 6px;
+    font-size: 14px;
+    display: block;
+}
+
 .product-card button:hover {
+    background: #0056b3;
+}
+
+
+.product-card:hover .buy-btn {
     background: #0056b3;
 }
 
