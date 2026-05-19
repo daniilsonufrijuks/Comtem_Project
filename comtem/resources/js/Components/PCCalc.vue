@@ -142,5 +142,39 @@ select {
     color: #4CAF50;
     text-align: center;
 }
+
+@media (min-width: 600px) {
+    .h1c {
+        font-size: 1.5rem;
+        margin: 20px;
+    }
+
+    .component {
+        flex-direction: row;
+        align-items: center;
+        margin-bottom: 15px;
+    }
+
+    label {
+        font-size: 1rem;
+        margin-right: 10px;
+        width: 60px;
+        flex-shrink: 0;
+    }
+
+    select {
+        width: 200px;
+        font-size: 16px;
+    }
+
+    .fps-result {
+        font-size: 15px;
+        margin-top: 20px;
+    }
+
+    h1 {
+        font-size: 15px;
+    }
+}
 </style>
 
