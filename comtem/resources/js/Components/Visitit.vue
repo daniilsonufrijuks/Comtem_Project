@@ -2,29 +2,29 @@
     <!-- visit this -->
     <h1 class="aboutus">Our partners</h1>
     <div class="product-cards-top">
-        <div class="product-card-top">
+        <a class="product-card-top" href="https://www.asus.com/" target="_blank">
             <img src="/images/front/prod1.png" alt="Product 1">
             <p>Best quality product at an affordable price.</p>
-            <button onclick="location.href='https://www.asus.com/'">Go</button>
-        </div>
+            <span class="go-btn">Go</span>
+        </a>
 
-        <div class="product-card-top">
+        <a class="product-card-top" href="https://www.bequiet.com/en" target="_blank">
             <img src="/images/front/prod2.png" alt="Product 2">
             <p>Limited time offer, hurry up!</p>
-            <button onclick="location.href='https://www.bequiet.com/en'">Go</button>
-        </div>
+            <span class="go-btn">Go</span>
+        </a>
 
-        <div class="product-card-top">
+        <a class="product-card-top" href="https://www.apple.com/" target="_blank">
             <img src="/images/front/prod3.png" alt="Product 3">
             <p>Top choice among customers this month.</p>
-            <button onclick="location.href='https://www.apple.com/'">Go</button>
-        </div>
+            <span class="go-btn">Go</span>
+        </a>
 
-        <div class="product-card-top">
+        <a class="product-card-top" href="https://www.msi.com/index.php" target="_blank">
             <img src="/images/front/prod4.png" alt="Product 4">
             <p>Special discount for a limited period.</p>
-            <button onclick="location.href='https://www.msi.com/index.php'">Go</button>
-        </div>
+            <span class="go-btn">Go</span>
+        </a>
     </div>
     <!-- visit this -->
 </template>
@@ -54,7 +54,7 @@
 .product-card-top {
     display: flex;
     flex-direction: column;
-    justify-content: space-between; /* This will push the button to the bottom */
+    justify-content: space-between;
     background-color: #f9f9f9;
     border: 1px solid #ddd;
     border-radius: 5px;
@@ -62,8 +62,7 @@
     text-align: center;
     padding: 15px;
     transition: transform 0.2s ease, box-shadow 0.2s ease;
-    height: 100%; /* Ensure cards take full available height */
-    /* height: 150px; */
+    height: 100%;
     min-height: 300px;
 }
 
@@ -98,16 +97,29 @@
     background-color: #0056b3;
 }
 
+.go-btn {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #007BFF;
+    color: #fff;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+}
+
+.product-card-top:hover .go-btn {
+    background-color: #0056b3;
+}
+
 /* Media query for phones */
 @media (max-width: 768px) {
     .product-cards-top {
-        flex-direction: column; /* Stack the cards vertically */
-        align-items: center; /* Center the cards horizontally */
+        flex-direction: column;
+        align-items: center;
     }
 
     .product-card-top {
-        width: 80%; /* Adjust the width of the cards */
-        margin-bottom: 20px; /* Add space between the cards */
+        width: 80%;
+        margin-bottom: 20px;
     }
 }
 /* Cards near top */
