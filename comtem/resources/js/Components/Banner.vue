@@ -1,7 +1,7 @@
 <template>
     <div v-if="showBanner" class="banner">
         <div class="banner-content">
-            <p>🔥 Limited-Time Offer! Get <strong>70% OFF</strong> on all items! 🔥</p>
+            <p>Limited-Time Offer! Get <strong>40% OFF</strong> on all items!</p>
             <button @click="closeBanner">X</button>
         </div>
     </div>
