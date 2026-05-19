@@ -33,18 +33,18 @@
 
             <h4 class="section-title">Key Features</h4>
             <ul class="features">
-                <li>⚡ High-performance electronic components</li>
-                <li>🔋 Energy-efficient and reliable operation</li>
-                <li>🛡️ Durable construction for long-term use</li>
-                <li>🎛️ User-friendly and intuitive design</li>
-                <li>🔌 Compatible with standard accessories</li>
+                <li>High-performance components</li>
+                <li>Energy-efficient and reliable structure</li>
+                <li>Durable construction for long-term use</li>
+                <li>User-friendly and intuitive design</li>
+                <li>Compatible with standard accessories</li>
             </ul>
 
             <!-- SPECS -->
-            <h4 class="section-title">Technical Specifications</h4>
+<!--            <h4 class="section-title">Technical Specifications</h4>-->
             <ul class="specs">
-                <li><strong>Category:</strong> {{ product.category }}</li>
-                <li><strong>Price:</strong> ${{ product.price }}</li>
+<!--                <li><strong>Category:</strong> {{ product.category }}</li>-->
+<!--                <li><strong>Price:</strong> ${{ product.price }}</li>-->
                 <li><strong>Availability:</strong> In Stock</li>
             </ul>
         </div>
