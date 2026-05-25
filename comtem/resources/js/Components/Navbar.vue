@@ -48,8 +48,8 @@ const goToUserPage = () => {
             <li v-else>
                 <i class="fa fa-user-circle icon" :style="{ color: 'white' }"></i>
             </li>
-            <li @click="logout" style="cursor: pointer;">
-                <i class="fa fa-sign-out icon" style="color: white;" title="Logout"></i>
+            <li v-if="isLoggedIn" @click="logout" style="cursor: pointer;">
+                    <i class="fa fa-sign-out icon" style="color: white;" title="Logout"></i>
             </li>
             <li>
                 <a href="/cart" style="position: relative;">
@@ -98,7 +98,7 @@ const goToUserPage = () => {
                     <span>{{ user?.name || 'Profile' }}</span>
                 </button>
 
-                <button class="footer-action logout-btn" @click="logout">
+                <button v-if="isLoggedIn" class="footer-action logout-btn" @click="logout">
                     <i class="fa fa-sign-out"></i>
                     <span>Logout</span>
                 </button>
