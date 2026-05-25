@@ -14,7 +14,9 @@
                 class="slider-item"
                 :style="{ width: itemWidth + 'px' }"
             >
-                <img :src="photo" alt="Slider Image" draggable="false" />
+                <a href="/market" class="slider-link">
+                    <img :src="photo" alt="Slider Image" draggable="false" />
+                </a>
             </div>
         </div>
 
