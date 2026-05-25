@@ -22,7 +22,7 @@
                     type="number"
                     v-model="bidAmount"
                     :min="minBid"
-                    step="1"
+                    step="0.1"
                     @input="validateBidAmount"
                     :disabled="!isAuctionActive"
                 />
@@ -74,7 +74,7 @@
 
 <script>
 import axios from 'axios';
-import { computed, ref } from "vue";
+import {computed, ref} from "vue";
 
 export default {
     props: {
@@ -104,12 +104,17 @@ export default {
             return new Date(props.item.end_time).toLocaleString();
         });
 
+        // const validateBidAmount = () => {
+        //     let raw = bidAmount.value;
+        //     let numericValue = parseFloat(raw);
+        //     if (isNaN(numericValue)) numericValue = minBid.value;
+        //     if (numericValue < minBid.value) numericValue = minBid.value;
+        //     bidAmount.value = numericValue;
+        // };
+
         const validateBidAmount = () => {
             let raw = bidAmount.value;
-            let numericValue = parseFloat(raw);
-            if (isNaN(numericValue)) numericValue = minBid.value;
-            if (numericValue < minBid.value) numericValue = minBid.value;
-            bidAmount.value = numericValue;
+            bidAmount.value = parseFloat(raw);
         };
 
         const getAuctionStatus = computed(() => {
@@ -157,7 +162,7 @@ export default {
                     itemId: itemId,
                 });
 
-                notificationMessage.value = `✅ Bid of $${bidAmount.value} placed successfully!`;
+                notificationMessage.value = `Bid of $${bidAmount.value} placed successfully!`;
                 showNotification.value = true;
                 setTimeout(() => (showNotification.value = false), 3000);
                 console.log('Bid Response:', response.data);
