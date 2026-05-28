@@ -102,6 +102,9 @@ const messages = {
         product_availability: 'Availability:',
         product_in_stock: 'In Stock',
         product_added: '✅ Item added to cart!',
+
+        blog_head: 'Watch Our Videos',
+        pc_doc: 'Computer Documentation',
     },
     lv: {
         home: 'Sākums',
@@ -193,6 +196,9 @@ const messages = {
         product_availability: 'Pieejamība:',
         product_in_stock: 'Noliktavā',
         product_added: '✅ Prece pievienota grozam!',
+
+        blog_head: 'Skatieties mūsu video',
+        pc_doc: 'Datora dokumentācija',
     }
 };
 
