@@ -1,35 +1,31 @@
+
+<script setup>
+import { useTranslation } from '../Composables/useTranslation';
+const { t } = useTranslation();
+</script>
+
 <template>
     <section class="testimonial-section">
         <div class="parent-container">
             <blockquote class="responsive-quote">
                 <p class="headline">
-                    Welcome to <strong>Comtem Market</strong>
+                    {{ t('about_headline') }}
                 </p>
 
-                <p>
-                    Your trusted destination for curated, contemporary products designed to enhance everyday living.
-                    Our mission is to create a seamless shopping experience by bringing together high-quality items
-                    that fit modern lifestyles.
-                </p>
+                <p>{{ t('about_p1') }}</p>
 
-                <p>
-                    At Comtem Market, we blend <strong>style, innovation, and functionality</strong>. From smart tech
-                    and home essentials to fashion-forward accessories and wellness products, every item is selected
-                    to inspire and elevate.
-                </p>
+                <p>{{ t('about_p2') }}</p>
 
                 <ul class="values">
-                    <li>✔ Thoughtfully curated products with quality and design in mind</li>
-                    <li>✔ Sustainable and eco-friendly choices</li>
-                    <li>✔ Customer-first shopping experience</li>
-                    <li>✔ Exclusive deals from trusted brands</li>
+                    <li>{{ t('about_v1') }}</li>
+                    <li>{{ t('about_v2') }}</li>
+                    <li>{{ t('about_v3') }}</li>
+                    <li>{{ t('about_v4') }}</li>
                 </ul>
 
-                <p class="closing">
-                    Join us in redefining the way you shop — where convenience meets quality and contemporary living.
-                </p>
+                <p class="closing">{{ t('about_closing') }}</p>
 
-                <cite>— COMTEM DEV GROUP</cite>
+                <cite>{{ t('testimonial_cite') }}</cite>
             </blockquote>
         </div>
     </section>

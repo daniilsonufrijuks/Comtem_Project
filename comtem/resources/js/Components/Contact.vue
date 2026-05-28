@@ -33,46 +33,46 @@ const submit = () => {
 
             <div class="form-side">
                 <div class="form-header">
-                    <h2>Get in Touch</h2>
-                    <p>We'd love to hear from you. Send us a message!</p>
+                    <h2>{{ t('contact_form_title') }}</h2>
+                    <p>{{ t('contact_form_subtitle') }}</p>
                 </div>
 
                 <form @submit.prevent="submit">
                     <div class="field">
-                        <label for="name">Name</label>
+                        <label for="name">{{ t('contact_form_name') }}</label>
                         <input
                             id="name"
                             v-model="form.name"
                             type="text"
-                            placeholder="Your name"
+                            :placeholder="t('contact_form_name_placeholder')"
                             required
                         />
                     </div>
                     <div class="field">
-                        <label for="email">Email</label>
+                        <label for="email">{{ t('contact_form_email') }}</label>
                         <input
                             id="email"
                             v-model="form.email"
                             type="email"
-                            placeholder="your@email.com"
+                            :placeholder="t('contact_form_email_placeholder')"
                             required
                         />
                     </div>
                     <div class="field">
-                        <label for="message">Message</label>
+                        <label for="message">{{ t('contact_form_message') }}</label>
                         <textarea
                             id="message"
                             v-model="form.body"
-                            placeholder="Write your message here…"
+                            :placeholder="t('contact_form_message_placeholder')"
                             required
                         ></textarea>
                     </div>
                     <button type="submit" :disabled="form.processing">
-                        <span v-if="form.processing">Sending…</span>
-                        <span v-else>Send Message <i class="fa fa-paper-plane"></i></span>
+                        <span v-if="form.processing">{{ t('contact_form_sending') }}</span>
+                        <span v-else>{{ t('contact_form_send') }} <i class="fa fa-paper-plane"></i></span>
                     </button>
                     <p v-if="form.recentlySuccessful" class="success-msg">
-                        <i class="fa fa-check-circle"></i> Message sent successfully!
+                        <i class="fa fa-check-circle"></i> {{ t('contact_form_success') }}
                     </p>
                 </form>
             </div>

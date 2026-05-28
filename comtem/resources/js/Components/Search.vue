@@ -5,12 +5,15 @@
                 <div class="search">
                     <i class="fa fa-search"></i>
                     <form @submit.prevent="handleSearch" id="searchForm" class="form-inline form">
-                        <input type="text" id="searchInput" class="form-control" placeholder="Searching..." v-model="query" @input="fetchSuggestions">
-                        <button type="submit" class="btn btn-primary">Search</button>
+                        <input type="text" id="searchInput" class="form-control"
+                               :placeholder="t('search_placeholder')"
+                               v-model="query"
+                               @input="fetchSuggestions">
+                        <button type="submit" class="btn btn-primary">{{ t('search_btn') }}</button>
                     </form>
-                    <!-- Suggestions list -->
                     <ul v-if="filteredQueries.length > 0" id="suggestions" class="suggestions-list">
-                        <li v-for="(suggestion, index) in filteredQueries" :key="index" @click="handleSuggestionClick(suggestion)">
+                        <li v-for="(suggestion, index) in filteredQueries" :key="index"
+                            @click="handleSuggestionClick(suggestion)">
                             {{ suggestion.name }}
                         </li>
                     </ul>
@@ -21,12 +24,17 @@
 </template>
 
 <script>
+import { useTranslation } from '../Composables/useTranslation';
 export default {
     data() {
         return {
             query: '',
             filteredQueries: [],
         };
+    },
+    setup() {
+        const { t } = useTranslation();
+        return { t };
     },
     methods: {
         // Fetch suggestions from the server based on the query

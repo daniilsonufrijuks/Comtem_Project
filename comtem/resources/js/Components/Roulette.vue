@@ -3,6 +3,9 @@ import { ref, onMounted, onBeforeUnmount } from 'vue'
 import { Roulette } from 'vue3-roulette'
 import axios from 'axios'
 
+import { useTranslation } from '../Composables/useTranslation';
+const { locale, t, toggleLocale } = useTranslation();
+
 const wheel = ref(null)
 const result = ref(null)
 const spinning = ref(false)
