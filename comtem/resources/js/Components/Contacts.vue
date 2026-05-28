@@ -1,6 +1,6 @@
 <template>
     <section class="contact-section">
-        <h1 class="aboutus">Contacts</h1>
+        <h1 class="aboutus">{{t('contacts_title')}}</h1>
         <div class="contact-container">
             <div class="contact-box">
                 <img src="/images/front/online_store_icon.png" alt="Online Store Icon">

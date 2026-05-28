@@ -4,7 +4,7 @@
 
             <!-- Header -->
             <div class="card-header">
-                <h2>Comments <span v-if="comments.length" class="badge">{{ comments.length }}</span></h2>
+                <h2>{{t('comments_title')}} <span v-if="comments.length" class="badge">{{ comments.length }}</span></h2>
             </div>
 
             <div class="card-body">
@@ -12,21 +12,21 @@
                 <div v-if="user" class="compose">
                     <textarea
                         v-model="newComment"
-                        placeholder="Write a comment…"
+                        placeholder=""
                         rows="3"
                         @keydown.ctrl.enter="submitComment"
                     />
                     <div class="compose-actions">
-                        <span class="hint">Ctrl + Enter to send</span>
+                        <span class="hint">{{t('comment_hint')}}</span>
                         <button @click="submitComment" :disabled="!newComment.trim()">
-                            <i class="fa fa-paper-plane"></i> Post
+                            <i class="fa fa-paper-plane"></i> {{t('comment_post')}}
                         </button>
                     </div>
                 </div>
 
                 <div v-else class="login-nudge">
                     <i class="fa fa-lock"></i>
-                    Please <a href="/login">log in</a> to comment.
+                    <a href="/login">log in</a> {{t('comment_login')}}
                 </div>
 
                 <!-- List -->
@@ -45,7 +45,7 @@
 
                 <div v-else class="empty-state">
                     <i class="fa fa-comments"></i>
-                    <p>No comments yet. Be the first!</p>
+                    <p>{{t('comment_empty')}}</p>
                 </div>
             </div>
 
@@ -55,7 +55,7 @@
 
 <script>
 import axios from 'axios';
-
+import { useTranslation } from '../Composables/useTranslation';
 export default {
     data() {
         return {
@@ -63,6 +63,10 @@ export default {
             newComment: '',
             user: null
         };
+    },
+    setup() {
+        const { t } = useTranslation();
+        return { t };
     },
     mounted() {
         this.fetchComments();

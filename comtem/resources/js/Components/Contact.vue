@@ -3,6 +3,9 @@ import { ref } from 'vue';
 import axios from 'axios';
 import {route} from "ziggy-js";
 import { Head, Link, useForm } from '@inertiajs/vue3';
+import { useTranslation } from '../Composables/useTranslation';
+const { locale, t, toggleLocale } = useTranslation();
+
 
 const form = useForm({
     name: '',

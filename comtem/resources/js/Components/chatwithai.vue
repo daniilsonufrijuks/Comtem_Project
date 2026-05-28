@@ -15,7 +15,7 @@
             <div class="chat-box" ref="chatBox">
                 <div class="welcome" v-if="chatMessages.length === 0">
                     <i class="fa fa-robot"></i>
-                    <p>Hi! Ask me anything about COMTEM.</p>
+                    <p>{{t('chat_welcome')}}</p>
                 </div>
 
                 <div
@@ -40,7 +40,7 @@
             <form @submit.prevent="sendMessage" class="chat-input">
                 <input
                     type="text"
-                    placeholder="Ask me anything…"
+                    placeholder=""
                     v-model="userInput"
                     :disabled="isLoading"
                     aria-label="Chat input"
@@ -56,7 +56,7 @@
 
 <script>
 import { marked } from "marked";
-
+import { useTranslation } from '../Composables/useTranslation';
 export default {
     name: "ChatWithAI",
     data() {
@@ -65,6 +65,10 @@ export default {
             chatMessages: [],
             isLoading: false,
         };
+    },
+    setup() {
+        const { t } = useTranslation();
+        return { t };
     },
     methods: {
         async sendMessage() {
