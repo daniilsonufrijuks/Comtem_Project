@@ -4,6 +4,9 @@ import { useUser } from '../Composables/useUser';
 import axios from 'axios';
 import { useRouter } from 'vue-router';
 
+import { useTranslation } from '../Composables/useTranslation';
+const { locale, t, toggleLocale } = useTranslation();
+
 const { isLoggedIn, user } = useUser();
 const isMenuActive = ref(false);
 const router = useRouter();
@@ -36,12 +39,12 @@ const goToUserPage = () => {
             <img class="imglogo" src="/m.png"/>
         </div>
         <ul class="desktop-nav">
-            <li><a href="/">Home</a></li>
-            <li><a href="/about">About</a></li>
-            <li><a href="/contacts">Contacts</a></li>
-            <li><a href="/tutor">Blog</a></li>
-            <li><a href="/market">Market</a></li>
-            <li><a href="/login">Login</a></li>
+            <li><a href="/">{{ t('home') }}</a></li>
+            <li><a href="/about">{{ t('about') }}</a></li>
+            <li><a href="/contacts">{{ t('contacts') }}</a></li>
+            <li><a href="/tutor">{{ t('blog') }}</a></li>
+            <li><a href="/market">{{ t('market') }}</a></li>
+            <li><a href="/login">{{ t('login') }}</a></li>
             <li v-if="isLoggedIn">
                 <i class="fa fa-user icon" :style="{color: 'white', cursor: 'pointer'}" :title="user?.name || 'User'" @click="goToUserPage"></i>
             </li>
@@ -56,6 +59,11 @@ const goToUserPage = () => {
                     <i class="fa fa-shopping-cart icon" style="color: white;"></i>
                     <span v-if="cartCount > 0" class="cart-badge">{{ cartCount }}</span>
                 </a>
+            </li>
+            <li>
+                <button @click="toggleLocale" style="background:none;border:1px solid rgba(255,255,255,0.4);color:#fff;padding:3px 10px;border-radius:6px;cursor:pointer;font-size:0.85rem;font-weight:600;">
+                    {{ locale === 'en' ? 'LV' : 'EN' }}
+                </button>
             </li>
         </ul>
 
@@ -78,12 +86,12 @@ const goToUserPage = () => {
             </div>
 
             <ul class="menubar-nav">
-                <li><a href="/" @click="toggleNav"><i class="fa fa-home nav-icon"></i>Home</a></li>
-                <li><a href="/about" @click="toggleNav"><i class="fa fa-info-circle nav-icon"></i>About</a></li>
-                <li><a href="/contacts" @click="toggleNav"><i class="fa fa-envelope nav-icon"></i>Contacts</a></li>
-                <li><a href="/tutor" @click="toggleNav"><i class="fa fa-book nav-icon"></i>Blog</a></li>
-                <li><a href="/market" @click="toggleNav"><i class="fa fa-store nav-icon"></i>Market</a></li>
-                <li><a href="/login" @click="toggleNav"><i class="fa fa-lock nav-icon"></i>Login</a></li>
+                <li><a href="/" @click="toggleNav"><i class="fa fa-home nav-icon"></i>{{ t('home') }}</a></li>
+                <li><a href="/about" @click="toggleNav"><i class="fa fa-info-circle nav-icon"></i>{{ t('about') }}</a></li>
+                <li><a href="/contacts" @click="toggleNav"><i class="fa fa-envelope nav-icon"></i>{{ t('contacts') }}</a></li>
+                <li><a href="/tutor" @click="toggleNav"><i class="fa fa-book nav-icon"></i>{{ t('blog') }}</a></li>
+                <li><a href="/market" @click="toggleNav"><i class="fa fa-store nav-icon"></i>{{ t('market') }}</a></li>
+                <li><a href="/login" @click="toggleNav"><i class="fa fa-lock nav-icon"></i>{{ t('login') }}</a></li>
             </ul>
 
             <div class="menubar-footer">
@@ -101,6 +109,10 @@ const goToUserPage = () => {
                 <button v-if="isLoggedIn" class="footer-action logout-btn" @click="logout">
                     <i class="fa fa-sign-out"></i>
                     <span>Logout</span>
+                </button>
+                <button class="footer-action" @click="toggleLocale">
+                    <i class="fa fa-language nav-icon"></i>
+                    <span>{{ locale === 'en' ? 'Latviešu' : 'English' }}</span>
                 </button>
             </div>
         </div>
