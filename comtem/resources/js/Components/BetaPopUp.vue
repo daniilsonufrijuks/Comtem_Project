@@ -1,6 +1,11 @@
 <script>
+import { useTranslation } from '../Composables/useTranslation';
 export default {
     name: "BetaModal",
+    setup() {
+        const { t } = useTranslation();
+        return { t };
+    },
     data() {
         return {
             visible: false,
@@ -25,9 +30,9 @@ export default {
         <div v-if="visible" class="beta-overlay" @click.self="close">
             <div class="beta-card">
                 <div class="beta-icon">⚠️</div>
-                <h2>Beta Version</h2>
-                <p>This website is currently in beta testing. Some features may not work as expected.</p>
-                <button @click="close">Got it</button>
+                <h2>{{t('beta_title')}}</h2>
+                <p>{{t('beta_body')}}</p>
+                <button @click="close">{{t('beta_btn')}}</button>
             </div>
         </div>
     </transition>
