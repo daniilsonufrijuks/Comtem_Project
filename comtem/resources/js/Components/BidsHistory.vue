@@ -2,51 +2,45 @@
     <div class="bids-history-container">
         <div class="card">
             <div class="card-header">
-                <h5 class="card-title">My Bids History</h5>
+                <h5 class="card-title">{{ t('bids_title') }}</h5>
             </div>
             <div class="card-body">
                 <div v-if="loading" class="text-center p-4">
                     <div class="spinner-border text-primary" role="status">
-                        <span class="visually-hidden">Loading...</span>
+                        <span class="visually-hidden">{{ t('bids_loading') }}</span>
                     </div>
                 </div>
 
-                <div v-else-if="error" class="alert alert-danger">
-                    {{ error }}
-                </div>
+                <div v-else-if="error" class="alert alert-danger">{{ error }}</div>
 
                 <div v-else-if="bids.length === 0" class="alert alert-info">
-                    You haven't placed any bids yet.
+                    {{ t('bids_empty') }}
                 </div>
 
                 <div v-else class="table-responsive">
                     <table class="table table-hover">
                         <thead>
                         <tr>
-                            <th>Item</th>
-                            <th>Bid Amount</th>
-                            <th>Date & Time</th>
-                            <th>Status</th>
+                            <th>{{ t('bids_item') }}</th>
+                            <th>{{ t('bids_amount') }}</th>
+                            <th>{{ t('bids_datetime') }}</th>
+                            <th>{{ t('bids_status') }}</th>
                         </tr>
                         </thead>
                         <tbody>
                         <tr v-for="bid in bids" :key="bid.id">
                             <td>
                                 <div class="d-flex align-items-center">
-<!--                                    <img v-if="bid.product.img" :src="'/storage/' + bid.product.img" alt="Item" class="bid-item-img me-2">-->
                                     <div>
-                                        <strong>{{ bid.product.name }}</strong>
-                                        <br>
-                                        <small class="text-muted">Starting bid: ${{ bid.product.starting_bid }}</small>
+                                        <strong>{{ bid.product.name }}</strong><br>
+                                        <small class="text-muted">{{ t('bids_starting') }} ${{ bid.product.starting_bid }}</small>
                                     </div>
                                 </div>
                             </td>
                             <td class="fw-bold text-success">${{ bid.bid_amount }}</td>
                             <td>{{ formatDateTime(bid.created_at) }}</td>
                             <td>
-                                    <span class="badge" :class="getBidStatusClass(bid)">
-                                        {{ getBidStatus(bid) }}
-                                    </span>
+                                <span class="badge" :class="getBidStatusClass(bid)">{{ getBidStatus(bid) }}</span>
                             </td>
                         </tr>
                         </tbody>
@@ -57,9 +51,10 @@
     </div>
 </template>
 
+
 <script>
 import axios from 'axios';
-
+import { useTranslation } from '../Composables/useTranslation';
 export default {
     name: 'BidsHistory',
     data() {
@@ -71,6 +66,10 @@ export default {
     },
     mounted() {
         this.fetchBids();
+    },
+    setup() {
+        const { t } = useTranslation();
+        return { t };
     },
     methods: {
         async fetchBids() {

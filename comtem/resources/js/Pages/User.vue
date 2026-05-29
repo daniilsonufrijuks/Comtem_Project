@@ -13,14 +13,13 @@
                                 </div>
                                 <h6 class="f-w-600">{{ user.name }}</h6>
                                 <i class="fas fa-edit edit-icon m-t-10 f-16" @click="toggleEditMode"></i>
-                                <p class="m-t-10">{{ isEditing ? 'Editing Mode' : 'Click pencil to edit' }}</p>
+                                <p class="m-t-10">{{ isEditing ? t('user_editing_mode') : t('user_click_to_edit') }}</p>
                             </div>
                         </div>
                         <div class="col-sm-8">
                             <div class="card-block">
-                                <h6 class="m-b-20 p-b-5 b-b-default f-w-600">Information</h6>
+                                <h6 class="m-b-20 p-b-5 b-b-default f-w-600">{{ t('user_information') }}</h6>
 
-                                <!-- Success/Error Messages -->
                                 <div v-if="successMessage" class="alert alert-success">
                                     <i class="fas fa-check-circle"></i> {{ successMessage }}
                                 </div>
@@ -30,7 +29,7 @@
 
                                 <div class="row">
                                     <div class="col-sm-6">
-                                        <p class="m-b-10 f-w-600">Email</p>
+                                        <p class="m-b-10 f-w-600">{{ t('user_email') }}</p>
                                         <div v-if="!isEditing">
                                             <h6 class="text-muted f-w-400">{{ user.email }}</h6>
                                         </div>
@@ -39,7 +38,7 @@
                                         </div>
                                     </div>
                                     <div class="col-sm-6">
-                                        <p class="m-b-10 f-w-600">Name</p>
+                                        <p class="m-b-10 f-w-600">{{ t('user_name') }}</p>
                                         <div v-if="!isEditing">
                                             <h6 class="text-muted f-w-400">{{ user.name }}</h6>
                                         </div>
@@ -48,7 +47,7 @@
                                         </div>
                                     </div>
                                     <div class="col-sm-6">
-                                        <p class="m-b-10 f-w-600">Address</p>
+                                        <p class="m-b-10 f-w-600">{{ t('user_address') }}</p>
                                         <div v-if="!isEditing">
                                             <h6 class="text-muted f-w-400">{{ user.address }}</h6>
                                         </div>
@@ -58,46 +57,44 @@
                                     </div>
                                 </div>
 
-                                <!-- Edit buttons -->
                                 <div class="row m-t-20" v-if="isEditing">
                                     <div class="col-sm-12">
                                         <button class="btn btn-primary btn-sm" @click="updateProfile" :disabled="loading">
-                                            <span v-if="loading">Updating...</span>
-                                            <span v-else>Save Changes</span>
+                                            <span v-if="loading">{{ t('user_updating') }}</span>
+                                            <span v-else>{{ t('user_save_changes') }}</span>
                                         </button>
-                                        <button class="btn btn-secondary btn-sm m-l-10" @click="cancelEdit">Cancel</button>
+                                        <button class="btn btn-secondary btn-sm m-l-10" @click="cancelEdit">{{ t('user_cancel') }}</button>
                                     </div>
                                 </div>
-                                <!-- Delete Account Section -->
+
                                 <div class="row m-t-30">
                                     <div class="col-sm-12">
-                                        <h6 class="m-b-20 p-b-5 b-b-default f-w-600 text-danger">Danger Zone</h6>
-                                        <p class="text-muted m-b-15">Once you delete your account, there is no going back. Please be certain.</p>
+                                        <h6 class="m-b-20 p-b-5 b-b-default f-w-600 text-danger">{{ t('user_danger_zone') }}</h6>
+                                        <p class="text-muted m-b-15">{{ t('user_danger_desc') }}</p>
                                         <button class="btn btn-danger btn-sm" @click="confirmDelete" :disabled="deleting">
-                                            <span v-if="deleting">Deleting...</span>
-                                            <span v-else>Delete Account</span>
+                                            <span v-if="deleting">{{ t('user_deleting') }}</span>
+                                            <span v-else>{{ t('user_delete_account') }}</span>
                                         </button>
                                     </div>
                                 </div>
 
-                                <!-- Delete Confirmation Modal -->
                                 <div v-if="showDeleteModal" class="modal-backdrop">
                                     <div class="modal-content">
                                         <div class="modal-header">
-                                            <h5 class="modal-title">Confirm Account Deletion</h5>
+                                            <h5 class="modal-title">{{ t('user_confirm_delete_title') }}</h5>
                                         </div>
                                         <div class="modal-body">
-                                            <p>Are you sure you want to delete your account? This action cannot be undone.</p>
+                                            <p>{{ t('user_confirm_delete_body') }}</p>
                                             <div class="form-group">
-                                                <label for="password">Enter your password to confirm:</label>
-                                                <input type="password" v-model="deletePassword" class="form-control" id="password" placeholder="Your password">
+                                                <label for="password">{{ t('user_password_confirm') }}</label>
+                                                <input type="password" v-model="deletePassword" class="form-control" id="password" :placeholder="t('user_password_placeholder')">
                                             </div>
                                         </div>
                                         <div class="modal-footer">
-                                            <button type="button" class="btn btn-secondary" @click="cancelDelete">Cancel</button>
+                                            <button type="button" class="btn btn-secondary" @click="cancelDelete">{{ t('user_cancel') }}</button>
                                             <button type="button" class="btn btn-danger" @click="deleteAccount" :disabled="!deletePassword || deleting">
-                                                <span v-if="deleting">Deleting...</span>
-                                                <span v-else>Delete Account</span>
+                                                <span v-if="deleting">{{ t('user_deleting') }}</span>
+                                                <span v-else>{{ t('user_delete_account') }}</span>
                                             </button>
                                         </div>
                                     </div>
@@ -108,68 +105,52 @@
                 </div>
             </div>
         </div>
-        <!-- Family Payment Section -->
+
         <div v-if="userFamilyData" class="col-xl-6 col-md-12">
             <div class="card">
                 <div class="card-header">
-                    <h5 class="card-title">Family Payment Management</h5>
+                    <h5 class="card-title">{{ t('family_title') }}</h5>
                 </div>
                 <div class="card-body">
-                    <!-- Family Info -->
                     <div class="family-info mb-4">
                         <h6>{{ userFamilyData.family_name }}</h6>
-                        <p>Invitation Code: <strong>{{ userFamilyData.invitation_code }}</strong></p>
-                        <p>Your Role: <span class="badge" :class="user.role === 'parent' ? 'bg-primary' : 'bg-secondary'">
-                            {{ user.role }}
-                        </span></p>
+                        <p>{{ t('family_invitation') }} <strong>{{ userFamilyData.invitation_code }}</strong></p>
+                        <p>{{ t('family_role') }} <span class="badge" :class="user.role === 'parent' ? 'bg-primary' : 'bg-secondary'">{{ user.role }}</span></p>
                     </div>
 
-                    <!-- Payment Methods Section -->
                     <div class="payment-methods-section">
-                        <h6>Family Payment Methods</h6>
+                        <h6>{{ t('family_payment_methods') }}</h6>
 
-                        <!-- Add Card (Parent Only) -->
                         <div v-if="isFamilyAdmin" class="add-card-section mb-3">
                             <div id="card-element" class="card-input mb-2"></div>
                             <button @click="addFamilyCard" :disabled="processingCard" class="btn btn-sm btn-primary">
-                                {{ processingCard ? 'Adding...' : 'Add Family Card' }}
+                                {{ processingCard ? t('family_adding_card') : t('family_add_card') }}
                             </button>
                         </div>
 
-                        <!-- Cards List -->
                         <div v-if="paymentMethods.length > 0" class="cards-list">
                             <div v-for="method in paymentMethods" :key="method.id" class="card-item mb-2 p-2 border rounded">
                                 <div class="d-flex justify-content-between align-items-center">
                                     <div>
                                         <i :class="getCardIcon(method.card_brand)" class="me-2"></i>
                                         {{ method.card_brand }} ****{{ method.card_last_four }}
-                                        <span v-if="method.is_default" class="badge bg-success ms-2">Default</span>
+                                        <span v-if="method.is_default" class="badge bg-success ms-2">{{ t('family_default_badge') }}</span>
                                     </div>
                                     <div v-if="isFamilyAdmin">
-                                        <button
-                                            v-if="!method.is_default"
-                                            @click="setDefaultCard(method.stripe_payment_method_id)"
-                                            class="btn btn-sm btn-outline-primary me-1"
-                                        >
-                                            Set Default
+                                        <button v-if="!method.is_default" @click="setDefaultCard(method.stripe_payment_method_id)" class="btn btn-sm btn-outline-primary me-1">
+                                            {{ t('family_set_default') }}
                                         </button>
-                                        <button
-                                            @click="removeCard(method.stripe_payment_method_id)"
-                                            class="btn btn-sm btn-outline-danger"
-                                        >
-                                            Remove
+                                        <button @click="removeCard(method.stripe_payment_method_id)" class="btn btn-sm btn-outline-danger">
+                                            {{ t('family_remove') }}
                                         </button>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <div v-else class="alert alert-info">
-                            No payment methods added yet.
-                        </div>
+                        <div v-else class="alert alert-info">{{ t('family_no_payments') }}</div>
 
-                        <!-- Card Usage Permission -->
                         <div v-if="isFamilyAdmin" class="permission-section mt-4">
-                            <h6>Manage Family Members</h6>
+                            <h6>{{ t('family_manage_members') }}</h6>
                             <div v-if="familyMembers.length > 0" class="members-list">
                                 <div v-for="member in familyMembers" :key="member.id" class="member-item d-flex justify-content-between align-items-center p-2 border-bottom">
                                     <div>
@@ -178,61 +159,41 @@
                                     </div>
                                     <div>
                                         <div class="form-check form-switch">
-                                            <input
-                                                class="form-check-input"
-                                                type="checkbox"
-                                                :checked="member.can_use_family_card"
-                                                @change="togglePermission(member.id)"
-                                                :disabled="member.id === user.id"
-                                            >
-                                            <label class="form-check-label">
-                                                Can use family card
-                                            </label>
+                                            <input class="form-check-input" type="checkbox" :checked="member.can_use_family_card" @change="togglePermission(member.id)" :disabled="member.id === user.id">
+                                            <label class="form-check-label">{{ t('family_can_use_card') }}</label>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                            <div v-else class="alert alert-info">
-                                No other family members.
-                            </div>
+                            <div v-else class="alert alert-info">{{ t('family_no_members') }}</div>
                         </div>
 
-                        <!-- Transaction History -->
                         <div class="transactions-section mt-4">
-                            <h6>Recent Transactions</h6>
+                            <h6>{{ t('family_transactions') }}</h6>
                             <div v-if="transactions.length > 0">
                                 <div v-for="transaction in transactions" :key="transaction.id" class="transaction-item p-2 border-bottom">
                                     <div class="d-flex justify-content-between">
                                         <div>
-                                            <strong>${{ transaction.amount }}</strong>
-                                            <br>
-                                            <small>{{ transaction.description }}</small>
-                                            <br>
-                                            <small class="text-muted">By: {{ transaction.user.name }}</small>
+                                            <strong>${{ transaction.amount }}</strong><br>
+                                            <small>{{ transaction.description }}</small><br>
+                                            <small class="text-muted">{{ t('family_by') }} {{ transaction.user.name }}</small>
                                         </div>
                                         <div>
-                                            <span class="badge" :class="{
-                                                'bg-success': transaction.status === 'succeeded',
-                                                'bg-warning': transaction.status === 'pending',
-                                                'bg-danger': transaction.status === 'failed'
-                                            }">
+                                            <span class="badge" :class="{ 'bg-success': transaction.status === 'succeeded', 'bg-warning': transaction.status === 'pending', 'bg-danger': transaction.status === 'failed' }">
                                                 {{ transaction.status }}
-                                            </span>
-                                            <br>
+                                            </span><br>
                                             <small class="text-muted">{{ formatDate(transaction.created_at) }}</small>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                            <div v-else class="alert alert-info">
-                                No transactions yet.
-                            </div>
+                            <div v-else class="alert alert-info">{{ t('family_no_transactions') }}</div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-<!--        <Visitit />-->
+
         <Roulette />
         <OrdersHistory />
         <BidsHistory />
@@ -259,6 +220,7 @@ import OrdersHistory from "@/Components/OrdersHistory.vue";
 import { loadStripe } from '@stripe/stripe-js';
 import BidsHistory from "@/Components/BidsHistory.vue";
 
+import { useTranslation } from '../Composables/useTranslation';
 export default {
     name: 'Home',
     components: {
@@ -279,6 +241,10 @@ export default {
     props: {
         routes: Object,
         user: Object
+    },
+    setup() {
+        const { t } = useTranslation();
+        return { t };
     },
     data() {
         return {

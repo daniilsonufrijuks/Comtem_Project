@@ -1,18 +1,23 @@
 <template>
     <div v-if="showBanner" class="banner">
         <div class="banner-content">
-            <p>Limited-Time Offer! Get <strong>40% OFF</strong> on all items!</p>
+            <p>{{t('banner')}}</p>
             <button @click="closeBanner">X</button>
         </div>
     </div>
 </template>
 
 <script>
+import { useTranslation } from '../Composables/useTranslation';
 export default {
     data() {
         return {
             showBanner: true
         };
+    },
+    setup() {
+        const { t, locale } = useTranslation();
+        return { t, locale };
     },
     methods: {
         closeBanner() {
