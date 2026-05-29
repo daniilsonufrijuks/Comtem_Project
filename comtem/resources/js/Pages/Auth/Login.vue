@@ -2,6 +2,10 @@
 import {route} from "ziggy-js";
 import { Head, Link, useForm } from '@inertiajs/vue3';
 
+import { useTranslation } from '@/Composables/useTranslation';
+
+const { t } = useTranslation();
+
 const form = useForm({
     email: '',
     password: '',
@@ -17,54 +21,42 @@ const submit = () => {
 <template>
     <section class="container forms">
         <Link href="/" class="back-button">
-            {{ 'Back Home' }}
+            {{ t('back_home') }}
         </Link>
         <div class="form login">
             <div class="form-content">
-                <header>Login</header>
+                <header>{{ t('login_header') }}</header>
 
                 <div v-if="form.errors.email" class="error-message">
                     {{ form.errors.email }}
                 </div>
 
-                <form @submit.prevent="submit"  autocomplete="off">
+                <form @submit.prevent="submit" autocomplete="off">
                     <div class="field input-field">
-                        <input type="email" v-model="form.email" placeholder="Email" class="input" required autocomplete="off">
-
+                        <input type="email" v-model="form.email" :placeholder="t('email_placeholder')" class="input" required autocomplete="off">
                         <span v-if="form.errors.email" class="field-error">
                             {{ form.errors.email }}
                         </span>
                     </div>
                     <div class="field input-field">
-                        <input type="password" v-model="form.password" placeholder="Password" class="password" required autocomplete="off">
+                        <input type="password" v-model="form.password" :placeholder="t('password_placeholder')" class="password" required autocomplete="off">
                         <i class='bx bx-hide eye-icon'></i>
                     </div>
                     <div class="form-link">
-                        <a href="#" class="forgot-pass">Forgot password?</a>
+                        <a href="#" class="forgot-pass">{{ t('forgot_password') }}</a>
                     </div>
                     <div class="field button-field">
                         <button type="submit"
                                 :disabled="form.processing"
-                        >Login</button>
+                        >{{ t('login_header') }}</button>
                     </div>
                 </form>
                 <div class="form-link">
-                    <span>Don't have an account? <a href="/registration" class="link signup-link">Signup</a></span>
+                    <span>{{ t('no_account') }} <a href="/registration" class="link signup-link">{{ t('signup_link') }}</a></span>
                 </div>
             </div>
-            <div class="line"></div>
-<!--            <div class="media-options">-->
-<!--                <a href="#" class="field facebook">-->
-<!--                    <i class='bx bxl-facebook facebook-icon'></i>-->
-<!--                    <span>Login with Facebook</span>-->
-<!--                </a>-->
-<!--            </div>-->
-<!--            <div class="media-options">-->
-<!--                <a href="#" class="field google">-->
-<!--                    <img src="#" alt="" class="google-img">-->
-<!--                    <span>Login with Google</span>-->
-<!--                </a>-->
-<!--            </div>-->
+            <!-- Optional: you can also translate 'Or' if you later uncomment the line separator -->
+            <!-- <div class="line">{{ t('or_separator') }}</div> -->
         </div>
     </section>
 </template>
