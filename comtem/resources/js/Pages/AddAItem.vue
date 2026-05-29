@@ -2,36 +2,35 @@
     <Navbar/>
     <Search />
     <Slider />
-
     <div class="main-container">
         <div class="add-auction-page">
-            <h1>Add New Auction Item</h1>
+            <h1>{{ t('auction_add_title') }}</h1>
             <form @submit.prevent="submitForm">
                 <div>
-                    <label>Title:</label>
+                    <label>{{ t('auction_add_title_label') }}</label>
                     <input type="text" v-model="form.name" required>
                 </div>
                 <div>
-                    <label>Description:</label>
+                    <label>{{ t('auction_add_description') }}</label>
                     <textarea v-model="form.description" required></textarea>
                 </div>
                 <div>
-                    <label>Starting Price:</label>
+                    <label>{{ t('auction_add_starting_price') }}</label>
                     <input type="number" v-model="form.starting_bid" required>
                 </div>
                 <div>
-                    <label>Starting Date:</label>
+                    <label>{{ t('auction_add_start_date') }}</label>
                     <input type="date" v-model="form.start_time" required>
                 </div>
                 <div>
-                    <label>Ending Date:</label>
+                    <label>{{ t('auction_add_end_date') }}</label>
                     <input type="date" v-model="form.end_time" required>
                 </div>
                 <div>
-                    <label>Image:</label>
+                    <label>{{ t('auction_add_image') }}</label>
                     <input type="file" @change="handleFileUpload">
                 </div>
-                <button type="submit">Submit</button>
+                <button type="submit">{{ t('auction_add_submit') }}</button>
             </form>
         </div>
         <Contact />
@@ -47,6 +46,7 @@ import Slider from "@/Components/Slider.vue";
 import Search from "@/Components/Search.vue";
 import Contact from "@/Components/Contact.vue";
 
+import { useTranslation } from '../Composables/useTranslation';
 export default {
     components: {Contact, Search, Slider, Navbar, Footer },
     data() {
@@ -65,6 +65,10 @@ export default {
     mounted() {
         // Check if user is authenticated
         this.isAuthenticated = !!usePage().props.auth.user;
+    },
+    setup() {
+        const { t } = useTranslation();
+        return { t };
     },
     methods: {
         handleFileUpload(event) {

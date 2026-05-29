@@ -2,17 +2,12 @@
     <Navbar/>
     <Search />
     <Slider />
-
     <div class="main-container">
         <Visitit />
         <div class="auction-page">
-<!--            <h1>Auction Listings</h1>-->
-            <!-- Add Auction Button -->
             <div class="add-auction-container">
-                <button @click="goToAddAuction" class="add-auction-btn">Add new auction</button>
+                <button @click="goToAddAuction" class="add-auction-btn">{{ t('auction_page_add_btn') }}</button>
             </div>
-
-            <!-- Auction items list -->
             <div class="auction-list">
                 <AuctionCardDB v-for="item in auctionItems" :key="item.id" :item="item"/>
             </div>
@@ -32,6 +27,7 @@ import Visitit from "@/Components/Visitit.vue";
 import Contact from "@/Components/Contact.vue";
 import AuctionCardDB from "@/Components/AuctionCardDB.vue";
 
+import { useTranslation } from '../Composables/useTranslation';
 export default {
     components: {AuctionCardDB, Contact, Visitit, Search, Slider, Footer, Navbar, ProductCardDB},
     data() {
@@ -41,6 +37,10 @@ export default {
     },
     mounted() {
         this.fetchAuctionItems();
+    },
+    setup() {
+        const { t } = useTranslation();
+        return { t };
     },
     methods: {
         fetchAuctionItems() {
