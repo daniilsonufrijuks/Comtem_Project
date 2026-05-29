@@ -117,7 +117,6 @@ export default {
 </script>
 
 <style scoped>
-/* Your existing styles remain the same */
 .search {
     display: flex;
     position: relative;
@@ -186,7 +185,7 @@ export default {
     background-color: #f0f0f0;
 }
 
-
+// phones
 @media screen and (max-width: 480px) {
 
     .container_search {
