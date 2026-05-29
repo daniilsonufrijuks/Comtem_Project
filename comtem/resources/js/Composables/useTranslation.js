@@ -49,7 +49,27 @@ const messages = {
         faq_all_categories: 'All Categories',
         faq_no_results: 'No questions found',
         faq_no_results_hint: 'Try adjusting your search or filter',
-        // EN — add to the en:{} block
+
+        // FAQ items
+        faq_q1: "How do I create an account?",
+        faq_a1: "To create an account, click on the 'Login' button at the top right corner of the page and then Sign Up button. Fill in your details including your name, email address, and a secure password. Once submitted, you'll receive a confirmation email to verify your account.",
+        faq_q2: "What payment methods do you accept?",
+        faq_a2: "We accept all major credit cards (Visa, MasterCard, American Express), PayPal, and bank transfers. All payments are processed securely through our encrypted payment system.",
+        faq_q3: "How can I reset my password?",
+        faq_a3: "If you've forgotten your password, click on the 'Forgot Password' link on the login page. Enter your email address and we'll send you a link to reset your password. The link will expire in 24 hours for security reasons.",
+        faq_q4: "What is your refund policy?",
+        faq_a4: "We offer a 30-day money-back guarantee on all our plans. If you're not satisfied with our service, you can request a full refund within 30 days of your initial purchase. To request a refund, contact our support team with your account details.",
+        faq_q5: "Do you offer customer support?",
+        faq_a5: "Yes, we offer 24/7 customer support via live chat and email. Our support team is available to help you with any questions or issues you may have. You can also check our knowledge base for answers to common questions.",
+        faq_q6: "Is my data secure?",
+        faq_a6: "We take data security very seriously. All data is encrypted in transit and at rest. We use industry-standard security practices and regularly undergo security audits to ensure your information is protected.",
+
+        // FAQ categories
+        faq_category_account: 'Account',
+        faq_category_billing: 'Billing',
+        faq_category_support: 'Support',
+        faq_category_security: 'Security',
+        // EN
         contact_form_title: 'Get in Touch',
         contact_form_subtitle: "We'd love to hear from you. Send us a message!",
         contact_form_name: 'Name',
@@ -445,7 +465,25 @@ const messages = {
         faq_all_categories: 'Visas kategorijas',
         faq_no_results: 'Jautājumi nav atrasti',
         faq_no_results_hint: 'Mēģini pielāgot meklēšanu vai filtru',
-        // LV — add to the lv:{} block
+
+        faq_q1: "Kā izveidot kontu?",
+        faq_a1: "Lai izveidotu kontu, noklikšķiniet uz 'Ieiet' pogas lapas augšējā labajā stūrī un pēc tam uz 'Reģistrēties'. Ievadiet savus datus – vārdu, e-pasta adresi un drošu paroli. Pēc nosūtīšanas jūs saņemsit apstiprinājuma e-pastu konta verifikācijai.",
+        faq_q2: "Kādas maksājumu metodes jūs pieņemat?",
+        faq_a2: "Mēs pieņemam visas galvenās kredītkartes (Visa, MasterCard, American Express), PayPal un bankas pārskaitījumus. Visi maksājumi tiek apstrādāti droši, izmantojot mūsu šifrēto maksājumu sistēmu.",
+        faq_q3: "Kā atiestatīt paroli?",
+        faq_a3: "Ja esat aizmirsis paroli, noklikšķiniet uz 'Aizmirsi paroli?' pieteikšanās lapā. Ievadiet savu e-pasta adresi, un mēs nosūtīsim jums saiti paroles atiestatīšanai. Drošības apsvērumu dēļ saite būs derīga 24 stundas.",
+        faq_q4: "Kāda ir jūsu atmaksas politika?",
+        faq_a4: "Mēs piedāvājam 30 dienu naudas atgriešanas garantiju visiem mūsu plāniem. Ja neesat apmierināts ar mūsu pakalpojumu, varat pieprasīt pilnu atmaksu 30 dienu laikā pēc sākotnējā pirkuma. Lai pieprasītu atmaksu, sazinieties ar mūsu atbalsta komandu, norādot sava konta informāciju.",
+        faq_q5: "Vai jūs piedāvājat klientu atbalstu?",
+        faq_a5: "Jā, mēs piedāvājam 24/7 klientu atbalstu, izmantojot tiešsaistes tērzēšanu un e-pastu. Mūsu atbalsta komanda ir pieejama, lai palīdzētu ar jebkuriem jautājumiem vai problēmām. Jūs varat arī pārbaudīt mūsu zināšanu bāzi, lai atrastu atbildes uz bieži uzdotiem jautājumiem.",
+        faq_q6: "Vai mani dati ir drošībā?",
+        faq_a6: "Mēs ļoti nopietni uztveram datu drošību. Visi dati tiek šifrēti pārsūtīšanas laikā un glabāšanā. Mēs izmantojam nozarē standarta drošības prakses un regulāri veicam drošības auditus, lai nodrošinātu jūsu informācijas aizsardzību.",
+
+        faq_category_account: 'Konts',
+        faq_category_billing: 'Norēķini',
+        faq_category_support: 'Atbalsts',
+        faq_category_security: 'Drošība',
+        // LV
         contact_form_title: 'Sazinies ar mums',
         contact_form_subtitle: 'Mēs priecāsimies dzirdēt no tevis. Nosūti mums ziņojumu!',
         contact_form_name: 'Vārds',
