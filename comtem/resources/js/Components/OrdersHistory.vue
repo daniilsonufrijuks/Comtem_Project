@@ -1,11 +1,13 @@
 <script setup>
 import { Link } from "@inertiajs/vue3";
 import { ref, onMounted, computed } from "vue";
+import { useTranslation } from '../Composables/useTranslation';
 
 const orders = ref([]);
 const loading = ref(true);
 const error = ref(null);
 const selectedDate = ref("");
+const { t } = useTranslation();
 
 const fetchOrders = async () => {
     try {
@@ -56,30 +58,18 @@ const clearFilter = () => {
 
 <template>
     <div class="order-history">
-        <h2 class="title">{{ 'Order History' }}</h2>
-        <!--        <h2 class="title">Your Order History</h2>-->
+        <h2 class="title">{{ t('orders_title') }}</h2>
 
-        <!-- Date Filter -->
         <div class="filter-bar">
-            <label for="dateFilter">{{ 'Filter By Date' }}:</label>
-            <!--            <label for="dateFilter">Filter by Date:</label>-->
-            <input
-                id="dateFilter"
-                type="date"
-                v-model="selectedDate"
-                class="date-input"
-            />
-            <button v-if="selectedDate" @click="clearFilter" class="clear-btn">
-                {{ 'Clear' }}
-            </button>
+            <label for="dateFilter">{{ t('orders_filter_label') }}:</label>
+            <input id="dateFilter" type="date" v-model="selectedDate" class="date-input" />
+            <button v-if="selectedDate" @click="clearFilter" class="clear-btn">{{ t('orders_clear') }}</button>
         </div>
 
-        <!--        <div v-if="loading" class="loading">Loading your orders...</div>-->
-        <div v-if="loading" class="loading">{{ 'Loading Your Orders' }}...</div>
+        <div v-if="loading" class="loading">{{ t('orders_loading') }}</div>
         <div v-else-if="error" class="error"><p>{{ error }}</p></div>
         <div v-else-if="filteredOrders.length === 0" class="empty">
-            <!--            <p>No orders found{{ selectedDate ? " for that date." : "." }}</p>-->
-            <p>{{ selectedDate ? 'No Orders Found For Date' : 'No Orders Found' }}</p>
+            <p>{{ selectedDate ? t('orders_empty_date') : t('orders_empty') }}</p>
         </div>
 
         <div v-else>
@@ -87,9 +77,9 @@ const clearFilter = () => {
                 <thead>
                 <tr>
                     <th>#</th>
-                    <th>Date</th>
-                    <th>Name</th>
-                    <th>Total ($)</th>
+                    <th>{{ t('orders_col_date') }}</th>
+                    <th>{{ t('orders_col_name') }}</th>
+                    <th>{{ t('orders_col_total') }}</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -104,6 +94,7 @@ const clearFilter = () => {
         </div>
     </div>
 </template>
+
 
 <style scoped>
 .order-history {

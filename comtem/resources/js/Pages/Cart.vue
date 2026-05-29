@@ -14,19 +14,19 @@
                             <p class="cart-card-description">{{ item.description }}</p>
                             <div class="cart-card-footer">
                                 <div class="cart-card-price">
-                                    <span class="price-label">Price:</span>
+                                    <span class="price-label">{{ t('cart_price_label') }}</span>
                                     <span class="price-value">${{ item.price }}</span>
                                 </div>
                                 <div class="cart-card-quantity">
-                                    <span class="quantity-label">Quantity:</span>
+                                    <span class="quantity-label">{{ t('cart_quantity_label') }}</span>
                                     <span class="quantity-value">{{ item.quantity }}</span>
                                 </div>
                                 <div class="cart-card-subtotal">
-                                    <span class="subtotal-label">Subtotal:</span>
+                                    <span class="subtotal-label">{{ t('cart_subtotal_label') }}</span>
                                     <span class="subtotal-value">${{ (item.price * item.quantity).toFixed(2) }}</span>
                                 </div>
                             </div>
-                            <button class="btn-remove" @click="removeItem(item.id)">Remove</button>
+                            <button class="btn-remove" @click="removeItem(item.id)">{{ t('cart_remove_btn') }}</button>
                         </div>
                     </div>
                 </div>
@@ -34,12 +34,12 @@
 
                 <div class="cart-summary">
                     <div class="summary-row">
-                        <span>Subtotal</span>
+                        <span>{{ t('cart_summary_subtotal') }}</span>
                         <span>${{ cartTotal.toFixed(2) }}</span>
                     </div>
 
                     <div class="summary-row">
-                        <span>Shipping</span>
+                        <span>{{ t('cart_summary_shipping') }}</span>
                         <span>
                             <span v-if="shippingCost === 0" class="free">FREE 🎉</span>
                             <span v-else>${{ shippingCost.toFixed(2) ?? '0.00' }}</span>
@@ -47,19 +47,18 @@
                     </div>
 
                     <div class="summary-row total">
-                        <span>Total</span>
+                        <span>{{ t('cart_summary_total') }}</span>
                         <span>${{ finalTotal.toFixed(2) ?? '0.00'}}</span>
                     </div>
 
-                    <button class="btn-clear" @click="clearCart">Clear Cart</button>
-                    <button class="btn-checkout" @click="proceedToCheckout">
-                        Proceed to Checkout
-                    </button>
+
+                    <button class="btn-clear" @click="clearCart">{{ t('cart_clear_btn') }}</button>
+                    <button class="btn-checkout" @click="proceedToCheckout">{{ t('cart_checkout_btn') }}</button>
                 </div>
             </div>
 
             <div v-else class="empty-cart">
-                <p>Your cart is empty.</p>
+                <p>{{ t('cart_empty') }}</p>
             </div>
         </div>
         <Contact />
@@ -83,6 +82,7 @@ import {computed, onMounted, ref} from "vue";
 import {usePage} from "@inertiajs/vue3";
 import {loadStripe} from "@stripe/stripe-js";
 
+import { useTranslation } from '@/Composables/useTranslation';
 export default {
     name: 'Cart',
     components: {
@@ -111,6 +111,8 @@ export default {
     setup() {
         const store = useStore();
         const page = usePage();
+
+        const { t } = useTranslation();
 
         const removeItem = (itemId) => {
             store.commit('REMOVE_FROM_CART', itemId);
@@ -315,6 +317,7 @@ export default {
             awardAmount,
             removeItem,
             shippingAddress,
+            t,
         };
     }
 }

@@ -4,6 +4,10 @@ import { Head, Link, useForm } from '@inertiajs/vue3';
 import { route } from "ziggy-js";
 import { ref } from 'vue';
 
+import { useTranslation } from '@/Composables/useTranslation';
+
+const { t } = useTranslation();
+
 const accountType = ref('standalone'); // 'standalone', 'create_family', 'join_family'
 
 const form = useForm({
@@ -42,11 +46,11 @@ const submit = () => {
 <template>
     <section class="container forms">
         <Link href="/" class="back-button">
-            {{ 'Back Home' }}
+            {{ t('back_home') }}
         </Link>
         <div class="form login">
             <div class="form-content">
-                <header>Registration</header>
+                <header>{{ t('registration_header') }}</header>
 
                 <!-- General Error Banner -->
                 <div v-if="Object.keys(form.errors).length > 0" class="error-banner">
@@ -56,15 +60,15 @@ const submit = () => {
                 </div>
 
 
-                <!-- Account Type Selection -->
+
                 <div class="account-type-selector">
                     <div class="account-type-option"
                          @click="accountType = 'standalone'"
                          :class="{ active: accountType === 'standalone' }">
                         <div class="option-icon">👤</div>
                         <div class="option-text">
-                            <div class="option-title">Standalone Account</div>
-                            <div class="option-description">Create a personal account</div>
+                            <div class="option-title">{{ t('account_type_standalone') }}</div>
+                            <div class="option-description">{{ t('account_type_standalone_desc') }}</div>
                         </div>
                     </div>
 
@@ -73,8 +77,8 @@ const submit = () => {
                          :class="{ active: accountType === 'create_family' }">
                         <div class="option-icon">👨‍👩‍👧‍👦</div>
                         <div class="option-text">
-                            <div class="option-title">Create Family</div>
-                            <div class="option-description">Start a new family as parent</div>
+                            <div class="option-title">{{ t('account_type_create_family') }}</div>
+                            <div class="option-description">{{ t('account_type_create_family_desc') }}</div>
                         </div>
                     </div>
 
@@ -83,8 +87,8 @@ const submit = () => {
                          :class="{ active: accountType === 'join_family' }">
                         <div class="option-icon">➕</div>
                         <div class="option-text">
-                            <div class="option-title">Join Family</div>
-                            <div class="option-description">Join existing family as child</div>
+                            <div class="option-title">{{ t('account_type_join_family') }}</div>
+                            <div class="option-description">{{ t('account_type_join_family_desc') }}</div>
                         </div>
                     </div>
                 </div>
@@ -111,7 +115,7 @@ const submit = () => {
                         >
                         <span v-if="form.errors.family_name" class="field-error">{{ form.errors.family_name }}</span>
                         <small style="display: block; margin-top: 5px; color: #666;">
-                            Choose a name for your family
+                            {{ t('family_name_hint') }}
                         </small>
                     </div>
 
@@ -126,7 +130,7 @@ const submit = () => {
                         >
                         <span v-if="form.errors.invitation_code" class="field-error">{{ form.errors.invitation_code }}</span>
                         <small style="display: block; margin-top: 5px; color: #666;">
-                            Get this code from your family admin
+                            {{ t('invitation_code_hint') }}
                         </small>
                     </div>
 
@@ -137,12 +141,12 @@ const submit = () => {
 
                     <!-- Password Requirements -->
                     <div class="password-requirements">
-                        <p>Password must contain:</p>
+                        <p>{{ t('password_requirements_title') }}</p>
                         <ul>
-                            <li :class="{ 'met': form.password.length >= 8 }">At least 8 characters</li>
-                            <li :class="{ 'met': /[a-zA-Z]/.test(form.password) }">At least one letter</li>
-                            <li :class="{ 'met': /\d/.test(form.password) }">At least one number</li>
-                            <li :class="{ 'met': /[@$!%*?&]/.test(form.password) }">At least one symbol (@$!%*?&)</li>
+                            <li :class="{ 'met': form.password.length >= 8 }">{{ t('password_req_length') }}</li>
+                            <li :class="{ 'met': /[a-zA-Z]/.test(form.password) }">{{ t('password_req_letter') }}</li>
+                            <li :class="{ 'met': /\d/.test(form.password) }">{{ t('password_req_number') }}</li>
+                            <li :class="{ 'met': /[@$!%*?&]/.test(form.password) }">{{ t('password_req_symbol') }}</li>
                         </ul>
                     </div>
 
@@ -154,16 +158,16 @@ const submit = () => {
                     <div class="field button-field">
                         <button type="submit" :disabled="form.processing">
                             {{
-                                accountType === 'standalone' ? 'Create Account' :
-                                    accountType === 'create_family' ? 'Create Family Account' :
-                                        'Join Family'
+                                accountType === 'standalone' ? t('create_account_btn') :
+                                    accountType === 'create_family' ? t('create_family_account_btn') :
+                                        t('join_family_btn')
                             }}
                         </button>
                     </div>
                 </form>
 
                 <div class="form-link">
-                    <span>Already have an account? <a href="/login" class="link signup-link">Login</a></span>
+                    <span>{{ t('already_have_account') }} <a href="/login" class="link signup-link">{{ t('login_link') }}</a></span>
                 </div>
             </div>
         </div>

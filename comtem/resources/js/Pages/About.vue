@@ -5,7 +5,7 @@
     <div class="main-container">
 <!--        <Visitit />-->
 <!--        <Productsintro />-->
-        <h1 class="aboutus">About us</h1>
+        <h1 class="aboutus">{{t('about')}}</h1>
         <AboutUsText />
         <Contact />
     </div>
@@ -23,6 +23,8 @@ import AboutUsText from "../Components/AboutUsText.vue";
 import Navbar from "@/Components/Navbar.vue";
 import Footer from "@/Components/Footer.vue";
 
+import { useTranslation } from '../Composables/useTranslation';
+
 export default {
     name: 'Home',
     components: {
@@ -38,7 +40,11 @@ export default {
     },
     props: {
         routes: Object
-    }
+    },
+    setup() {
+        const { t, locale } = useTranslation();
+        return { t, locale };
+    },
 }
 </script>
 

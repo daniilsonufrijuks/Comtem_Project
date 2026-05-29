@@ -2,7 +2,7 @@
     <div class="library-container">
 
         <h2 class="library-title">
-            📘 Computer Documentation
+            {{t('pc_doc')}}
         </h2>
 
         <div class="books-grid">
@@ -38,7 +38,7 @@
 
 <script>
 import axios from 'axios';
-
+import { useTranslation } from '../Composables/useTranslation';
 export default {
     name: 'BooksLibrary',
     data() {
@@ -48,6 +48,10 @@ export default {
     },
     mounted() {
         this.fetchBooks();
+    },
+    setup() {
+        const { t, locale } = useTranslation();
+        return { t, locale };
     },
     methods: {
         fetchBooks() {

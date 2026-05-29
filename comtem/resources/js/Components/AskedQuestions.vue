@@ -1,9 +1,10 @@
+
 <template>
     <div id="app">
         <div class="faq-container">
             <div class="faq-header">
-                <h1>Frequently Asked Questions</h1>
-                <p>Find answers to common questions about our product and services</p>
+                <h1>{{ t('faq_title') }}</h1>
+                <p>{{ t('faq_subtitle') }}</p>
             </div>
 
             <div class="faq-controls">
@@ -12,15 +13,15 @@
                     <input
                         type="text"
                         v-model="searchQuery"
-                        placeholder="Search questions..."
-                        @input="filterFaqs"
+                        :placeholder="t('faq_search')"
+                        @input="onSearchInput"
                     >
                 </div>
 
-                <select class="category-filter" v-model="selectedCategory" @change="filterFaqs">
-                    <option value="">All Categories</option>
+                <select class="category-filter" v-model="selectedCategory" @change="onFilterChange">
+                    <option value="">{{ t('faq_all_categories') }}</option>
                     <option v-for="category in categories" :key="category" :value="category">
-                        {{ category }}
+                        {{ t('faq_category_' + category.toLowerCase()) }}
                     </option>
                 </select>
             </div>
@@ -35,7 +36,7 @@
                     <div class="faq-question" @click="toggleFaq(faq.id)">
                         <div>
                             <h3>{{ faq.question }}</h3>
-                            <span class="category-tag">{{ faq.category }}</span>
+                            <span class="category-tag">{{ t('faq_category_' + faq.categoryKey) }}</span>
                         </div>
                         <span class="arrow"><i class="fas fa-chevron-down"></i></span>
                     </div>
@@ -47,8 +48,8 @@
 
                 <div v-if="filteredFaqs.length === 0" class="empty-state">
                     <i class="fas fa-search"></i>
-                    <h3>No questions found</h3>
-                    <p>Try adjusting your search or filter</p>
+                    <h3>{{ t('faq_no_results') }}</h3>
+                    <p>{{ t('faq_no_results_hint') }}</p>
                 </div>
             </div>
         </div>
@@ -56,89 +57,88 @@
 </template>
 
 <script>
+import { ref, computed } from 'vue';
+import { useTranslation } from '@/Composables/useTranslation';
+
 export default {
     name: 'FaqComponent',
-    data() {
-        return {
-            faqs: [
-                {
-                    id: 1,
-                    question: "How do I create an account?",
-                    answer: "To create an account, click on the 'Login' button at the top right corner of the page and then Sign Up button. Fill in your details including your name, email address, and a secure password. Once submitted, you'll receive a confirmation email to verify your account.",
-                    category: "Account"
-                },
-                {
-                    id: 2,
-                    question: "What payment methods do you accept?",
-                    answer: "We accept all major credit cards (Visa, MasterCard, American Express), PayPal, and bank transfers. All payments are processed securely through our encrypted payment system.",
-                    category: "Billing"
-                },
-                {
-                    id: 3,
-                    question: "How can I reset my password?",
-                    answer: "If you've forgotten your password, click on the 'Forgot Password' link on the login page. Enter your email address and we'll send you a link to reset your password. The link will expire in 24 hours for security reasons.",
-                    category: "Account"
-                },
-                {
-                    id: 4,
-                    question: "What is your refund policy?",
-                    answer: "We offer a 30-day money-back guarantee on all our plans. If you're not satisfied with our service, you can request a full refund within 30 days of your initial purchase. To request a refund, contact our support team with your account details.",
-                    category: "Billing"
-                },
-                {
-                    id: 5,
-                    question: "Do you offer customer support?",
-                    answer: "Yes, we offer 24/7 customer support via live chat and email. Our support team is available to help you with any questions or issues you may have. You can also check our knowledge base for answers to common questions.",
-                    category: "Support"
-                },
-                {
-                    id: 6,
-                    question: "Is my data secure?",
-                    answer: "We take data security very seriously. All data is encrypted in transit and at rest. We use industry-standard security practices and regularly undergo security audits to ensure your information is protected.",
-                    category: "Security"
-                }
-            ],
-            filteredFaqs: [],
-            activeFaq: null,
-            searchQuery: '',
-            selectedCategory: ''
-        };
-    },
-    computed: {
-        categories() {
-            return [...new Set(this.faqs.map(faq => faq.category))];
-        }
-    },
-    mounted() {
-        this.filteredFaqs = this.faqs;
-        // Open the first FAQ by default
-        if (this.faqs.length > 0) {
-            this.activeFaq = this.faqs[0].id;
-        }
-    },
-    methods: {
-        toggleFaq(id) {
-            this.activeFaq = this.activeFaq === id ? null : id;
-        },
-        filterFaqs() {
-            this.filteredFaqs = this.faqs.filter(faq => {
-                const matchesSearch = faq.question.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
-                    faq.answer.toLowerCase().includes(this.searchQuery.toLowerCase());
-                const matchesCategory = !this.selectedCategory || faq.category === this.selectedCategory;
+    setup() {
+        const { t } = useTranslation();
+
+        // FAQ keys
+        const faqKeys = [
+            { id: 1, questionKey: 'faq_q1', answerKey: 'faq_a1', categoryKey: 'account' },
+            { id: 2, questionKey: 'faq_q2', answerKey: 'faq_a2', categoryKey: 'billing' },
+            { id: 3, questionKey: 'faq_q3', answerKey: 'faq_a3', categoryKey: 'account' },
+            { id: 4, questionKey: 'faq_q4', answerKey: 'faq_a4', categoryKey: 'billing' },
+            { id: 5, questionKey: 'faq_q5', answerKey: 'faq_a5', categoryKey: 'support' },
+            { id: 6, questionKey: 'faq_q6', answerKey: 'faq_a6', categoryKey: 'security' },
+        ];
+
+        const activeFaq = ref(faqKeys.length > 0 ? faqKeys[0].id : null);
+        const searchQuery = ref('');
+        const selectedCategory = ref('');
+
+        // Get unique categories from the keys
+        const categories = computed(() => {
+            return [...new Set(faqKeys.map(f => f.categoryKey))];
+        });
+
+        // Build translated FAQ objects
+        const translatedFaqs = computed(() => {
+            return faqKeys.map(faq => ({
+                id: faq.id,
+                question: t(faq.questionKey),
+                answer: t(faq.answerKey),
+                categoryKey: faq.categoryKey,
+            }));
+        });
+
+        // Filter translated FAQs
+        const filteredFaqs = computed(() => {
+            const query = searchQuery.value.toLowerCase().trim();
+            const cat = selectedCategory.value.toLowerCase();
+
+            const filtered = translatedFaqs.value.filter(faq => {
+                const matchesSearch = query === '' ||
+                    faq.question.toLowerCase().includes(query) ||
+                    faq.answer.toLowerCase().includes(query);
+                const matchesCategory = cat === '' || faq.categoryKey === cat;
                 return matchesSearch && matchesCategory;
             });
 
-            // If no FAQ is active after filtering, activate the first one if available
-            if (this.filteredFaqs.length > 0 && !this.filteredFaqs.some(faq => faq.id === this.activeFaq)) {
-                this.activeFaq = this.filteredFaqs[0].id;
-            } else if (this.filteredFaqs.length === 0) {
-                this.activeFaq = null;
+            // Keep activeFaq valid if possible
+            if (filtered.length > 0 && !filtered.some(f => f.id === activeFaq.value)) {
+                activeFaq.value = filtered[0].id;
+            } else if (filtered.length === 0) {
+                activeFaq.value = null;
             }
-        }
-    }
+
+            return filtered;
+        });
+
+        // Methods
+        const toggleFaq = (id) => {
+            activeFaq.value = activeFaq.value === id ? null : id;
+        };
+
+        const onSearchInput = () => {};
+        const onFilterChange = () => {};
+
+        return {
+            t,
+            activeFaq,
+            searchQuery,
+            selectedCategory,
+            categories,
+            filteredFaqs,
+            toggleFaq,
+            onSearchInput,
+            onFilterChange,
+        };
+    },
 };
 </script>
-
 
 <style>
 

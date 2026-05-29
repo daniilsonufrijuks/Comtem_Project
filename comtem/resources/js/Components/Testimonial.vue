@@ -1,23 +1,26 @@
+<script setup>
+import { useTranslation } from '../Composables/useTranslation';
+const { locale, t, toggleLocale } = useTranslation();
+
+</script>
+
 <template>
     <section class="testimonial-section">
         <div class="parent-container">
             <blockquote class="responsive-quote">
                 <p class="headline">
-                    Dear Valued Customer,
+                    {{t('testimonial_greeting')}}
                 </p>
 
                 <p>
-                    Welcome to <strong>COMTEM</strong> — where cutting-edge technology meets exceptional service.
-                    Whether you’re a tech enthusiast, a professional seeking reliable solutions, or simply looking
-                    for the latest innovations, we’re here to support you every step of the way.
+                    {{t('testimonial_p1')}}
                 </p>
 
                 <p>
-                    Our commitment goes beyond products. We focus on quality, reliability, and customer satisfaction
-                    to ensure you always get technology you can trust.
+                    {{t('testimonial_p2')}}
                 </p>
 
-                <cite>— COMTEM DEV GROUP</cite>
+                <cite>{{t('testimonial_cite')}}</cite>
             </blockquote>
         </div>
     </section>

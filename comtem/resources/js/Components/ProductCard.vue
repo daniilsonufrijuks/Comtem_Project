@@ -24,44 +24,37 @@
                     @input="validateQuantity"
                 />
                 <button class="add-btn" @click="addToCart(product)">
-                    🛒 Add to Cart
+                    {{ t('product_add_to_cart') }}
                 </button>
             </div>
 
-            <h4>Product Details</h4>
+            <h4>{{ t('product_details') }}</h4>
             <p class="description">{{ product.description }}</p>
 
-            <h4 class="section-title">Key Features</h4>
+            <h4 class="section-title">{{ t('product_key_features') }}</h4>
             <ul class="features">
-                <li>High-performance components</li>
-                <li>Energy-efficient and reliable structure</li>
-                <li>Durable construction for long-term use</li>
-                <li>User-friendly and intuitive design</li>
-                <li>Compatible with standard accessories</li>
+                <li>{{ t('product_feature_1') }}</li>
+                <li>{{ t('product_feature_2') }}</li>
+                <li>{{ t('product_feature_3') }}</li>
+                <li>{{ t('product_feature_4') }}</li>
+                <li>{{ t('product_feature_5') }}</li>
             </ul>
 
-            <!-- SPECS -->
-<!--            <h4 class="section-title">Technical Specifications</h4>-->
             <ul class="specs">
-<!--                <li><strong>Category:</strong> {{ product.category }}</li>-->
-<!--                <li><strong>Price:</strong> ${{ product.price }}</li>-->
-                <li><strong>Availability:</strong> In Stock</li>
+                <li><strong>{{ t('product_availability') }}</strong> {{ t('product_in_stock') }}</li>
             </ul>
         </div>
 
-        <!-- Image modal -->
         <div v-if="openModal" class="modal" @click="openModal = false">
             <img :src="product.image" alt="Large product view" class="modal-img" />
         </div>
-
     </section>
 
-    <p v-else>Loading product details...</p>
+    <p v-else>{{ t('product_loading') }}</p>
 
-    <!-- Notification -->
     <transition name="slide">
         <div v-if="showNotification" class="notification">
-            ✅ Item added to cart!
+            {{ t('product_added') }}
         </div>
     </transition>
 </template>
@@ -69,7 +62,7 @@
 <script>
 import { useStore } from "vuex";
 import {computed, ref} from "vue";
-
+import { useTranslation } from '../Composables/useTranslation';
 export default {
     props: ["product"],
     setup(props) {
@@ -78,6 +71,7 @@ export default {
         const showNotification = ref(false);
         const openModal = ref(false);
         const selectedVariation = ref(null);
+        const { t } = useTranslation();
 
         // if (props.product.variations?.length) {
         //     selectedVariation.value = props.product.variations[0];
@@ -112,7 +106,7 @@ export default {
         };
 
         return {
-            quantity, addToCart, showNotification, openModal, selectVariation,  selectedVariation, validateQuantity,
+            quantity, addToCart, showNotification, openModal, selectVariation,  selectedVariation, validateQuantity, t,
         };
     },
 };

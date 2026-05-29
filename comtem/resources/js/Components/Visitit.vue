@@ -1,28 +1,33 @@
+<script setup>
+import { useTranslation } from '../Composables/useTranslation';
+const { locale, t, toggleLocale } = useTranslation();
+</script>
+
 <template>
     <!-- visit this -->
-    <h1 class="aboutus">Our partners</h1>
+    <h1 class="aboutus">{{t('partners_title')}}</h1>
     <div class="product-cards-top">
         <a class="product-card-top" href="https://www.asus.com/" target="_blank">
             <img src="/images/front/prod1.png" alt="Product 1">
-            <p>Best quality product at an affordable price.</p>
+            <p>{{t('partners_p1')}}</p>
             <span class="go-btn">Go</span>
         </a>
 
         <a class="product-card-top" href="https://www.bequiet.com/en" target="_blank">
             <img src="/images/front/prod2.png" alt="Product 2">
-            <p>Limited time offer, hurry up!</p>
+            <p>{{t('partners_p2')}}</p>
             <span class="go-btn">Go</span>
         </a>
 
         <a class="product-card-top" href="https://www.apple.com/" target="_blank">
             <img src="/images/front/prod3.png" alt="Product 3">
-            <p>Top choice among customers this month.</p>
+            <p>{{t('partners_p3')}}</p>
             <span class="go-btn">Go</span>
         </a>
 
         <a class="product-card-top" href="https://www.msi.com/index.php" target="_blank">
             <img src="/images/front/prod4.png" alt="Product 4">
-            <p>Special discount for a limited period.</p>
+            <p>{{t('partners_p4')}}</p>
             <span class="go-btn">Go</span>
         </a>
     </div>
@@ -176,5 +181,4 @@ h1 {
     }
 }
 </style>
-<script setup lang="ts">
-</script>
+

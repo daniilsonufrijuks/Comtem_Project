@@ -1,204 +1,126 @@
 <template>
     <div class="admin-dashboard">
         <div class="admin-header">
-            <button @click="$inertia.visit('/')" class="back-button">Back to Home</button>
-            <h1 class="title">Admin Dashboard</h1>
+            <button @click="$inertia.visit('/')" class="back-button">{{ t('admin_back_home') }}</button>
+            <h1 class="title">{{ t('admin_title') }}</h1>
             <ExportDatabasePdf @notify="showNotification" />
         </div>
 
         <!-- Navigation Tabs -->
         <div class="navigation-tabs">
-            <button @click="activeTab = 'analytics'" :class="['tab-button', { active: activeTab === 'analytics' }]">
-                📊 Analytics
-            </button>
-            <button @click="activeTab = 'orders'" :class="['tab-button', { active: activeTab === 'orders' }]">
-                📦 Orders
-            </button>
-            <button @click="activeTab = 'orderDetails'" :class="['tab-button', { active: activeTab === 'orderDetails' }]">
-                📋 Order Details
-            </button>
-<!--            <button @click="activeTab = 'orderItems'" :class="['tab-button', { active: activeTab === 'orderItems' }]">-->
-<!--                📝 Order Items-->
-<!--            </button>-->
-            <button @click="activeTab = 'products'" :class="['tab-button', { active: activeTab === 'products' }]">
-                🛍️ Products
-            </button>
-            <button @click="activeTab = 'users'" :class="['tab-button', { active: activeTab === 'users' }]">
-                👥 Users
-            </button>
-            <button @click="activeTab = 'families'" :class="['tab-button', { active: activeTab === 'families' }]">
-                👨‍👩‍👧‍👦 Families
-            </button>
-            <button @click="activeTab = 'comments'" :class="['tab-button', { active: activeTab === 'comments' }]">
-                💬 Comments
-            </button>
-            <button @click="activeTab = 'auctions'" :class="['tab-button', { active: activeTab === 'auctions' }]">
-                🏷️ Auctions
-            </button>
-            <button @click="activeTab = 'bids'" :class="['tab-button', { active: activeTab === 'bids' }]">
-                💰 Bids
-            </button>
-            <button @click="activeTab = 'addProduct'" :class="['tab-button', { active: activeTab === 'addProduct' }]">
-                ➕ Add Product
-            </button>
-            <button @click="activeTab = 'addUser'" :class="['tab-button', { active: activeTab === 'addUser' }]">
-                👤 Add User
-            </button>
-            <button @click="activeTab = 'addFamily'" :class="['tab-button', { active: activeTab === 'addFamily' }]">
-                🏠 Add Family
-            </button>
+            <button @click="activeTab = 'analytics'" :class="['tab-button', { active: activeTab === 'analytics' }]">{{ t('admin_tab_analytics') }}</button>
+            <button @click="activeTab = 'orders'" :class="['tab-button', { active: activeTab === 'orders' }]">{{ t('admin_tab_orders') }}</button>
+            <button @click="activeTab = 'orderDetails'" :class="['tab-button', { active: activeTab === 'orderDetails' }]">{{ t('admin_tab_order_details') }}</button>
+            <button @click="activeTab = 'products'" :class="['tab-button', { active: activeTab === 'products' }]">{{ t('admin_tab_products') }}</button>
+            <button @click="activeTab = 'users'" :class="['tab-button', { active: activeTab === 'users' }]">{{ t('admin_tab_users') }}</button>
+            <button @click="activeTab = 'families'" :class="['tab-button', { active: activeTab === 'families' }]">{{ t('admin_tab_families') }}</button>
+            <button @click="activeTab = 'comments'" :class="['tab-button', { active: activeTab === 'comments' }]">{{ t('admin_tab_comments') }}</button>
+            <button @click="activeTab = 'auctions'" :class="['tab-button', { active: activeTab === 'auctions' }]">{{ t('admin_tab_auctions') }}</button>
+            <button @click="activeTab = 'bids'" :class="['tab-button', { active: activeTab === 'bids' }]">{{ t('admin_tab_bids') }}</button>
+            <button @click="activeTab = 'addProduct'" :class="['tab-button', { active: activeTab === 'addProduct' }]">{{ t('admin_tab_add_product') }}</button>
+            <button @click="activeTab = 'addUser'" :class="['tab-button', { active: activeTab === 'addUser' }]">{{ t('admin_tab_add_user') }}</button>
+            <button @click="activeTab = 'addFamily'" :class="['tab-button', { active: activeTab === 'addFamily' }]">{{ t('admin_tab_add_family') }}</button>
         </div>
 
         <!-- Analytics Tab -->
         <section v-if="activeTab === 'analytics'" class="section analytics-section">
-            <h2 class="section-title">📊 Dashboard Analytics</h2>
-
-            <!-- Loading state -->
-            <div v-if="loadingAnalytics" class="loading">
-                Loading analytics...
-            </div>
-
+            <h2 class="section-title">{{ t('admin_analytics_title') }}</h2>
+            <div v-if="loadingAnalytics" class="loading">{{ t('admin_analytics_loading') }}</div>
             <div v-else>
-                <!-- Summary Cards -->
                 <div class="summary-cards">
                     <div class="summary-card">
                         <div class="card-icon">📦</div>
                         <div class="card-content">
-                            <h3>Total Orders</h3>
+                            <h3>{{ t('admin_total_orders') }}</h3>
                             <p class="stat">{{ analyticsData.totalOrders || 0 }}</p>
-                            <small>{{ analyticsData.recentOrders || 0 }} in last 30 days</small>
+                            <small>{{ analyticsData.recentOrders || 0 }} {{ t('admin_last_30') }}</small>
                         </div>
                     </div>
-
                     <div class="summary-card">
                         <div class="card-icon">💰</div>
                         <div class="card-content">
-                            <h3>Total Revenue</h3>
+                            <h3>{{ t('admin_total_revenue') }}</h3>
                             <p class="stat">${{ formatNumber(analyticsData.totalRevenue) || '0' }}</p>
-                            <small>${{ formatNumber(analyticsData.recentRevenue) || '0' }} recent</small>
+                            <small>${{ formatNumber(analyticsData.recentRevenue) || '0' }} {{ t('admin_recent') }}</small>
                         </div>
                     </div>
-
                     <div class="summary-card">
                         <div class="card-icon">🛍️</div>
                         <div class="card-content">
-                            <h3>Products</h3>
+                            <h3>{{ t('admin_products') }}</h3>
                             <p class="stat">{{ analyticsData.totalProducts || 0 }}</p>
-                            <small>Active listings</small>
+                            <small>{{ t('admin_active_listings') }}</small>
                         </div>
                     </div>
-
                     <div class="summary-card">
                         <div class="card-icon">👥</div>
                         <div class="card-content">
-                            <h3>Users</h3>
+                            <h3>{{ t('admin_users') }}</h3>
                             <p class="stat">{{ analyticsData.totalUsers || 0 }}</p>
-                            <small>{{ analyticsData.totalFamilies || 0 }} families</small>
+                            <small>{{ analyticsData.totalFamilies || 0 }} {{ t('admin_families') }}</small>
                         </div>
                     </div>
                 </div>
 
-                <!-- Charts Grid -->
                 <div class="charts-grid">
-                    <div class="chart-container">
-                        <h3>📈 Orders Trend (30 Days)</h3>
-                        <canvas ref="ordersChart" width="400" height="200"></canvas>
-                    </div>
-
-                    <div class="chart-container">
-                        <h3>💰 Revenue Trend (30 Days)</h3>
-                        <canvas ref="revenueChart" width="400" height="200"></canvas>
-                    </div>
-
-                    <div class="chart-container">
-                        <h3>📊 Order Status</h3>
-                        <canvas ref="statusChart" width="400" height="200"></canvas>
-                    </div>
-
-                    <div class="chart-container">
-                        <h3>🏷️ Category Performance</h3>
-                        <canvas ref="categoryChart" width="400" height="200"></canvas>
-                    </div>
+                    <div class="chart-container"><h3>{{ t('admin_orders_trend') }}</h3><canvas ref="ordersChart" width="400" height="200"></canvas></div>
+                    <div class="chart-container"><h3>{{ t('admin_revenue_trend') }}</h3><canvas ref="revenueChart" width="400" height="200"></canvas></div>
+                    <div class="chart-container"><h3>{{ t('admin_order_status') }}</h3><canvas ref="statusChart" width="400" height="200"></canvas></div>
+                    <div class="chart-container"><h3>{{ t('admin_category_perf') }}</h3><canvas ref="categoryChart" width="400" height="200"></canvas></div>
                 </div>
 
-                <!-- Top Tables -->
                 <div class="tables-grid">
-                    <!-- Top Products -->
                     <div class="table-container" v-if="analyticsData.topProducts && analyticsData.topProducts.length > 0">
-                        <h3>🔥 Top Products</h3>
+                        <h3>{{ t('admin_top_products') }}</h3>
                         <div class="scrollable-table">
                             <table class="data-table">
-                                <thead>
-                                <tr>
-                                    <th>Product</th>
-                                    <th>Category</th>
-                                    <th>Sold</th>
-                                    <th>Revenue</th>
-                                </tr>
-                                </thead>
+                                <thead><tr><th>{{ t('admin_col_product') }}</th><th>{{ t('admin_col_category') }}</th><th>{{ t('admin_col_sold') }}</th><th>{{ t('admin_col_revenue') }}</th></tr></thead>
                                 <tbody>
                                 <tr v-for="product in analyticsData.topProducts" :key="product.name">
-                                    <td>{{ product.name }}</td>
-                                    <td>{{ product.category }}</td>
-                                    <td>{{ product.quantity_sold }}</td>
-                                    <td>${{ formatNumber(product.revenue) }}</td>
+                                    <td>{{ product.name }}</td><td>{{ product.category }}</td><td>{{ product.quantity_sold }}</td><td>${{ formatNumber(product.revenue) }}</td>
                                 </tr>
                                 </tbody>
                             </table>
                         </div>
                     </div>
-
-                    <!-- Top Customers -->
                     <div class="table-container" v-if="analyticsData.topCustomers && analyticsData.topCustomers.length > 0">
-                        <h3>⭐ Top Customers</h3>
+                        <h3>{{ t('admin_top_customers') }}</h3>
                         <div class="scrollable-table">
                             <table class="data-table">
-                                <thead>
-                                <tr>
-                                    <th>Customer</th>
-                                    <th>Email</th>
-                                    <th>Orders</th>
-                                    <th>Spent</th>
-                                </tr>
-                                </thead>
+                                <thead><tr><th>{{ t('admin_col_customer') }}</th><th>{{ t('admin_col_email') }}</th><th>{{ t('admin_col_orders') }}</th><th>{{ t('admin_col_spent') }}</th></tr></thead>
                                 <tbody>
                                 <tr v-for="customer in analyticsData.topCustomers" :key="customer.id">
-                                    <td>{{ customer.name }}</td>
-                                    <td>{{ customer.email }}</td>
-                                    <td>{{ customer.order_count }}</td>
-                                    <td>${{ formatNumber(customer.total_spent) }}</td>
+                                    <td>{{ customer.name }}</td><td>{{ customer.email }}</td><td>{{ customer.order_count }}</td><td>${{ formatNumber(customer.total_spent) }}</td>
                                 </tr>
                                 </tbody>
                             </table>
                         </div>
                     </div>
-
                     <div class="analytics-cards">
-                        <h3>💬 Comment Analytics</h3>
+                        <h3>{{ t('admin_comment_analytics') }}</h3>
                         <div class="analytics-card">
                             <div class="card-icon">📝</div>
                             <div class="card-content">
-                                <h4>Total Comments</h4>
+                                <h4>{{ t('admin_total_comments') }}</h4>
                                 <p class="stat">{{ commentAnalytics.totalComments || 0 }}</p>
                             </div>
                         </div>
                     </div>
-
                 </div>
             </div>
         </section>
 
         <!-- Orders Tab -->
         <section v-if="activeTab === 'orders'" class="section">
-            <h2 class="section-title">📦 Orders Management</h2>
+            <h2 class="section-title">{{ t('admin_orders_title') }}</h2>
             <div class="table-controls">
-                <input v-model="orderSearch" type="text" placeholder="Search orders..." class="search-input" />
+                <input v-model="orderSearch" type="text" :placeholder="t('admin_search_orders')" class="search-input" />
                 <select v-model="orderStatusFilter" class="filter-select">
-                    <option value="">All Status</option>
-                    <option value="pending">Pending</option>
-                    <option value="processing">Processing</option>
-                    <option value="completed">Completed</option>
-                    <option value="cancelled">Cancelled</option>
+                    <option value="">{{ t('admin_all_status') }}</option>
+                    <option value="pending">{{ t('admin_status_pending') }}</option>
+                    <option value="processing">{{ t('admin_status_processing') }}</option>
+                    <option value="completed">{{ t('admin_status_completed') }}</option>
+                    <option value="cancelled">{{ t('admin_status_cancelled') }}</option>
                 </select>
             </div>
             <div class="scrollable-container">
@@ -207,15 +129,15 @@
                         <template v-if="editOrder && editOrder.id === order.id">
                             <div class="edit-form">
                                 <select v-model="editOrder.status" class="form-input">
-                                    <option value="pending">Pending</option>
-                                    <option value="processing">Processing</option>
-                                    <option value="completed">Completed</option>
-                                    <option value="cancelled">Cancelled</option>
+                                    <option value="pending">{{ t('admin_status_pending') }}</option>
+                                    <option value="processing">{{ t('admin_status_processing') }}</option>
+                                    <option value="completed">{{ t('admin_status_completed') }}</option>
+                                    <option value="cancelled">{{ t('admin_status_cancelled') }}</option>
                                 </select>
-                                <input v-model="editOrder.total" type="number" step="0.01" placeholder="Total" class="form-input" />
+                                <input v-model="editOrder.total" type="number" step="0.01" :placeholder="t('admin_label_total')" class="form-input" />
                                 <div class="edit-actions">
-                                    <button @click="updateOrder" class="save-btn">💾 Save</button>
-                                    <button @click="cancelEditOrder" class="cancel-btn">❌ Cancel</button>
+                                    <button @click="updateOrder" class="save-btn">{{ t('admin_save') }}</button>
+                                    <button @click="cancelEditOrder" class="cancel-btn">{{ t('admin_cancel') }}</button>
                                 </div>
                             </div>
                         </template>
@@ -225,29 +147,27 @@
                                 <div class="order-status" :class="order.status">{{ order.status }}</div>
                             </div>
                             <div class="order-details">
-                                <p><strong>Customer:</strong> {{ order.user ? order.user.name : 'N/A' }}</p>
-                                <p><strong>Total:</strong> ${{ order.total }}</p>
-                                <p><strong>Date:</strong> {{ formatDate(order.created_at) }}</p>
-                                <p><strong>Payment:</strong> {{ order.payment_method || 'N/A' }}</p>
-                                <p><strong>Items:</strong> {{ order.order_goods ? order.order_goods.length : 0 }}</p>
-                                <p v-if="order.shipping_address"><strong>Shipping:</strong> {{ order.shipping_address }}</p>
+                                <p><strong>{{ t('admin_label_customer') }}</strong> {{ order.user ? order.user.name : 'N/A' }}</p>
+                                <p><strong>{{ t('admin_label_total') }}</strong> ${{ order.total }}</p>
+                                <p><strong>{{ t('admin_label_date') }}</strong> {{ formatDate(order.created_at) }}</p>
+                                <p><strong>{{ t('admin_label_payment') }}</strong> {{ order.payment_method || 'N/A' }}</p>
+                                <p><strong>{{ t('admin_label_items') }}</strong> {{ order.order_goods ? order.order_goods.length : 0 }}</p>
+                                <p v-if="order.shipping_address"><strong>{{ t('admin_label_shipping') }}</strong> {{ order.shipping_address }}</p>
                             </div>
                             <div class="actions">
-                                <button @click="startEditOrder(order)" class="edit-btn">✏️ Edit</button>
-                                <button @click="deleteOrder(order.id)" class="delete-btn">🗑️ Delete</button>
+                                <button @click="startEditOrder(order)" class="edit-btn">{{ t('admin_edit') }}</button>
+                                <button @click="deleteOrder(order.id)" class="delete-btn">{{ t('admin_delete') }}</button>
                             </div>
                         </template>
                     </div>
                 </div>
-                <div v-if="filteredOrders.length === 0" class="empty-state">
-                    No orders found
-                </div>
+                <div v-if="filteredOrders.length === 0" class="empty-state">{{ t('admin_no_orders') }}</div>
             </div>
         </section>
 
         <!-- Order Details Tab -->
         <section v-if="activeTab === 'orderDetails'" class="section">
-            <h2 class="section-title">📋 Order Details</h2>
+            <h2 class="section-title">{{ t('admin_order_details_title') }}</h2>
             <div class="scrollable-container">
                 <div class="card-grid">
                     <div class="order-detail-card" v-for="order in ordersj" :key="order.order_id">
@@ -256,60 +176,29 @@
                             <div class="order-status" :class="order.order_status">{{ order.order_status }}</div>
                         </div>
                         <div class="order-details">
-                            <p><strong>Customer:</strong> {{ order.customer_name }} ({{ order.customer_email }})</p>
-                            <p><strong>Item:</strong> {{ order.item_name }}</p>
-                            <p><strong>Price:</strong> ${{ order.item_price }}</p>
-                            <p><strong>Category:</strong> {{ order.category }}</p>
-                            <p><strong>Total:</strong> ${{ order.total_price }}</p>
-                            <p><strong>Date:</strong> {{ formatDate(order.created_at) }}</p>
+                            <p><strong>{{ t('admin_label_customer') }}</strong> {{ order.customer_name }} ({{ order.customer_email }})</p>
+                            <p><strong>{{ t('admin_label_item') }}</strong> {{ order.item_name }}</p>
+                            <p><strong>{{ t('admin_label_price') }}</strong> ${{ order.item_price }}</p>
+                            <p><strong>{{ t('admin_label_category') }}</strong> {{ order.category }}</p>
+                            <p><strong>{{ t('admin_label_total') }}</strong> ${{ order.total_price }}</p>
+                            <p><strong>{{ t('admin_label_date') }}</strong> {{ formatDate(order.created_at) }}</p>
                         </div>
                         <div class="actions">
-                            <button @click="deleteOrder(order.order_id)" class="delete-btn">🗑️ Delete</button>
+                            <button @click="deleteOrder(order.order_id)" class="delete-btn">{{ t('admin_delete') }}</button>
                         </div>
                     </div>
                 </div>
-                <div v-if="ordersj.length === 0" class="empty-state">
-                    No order details found
-                </div>
-            </div>
-        </section>
-
-        <!-- Order Items Tab -->
-        <section v-if="activeTab === 'orderItems'" class="section">
-            <h2 class="section-title">📝 Order Items</h2>
-            <div class="scrollable-container">
-                <div class="card-grid">
-                    <div class="order-item-card" v-for="item in orderItems" :key="item.id">
-                        <div class="item-header">
-                            <div class="item-id">Item #{{ item.id }}</div>
-                            <div class="item-status" :class="item.status">{{ item.status }}</div>
-                        </div>
-                        <div class="item-details">
-                            <p><strong>Order ID:</strong> {{ item.order_id }}</p>
-                            <p><strong>Product:</strong> {{ item.name }}</p>
-                            <p><strong>Price:</strong> ${{ item.price }}</p>
-                            <p><strong>Category:</strong> {{ item.category }}</p>
-                            <p><strong>Total:</strong> ${{ item.total_price }}</p>
-                            <p><strong>Date:</strong> {{ formatDate(item.created_at) }}</p>
-                        </div>
-                        <div class="actions">
-                            <button @click="deleteOrderItem(item.id)" class="delete-btn">🗑️ Delete</button>
-                        </div>
-                    </div>
-                </div>
-                <div v-if="orderItems.length === 0" class="empty-state">
-                    No order items found
-                </div>
+                <div v-if="ordersj.length === 0" class="empty-state">{{ t('admin_no_order_details') }}</div>
             </div>
         </section>
 
         <!-- Products Tab -->
         <section v-if="activeTab === 'products'" class="section">
-            <h2 class="section-title">🛍️ Product Management</h2>
+            <h2 class="section-title">{{ t('admin_products_title') }}</h2>
             <div class="table-controls">
-                <input v-model="productSearch" type="text" placeholder="Search products..." class="search-input" />
+                <input v-model="productSearch" type="text" :placeholder="t('admin_search_products')" class="search-input" />
                 <select v-model="productCategoryFilter" class="filter-select">
-                    <option value="">All Categories</option>
+                    <option value="">{{ t('admin_all_categories') }}</option>
                     <option v-for="category in productCategories" :key="category">{{ category }}</option>
                 </select>
             </div>
@@ -318,78 +207,72 @@
                     <div class="product-card" v-for="product in filteredProducts" :key="product.id">
                         <template v-if="editProduct && editProduct.id === product.id">
                             <div class="edit-form">
-                                <input v-model="editProduct.name" placeholder="Name" class="form-input" />
-                                <input v-model="editProduct.price" type="number" step="0.01" placeholder="Price" class="form-input" />
-                                <input v-model="editProduct.category" placeholder="Category" class="form-input" />
-                                <textarea v-model="editProduct.description" placeholder="Description" class="form-input"></textarea>
-
+                                <input v-model="editProduct.name" :placeholder="t('admin_label_product_name')" class="form-input" />
+                                <input v-model="editProduct.price" type="number" step="0.01" :placeholder="t('admin_label_price')" class="form-input" />
+                                <input v-model="editProduct.category" :placeholder="t('admin_label_category')" class="form-input" />
+                                <textarea v-model="editProduct.description" :placeholder="t('admin_label_description')" class="form-input"></textarea>
                                 <div v-if="product.image && !editImageFile" class="current-image">
-                                    <p><strong>Current Image:</strong></p>
+                                    <p><strong>{{ t('admin_current_image') }}</strong></p>
                                     <img :src="'/' + product.image" alt="Current Product Image" />
                                 </div>
-
                                 <div v-if="editImageFile" class="new-image">
-                                    <p><strong>New Image:</strong></p>
+                                    <p><strong>{{ t('admin_new_image') }}</strong></p>
                                     <img :src="editImagePreview" alt="New Product Image" />
                                 </div>
-
                                 <div class="file-upload">
-                                    <label>Update Image (optional):</label>
+                                    <label>{{ t('admin_update_image') }}</label>
                                     <input type="file" @change="handleEditImageUpload" accept="image/*" />
                                 </div>
-
                                 <div class="edit-actions">
-                                    <button @click="updateProduct" class="save-btn">💾 Save</button>
-                                    <button @click="cancelEdit" class="cancel-btn">❌ Cancel</button>
+                                    <button @click="updateProduct" class="save-btn">{{ t('admin_save') }}</button>
+                                    <button @click="cancelEdit" class="cancel-btn">{{ t('admin_cancel') }}</button>
                                 </div>
                             </div>
                         </template>
                         <template v-else>
                             <div class="product-image-container">
                                 <img v-if="product.image" :src="'/' + product.image" alt="Product Image" class="product-image" />
-                                <div v-else class="no-image">No Image</div>
+                                <div v-else class="no-image">{{ t('admin_no_image') }}</div>
                             </div>
                             <div class="product-info">
                                 <h4>{{ product.name }}</h4>
                                 <p class="price">${{ product.price }}</p>
                                 <p class="category">{{ product.category }}</p>
                                 <p class="description">{{ product.description }}</p>
-                                <p class="created">Added: {{ formatDate(product.created_at) }}</p>
+                                <p class="created">{{ t('admin_label_added') }} {{ formatDate(product.created_at) }}</p>
                             </div>
                             <div class="actions">
-                                <button @click="startEdit(product)" class="edit-btn">✏️ Edit</button>
-                                <button @click="deleteProduct(product.id)" class="delete-btn">🗑️ Delete</button>
+                                <button @click="startEdit(product)" class="edit-btn">{{ t('admin_edit') }}</button>
+                                <button @click="deleteProduct(product.id)" class="delete-btn">{{ t('admin_delete') }}</button>
                             </div>
                         </template>
                     </div>
                 </div>
-                <div v-if="filteredProducts.length === 0" class="empty-state">
-                    No products found
-                </div>
+                <div v-if="filteredProducts.length === 0" class="empty-state">{{ t('admin_no_products') }}</div>
             </div>
         </section>
 
-        <!-- Users Tab (Keep existing) -->
+        <!-- Users Tab -->
         <section v-if="activeTab === 'users'" class="section">
-            <h2 class="section-title">👥 User Management</h2>
+            <h2 class="section-title">{{ t('admin_users_title') }}</h2>
             <div class="scrollable-container">
                 <div class="card-grid">
                     <div class="user-card" v-for="user in users" :key="user.id">
                         <template v-if="editUser && editUser.id === user.id">
                             <div class="edit-form">
-                                <input v-model="editUser.name" placeholder="Name" class="form-input">
-                                <input v-model="editUser.email" type="email" placeholder="Email" class="form-input">
+                                <input v-model="editUser.name" :placeholder="t('admin_label_full_name')" class="form-input">
+                                <input v-model="editUser.email" type="email" :placeholder="t('admin_label_email')" class="form-input">
                                 <select v-model="editUser.role" class="form-input">
                                     <option value="user">User</option>
                                     <option value="parent">Parent</option>
                                     <option value="child">Child</option>
                                     <option value="admin">Admin</option>
                                 </select>
-                                <input v-model="editUser.awards" type="number" placeholder="Awards" class="form-input">
-                                <input v-model="editUser.password" type="password" placeholder="New Password (leave empty to keep current)" class="form-input">
+                                <input v-model="editUser.awards" type="number" :placeholder="t('admin_label_awards_pts')" class="form-input">
+                                <input v-model="editUser.password" type="password" :placeholder="t('admin_new_password')" class="form-input">
                                 <div class="edit-actions">
-                                    <button @click="updateUser" class="save-btn">💾 Save</button>
-                                    <button @click="cancelEditUser" class="cancel-btn">❌ Cancel</button>
+                                    <button @click="updateUser" class="save-btn">{{ t('admin_save') }}</button>
+                                    <button @click="cancelEditUser" class="cancel-btn">{{ t('admin_cancel') }}</button>
                                 </div>
                             </div>
                         </template>
@@ -402,15 +285,15 @@
                                 </div>
                             </div>
                             <div class="user-details">
-                                <p><strong>Role:</strong> <span class="role-badge" :class="user.role">{{ user.role }}</span></p>
-                                <p><strong>Awards:</strong> {{ user.awards || 0 }}</p>
-                                <p><strong>Orders:</strong> {{ user.orders_count || 0 }}</p>
-                                <p><strong>Joined:</strong> {{ formatDate(user.created_at) }}</p>
-                                <p v-if="user.family"><strong>Family:</strong> {{ user.family.family_name }}</p>
+                                <p><strong>{{ t('admin_label_role') }}</strong> <span class="role-badge" :class="user.role">{{ user.role }}</span></p>
+                                <p><strong>{{ t('admin_label_awards') }}</strong> {{ user.awards || 0 }}</p>
+                                <p><strong>{{ t('admin_label_orders') }}</strong> {{ user.orders_count || 0 }}</p>
+                                <p><strong>{{ t('admin_label_joined') }}</strong> {{ formatDate(user.created_at) }}</p>
+                                <p v-if="user.family"><strong>{{ t('admin_label_family') }}</strong> {{ user.family.family_name }}</p>
                             </div>
                             <div class="actions">
-                                <button @click="startEditUser(user)" class="edit-btn">✏️ Edit</button>
-                                <button @click="deleteUser(user.id)" class="delete-btn">🗑️ Delete</button>
+                                <button @click="startEditUser(user)" class="edit-btn">{{ t('admin_edit') }}</button>
+                                <button @click="deleteUser(user.id)" class="delete-btn">{{ t('admin_delete') }}</button>
                             </div>
                         </template>
                     </div>
@@ -418,56 +301,34 @@
             </div>
         </section>
 
+        <!-- Comments Tab -->
         <section v-if="activeTab === 'comments'" class="section">
-            <h2 class="section-title">💬 Comment Management</h2>
-
-            <!-- Add Comment Form -->
+            <h2 class="section-title">{{ t('admin_comments_title') }}</h2>
             <div class="add-comment-section">
-                <h3>Add New Comment</h3>
+                <h3>{{ t('admin_add_comment') }}</h3>
                 <form @submit.prevent="addComment" class="comment-form">
                     <div class="form-group">
-                <textarea
-                    v-model="newComment.body"
-                    placeholder="Write your comment here..."
-                    rows="3"
-                    required
-                    class="comment-input"
-                ></textarea>
+                        <textarea v-model="newComment.body" :placeholder="t('admin_comment_placeholder')" rows="3" required class="comment-input"></textarea>
                     </div>
                     <button type="submit" class="submit-btn" :disabled="isAddingComment">
-                        {{ isAddingComment ? 'Posting...' : '📝 Post Comment' }}
+                        {{ isAddingComment ? t('admin_posting') : t('admin_post_comment') }}
                     </button>
                 </form>
             </div>
-
-            <!-- Comments List -->
             <div class="comments-list">
-                <h3>All Comments ({{ localComments.length }})</h3>
-
-                <!-- Loading State -->
-                <div v-if="loadingComments" class="loading">
-                    Loading comments...
-                </div>
-
-                <!-- Comments Grid -->
+                <h3>{{ t('admin_all_comments') }} ({{ localComments.length }})</h3>
+                <div v-if="loadingComments" class="loading">{{ t('admin_loading_comments') }}</div>
                 <div v-else class="comments-grid">
                     <div v-for="comment in localComments" :key="comment.id" class="comment-card">
-                        <!-- Edit Mode -->
                         <template v-if="editComment && editComment.id === comment.id">
                             <div class="edit-comment-form">
-                        <textarea
-                            v-model="editComment.body"
-                            rows="3"
-                            class="form-input"
-                        ></textarea>
+                                <textarea v-model="editComment.body" rows="3" class="form-input"></textarea>
                                 <div class="edit-actions">
-                                    <button @click="updateComment" class="save-btn">💾 Save</button>
-                                    <button @click="cancelEditComment" class="cancel-btn">❌ Cancel</button>
+                                    <button @click="updateComment" class="save-btn">{{ t('admin_save') }}</button>
+                                    <button @click="cancelEditComment" class="cancel-btn">{{ t('admin_cancel') }}</button>
                                 </div>
                             </div>
                         </template>
-
-                        <!-- View Mode -->
                         <template v-else>
                             <div class="comment-header">
                                 <div class="comment-user">
@@ -482,51 +343,43 @@
                                     <button @click="deleteComment(comment.id)" class="icon-btn delete-icon" title="Delete">🗑️</button>
                                 </div>
                             </div>
-                            <div class="comment-body">
-                                {{ comment.body }}
-                            </div>
-                            <div v-if="comment.created_at !== comment.updated_at" class="comment-edited">
-                                (edited)
-                            </div>
+                            <div class="comment-body">{{ comment.body }}</div>
+                            <div v-if="comment.created_at !== comment.updated_at" class="comment-edited">{{ t('admin_edited') }}</div>
                         </template>
                     </div>
-
-                    <!-- Empty State -->
-                    <div v-if="localComments.length === 0" class="empty-state">
-                        No comments yet. Be the first to comment!
-                    </div>
+                    <div v-if="localComments.length === 0" class="empty-state">{{ t('admin_no_comments') }}</div>
                 </div>
             </div>
         </section>
 
         <!-- Auctions Tab -->
         <section v-if="activeTab === 'auctions'" class="section">
-            <h2 class="section-title">🏷️ Auction Management</h2>
+            <h2 class="section-title">{{ t('admin_auctions_title') }}</h2>
             <div class="table-controls">
-                <button @click="showAddAuctionModal = true" class="submit-btn" style="width: auto;">➕ Add Auction</button>
-                <input v-model="auctionSearch" type="text" placeholder="Search auctions..." class="search-input" />
+                <button @click="showAddAuctionModal = true" class="submit-btn" style="width: auto;">{{ t('admin_add_auction_btn') }}</button>
+                <input v-model="auctionSearch" type="text" :placeholder="t('admin_search_auctions')" class="search-input" />
             </div>
             <div class="scrollable-container">
                 <div class="card-grid">
                     <div class="auction-card" v-for="auction in filteredAuctions" :key="auction.id">
                         <template v-if="editAuction && editAuction.id === auction.id">
                             <div class="edit-form">
-                                <input v-model="editAuction.name" placeholder="Name" class="form-input" />
-                                <textarea v-model="editAuction.description" placeholder="Description" class="form-input"></textarea>
-                                <input v-model="editAuction.starting_bid" type="number" step="0.01" placeholder="Starting Bid" class="form-input" />
+                                <input v-model="editAuction.name" :placeholder="t('admin_label_name')" class="form-input" />
+                                <textarea v-model="editAuction.description" :placeholder="t('admin_label_description')" class="form-input"></textarea>
+                                <input v-model="editAuction.starting_bid" type="number" step="0.01" :placeholder="t('admin_label_starting_bid')" class="form-input" />
                                 <input v-model="editAuction.start_time" type="datetime-local" class="form-input" />
                                 <input v-model="editAuction.end_time" type="datetime-local" class="form-input" />
                                 <div v-if="editAuction.img" class="current-image">
-                                    <p><strong>Current Image:</strong></p>
+                                    <p><strong>{{ t('admin_current_image') }}</strong></p>
                                     <img :src="'/' + editAuction.img" style="max-width:100px;" />
                                 </div>
                                 <div class="file-upload">
-                                    <label>Update Image (optional):</label>
+                                    <label>{{ t('admin_update_image_optional') }}</label>
                                     <input type="file" @change="handleEditAuctionImageUpload" accept="image/*" />
                                 </div>
                                 <div class="edit-actions">
-                                    <button @click="updateAuction" class="save-btn">💾 Save</button>
-                                    <button @click="cancelEditAuction" class="cancel-btn">❌ Cancel</button>
+                                    <button @click="updateAuction" class="save-btn">{{ t('admin_save') }}</button>
+                                    <button @click="cancelEditAuction" class="cancel-btn">{{ t('admin_cancel') }}</button>
                                 </div>
                             </div>
                         </template>
@@ -537,57 +390,57 @@
                                 </div>
                                 <div class="auction-info">
                                     <h4>{{ auction.name }}</h4>
-                                    <p class="starting-bid">Starting: ${{ auction.starting_bid }}</p>
+                                    <p class="starting-bid">{{ t('admin_auction_starting') }} ${{ auction.starting_bid }}</p>
                                     <p class="dates">📅 {{ formatDate(auction.start_time) }} → {{ formatDate(auction.end_time) }}</p>
                                     <p class="description">{{ auction.description.substring(0, 100) }}...</p>
                                 </div>
                             </div>
                             <div class="actions">
-                                <button @click="viewBids(auction.id)" class="edit-btn">💰 View Bids</button>
-                                <button @click="startEditAuction(auction)" class="edit-btn">✏️ Edit</button>
-                                <button @click="deleteAuction(auction.id)" class="delete-btn">🗑️ Delete</button>
+                                <button @click="viewBids(auction.id)" class="edit-btn">{{ t('admin_view_bids') }}</button>
+                                <button @click="startEditAuction(auction)" class="edit-btn">{{ t('admin_edit') }}</button>
+                                <button @click="deleteAuction(auction.id)" class="delete-btn">{{ t('admin_delete') }}</button>
                             </div>
                         </template>
                     </div>
                 </div>
-                <div v-if="filteredAuctions.length === 0" class="empty-state">No auctions found</div>
+                <div v-if="filteredAuctions.length === 0" class="empty-state">{{ t('admin_no_auctions') }}</div>
             </div>
 
             <!-- Add Auction Modal -->
             <div v-if="showAddAuctionModal" class="modal" @click.self="showAddAuctionModal = false">
                 <div class="modal-content">
-                    <h3>Add New Auction</h3>
+                    <h3>{{ t('admin_auction_modal_title') }}</h3>
                     <form @submit.prevent="createAuction">
                         <div class="form-group">
-                            <label>Name *</label>
+                            <label>{{ t('admin_label_name') }}</label>
                             <input v-model="newAuction.name" required />
                         </div>
                         <div class="form-group">
-                            <label>Description *</label>
+                            <label>{{ t('admin_label_description') }}</label>
                             <textarea v-model="newAuction.description" required></textarea>
                         </div>
                         <div class="form-group">
-                            <label>Starting Bid ($) *</label>
+                            <label>{{ t('admin_label_starting_bid') }}</label>
                             <input type="number" step="0.01" v-model="newAuction.starting_bid" required />
                         </div>
                         <div class="form-group">
-                            <label>Start Date & Time *</label>
+                            <label>{{ t('admin_label_start_datetime') }}</label>
                             <input type="datetime-local" v-model="newAuction.start_time" required />
                         </div>
                         <div class="form-group">
-                            <label>End Date & Time *</label>
+                            <label>{{ t('admin_label_end_datetime') }}</label>
                             <input type="datetime-local" v-model="newAuction.end_time" required />
                         </div>
                         <div class="form-group">
-                            <label>Image (optional)</label>
+                            <label>{{ t('admin_label_image_optional') }}</label>
                             <input type="file" @change="handleNewAuctionImageUpload" accept="image/*" />
                             <div v-if="newAuctionImagePreview" class="image-preview">
                                 <img :src="newAuctionImagePreview" style="max-width:100px;" />
                             </div>
                         </div>
                         <div class="edit-actions">
-                            <button type="submit" class="save-btn" :disabled="isAddingAuction">Create</button>
-                            <button type="button" @click="showAddAuctionModal = false" class="cancel-btn">Cancel</button>
+                            <button type="submit" class="save-btn" :disabled="isAddingAuction">{{ t('admin_creating') }}</button>
+                            <button type="button" @click="showAddAuctionModal = false" class="cancel-btn">{{ t('admin_cancel') }}</button>
                         </div>
                     </form>
                 </div>
@@ -596,18 +449,24 @@
 
         <!-- Bids Tab -->
         <section v-if="activeTab === 'bids'" class="section">
-            <h2 class="section-title">💰 All Bids</h2>
+            <h2 class="section-title">{{ t('admin_bids_title') }}</h2>
             <div class="table-controls">
-                <input v-model="bidSearch" type="text" placeholder="Search by auction or user..." class="search-input" />
+                <input v-model="bidSearch" type="text" :placeholder="t('admin_search_bids')" class="search-input" />
                 <select v-model="bidAuctionFilter" class="filter-select">
-                    <option value="">All Auctions</option>
+                    <option value="">{{ t('admin_all_auctions') }}</option>
                     <option v-for="auction in auctions" :key="auction.id" :value="auction.id">{{ auction.name }}</option>
                 </select>
             </div>
             <div class="scrollable-table">
                 <table class="data-table">
                     <thead>
-                    <tr><th>Auction</th><th>Bidder</th><th>Bid Amount</th><th>Date</th><th>Actions</th></tr>
+                    <tr>
+                        <th>{{ t('admin_col_auction') }}</th>
+                        <th>{{ t('admin_col_bidder') }}</th>
+                        <th>{{ t('admin_col_bid_amount') }}</th>
+                        <th>{{ t('admin_col_date') }}</th>
+                        <th>{{ t('admin_col_actions') }}</th>
+                    </tr>
                     </thead>
                     <tbody>
                     <tr v-for="bid in filteredBids" :key="bid.id">
@@ -617,35 +476,31 @@
                         <td>{{ formatDate(bid.created_at) }}</td>
                         <td><button @click="deleteBid(bid.id)" class="delete-btn">🗑️</button></td>
                     </tr>
-                    <tr v-if="filteredBids.length === 0"><td colspan="5" class="empty-state">No bids found</td></tr>
+                    <tr v-if="filteredBids.length === 0"><td colspan="5" class="empty-state">{{ t('admin_no_bids') }}</td></tr>
                     </tbody>
                 </table>
             </div>
         </section>
 
-
         <!-- Add User Tab -->
         <section v-if="activeTab === 'addUser'" class="section">
-            <h2 class="section-title">👤 Add New User</h2>
+            <h2 class="section-title">{{ t('admin_add_user_title') }}</h2>
             <div class="scrollable-container">
                 <form @submit.prevent="addUser" class="form">
                     <div class="form-group">
-                        <label>Full Name *</label>
+                        <label>{{ t('admin_label_full_name') }}</label>
                         <input v-model="newUser.name" type="text" placeholder="John Doe" required>
                     </div>
-
                     <div class="form-group">
-                        <label>Email Address *</label>
+                        <label>{{ t('admin_label_email') }}</label>
                         <input v-model="newUser.email" type="email" placeholder="john@example.com" required>
                     </div>
-
                     <div class="form-group">
-                        <label>Password *</label>
+                        <label>{{ t('admin_label_password') }}</label>
                         <input v-model="newUser.password" type="password" placeholder="Minimum 8 characters" required>
                     </div>
-
                     <div class="form-group">
-                        <label>Role *</label>
+                        <label>{{ t('admin_label_role') }}</label>
                         <select v-model="newUser.role" required>
                             <option value="standalone">Standalone</option>
                             <option value="parent">Parent</option>
@@ -653,24 +508,21 @@
                             <option value="admin">Admin</option>
                         </select>
                     </div>
-
                     <div class="form-group">
-                        <label>Awards Points</label>
+                        <label>{{ t('admin_label_awards_pts') }}</label>
                         <input v-model="newUser.awards" type="number" placeholder="0" min="0">
                     </div>
-
                     <div class="form-group">
-                        <label>Assign to Family (Optional)</label>
+                        <label>{{ t('admin_label_assign_family') }}</label>
                         <select v-model="newUser.family_id">
-                            <option value="">No Family</option>
+                            <option value="">{{ t('admin_no_family') }}</option>
                             <option v-for="family in families" :key="family.id" :value="family.id">
                                 {{ family.family_name }} (Parent: {{ family.parent?.name || 'N/A' }})
                             </option>
                         </select>
                     </div>
-
                     <button type="submit" class="submit-btn" :disabled="isAddingUser">
-                        {{ isAddingUser ? 'Adding User...' : '➕ Add User' }}
+                        {{ isAddingUser ? t('admin_adding_user') : t('admin_add_user_btn') }}
                     </button>
                 </form>
             </div>
@@ -678,21 +530,19 @@
 
         <!-- Families Tab -->
         <section v-if="activeTab === 'families'" class="section">
-            <h2 class="section-title">👨‍👩‍👧‍👦 Family Management</h2>
+            <h2 class="section-title">{{ t('admin_families_title') }}</h2>
             <div class="scrollable-container">
                 <div class="card-grid">
                     <div class="family-card" v-for="family in families" :key="family.id">
                         <template v-if="editFamily && editFamily.id === family.id">
                             <div class="edit-form">
-                                <input v-model="editFamily.family_name" placeholder="Family Name" class="form-input">
+                                <input v-model="editFamily.family_name" :placeholder="t('admin_label_family_name')" class="form-input">
                                 <select v-model="editFamily.parent_id" class="form-input">
-                                    <option v-for="user in users" :key="user.id" :value="user.id">
-                                        {{ user.name }} ({{ user.email }})
-                                    </option>
+                                    <option v-for="user in users" :key="user.id" :value="user.id">{{ user.name }} ({{ user.email }})</option>
                                 </select>
                                 <div class="edit-actions">
-                                    <button @click="updateFamily" class="save-btn">💾 Save</button>
-                                    <button @click="cancelEditFamily" class="cancel-btn">❌ Cancel</button>
+                                    <button @click="updateFamily" class="save-btn">{{ t('admin_save') }}</button>
+                                    <button @click="cancelEditFamily" class="cancel-btn">{{ t('admin_cancel') }}</button>
                                 </div>
                             </div>
                         </template>
@@ -701,17 +551,17 @@
                                 <div class="family-icon">🏠</div>
                                 <div class="family-info">
                                     <h4>{{ family.family_name }}</h4>
-                                    <p class="invitation-code">Invite Code: <strong>{{ family.invitation_code }}</strong></p>
+                                    <p class="invitation-code">{{ t('admin_invite_code') }} <strong>{{ family.invitation_code }}</strong></p>
                                 </div>
                             </div>
                             <div class="family-details">
-                                <p><strong>Parent:</strong> {{ family.parent?.name || 'Not set' }}</p>
-                                <p><strong>Members:</strong> {{ family.users_count || 0 }}</p>
-                                <p><strong>Created:</strong> {{ formatDate(family.created_at) }}</p>
+                                <p><strong>{{ t('admin_label_parent') }}</strong> {{ family.parent?.name || t('admin_label_not_set') }}</p>
+                                <p><strong>{{ t('admin_label_members') }}</strong> {{ family.users_count || 0 }}</p>
+                                <p><strong>{{ t('admin_label_created') }}</strong> {{ formatDate(family.created_at) }}</p>
                             </div>
                             <div class="actions">
-                                <button @click="startEditFamily(family)" class="edit-btn">✏️ Edit</button>
-                                <button @click="deleteRecord('family', family.id)" class="delete-btn">🗑️ Delete</button>
+                                <button @click="startEditFamily(family)" class="edit-btn">{{ t('admin_edit') }}</button>
+                                <button @click="deleteRecord('family', family.id)" class="delete-btn">{{ t('admin_delete') }}</button>
                             </div>
                         </template>
                     </div>
@@ -721,76 +571,67 @@
 
         <!-- Add Family Tab -->
         <section v-if="activeTab === 'addFamily'" class="section">
-            <h2 class="section-title">🏠 Create New Family</h2>
+            <h2 class="section-title">{{ t('admin_add_family_title') }}</h2>
             <div class="scrollable-container">
                 <form @submit.prevent="addFamily" class="form">
                     <div class="form-group">
-                        <label>Family Name *</label>
+                        <label>{{ t('admin_label_family_name') }}</label>
                         <input v-model="newFamily.family_name" type="text" placeholder="Smith Family" required>
                     </div>
-
                     <div class="form-group">
-                        <label>Parent *</label>
+                        <label>{{ t('admin_label_select_parent') }}</label>
                         <select v-model="newFamily.parent_id" required>
-                            <option value="">Select Parent User</option>
+                            <option value="">{{ t('admin_select_parent') }}</option>
                             <option v-for="user in users.filter(u => u.role !== 'child')" :key="user.id" :value="user.id">
                                 {{ user.name }} ({{ user.email }}) - {{ user.role }}
                             </option>
                         </select>
                     </div>
-
                     <button type="submit" class="submit-btn" :disabled="isAddingFamily">
-                        {{ isAddingFamily ? 'Creating Family...' : '🏠 Create Family' }}
+                        {{ isAddingFamily ? t('admin_creating_family') : t('admin_create_family_btn') }}
                     </button>
                 </form>
             </div>
         </section>
 
-        <!-- Add Product Tab (Keep existing) -->
+        <!-- Add Product Tab -->
         <section v-if="activeTab === 'addProduct'" class="section">
-            <h2 class="section-title">🛍️ Add New Product</h2>
+            <h2 class="section-title">{{ t('admin_add_product_title') }}</h2>
             <div class="scrollable-container">
                 <form @submit.prevent="addProduct" class="form">
                     <div class="form-group">
-                        <label>Product Name *</label>
-                        <input v-model="newProduct.name" type="text" placeholder="Product Name" required>
+                        <label>{{ t('admin_label_product_name') }}</label>
+                        <input v-model="newProduct.name" type="text" :placeholder="t('admin_label_product_name')" required>
                     </div>
-
                     <div class="form-group">
-                        <label>Price *</label>
-                        <input v-model="newProduct.price" type="number" step="0.01" placeholder="Price" required>
+                        <label>{{ t('admin_label_price') }}</label>
+                        <input v-model="newProduct.price" type="number" step="0.01" :placeholder="t('admin_label_price')" required>
                     </div>
-
                     <div class="form-group">
-                        <label>Category *</label>
-                        <input v-model="newProduct.category" type="text" placeholder="Category" required>
+                        <label>{{ t('admin_label_category') }}</label>
+                        <input v-model="newProduct.category" type="text" :placeholder="t('admin_label_category')" required>
                     </div>
-
                     <div class="form-group">
-                        <label>Description</label>
-                        <textarea v-model="newProduct.description" placeholder="Description"></textarea>
+                        <label>{{ t('admin_label_description') }}</label>
+                        <textarea v-model="newProduct.description" :placeholder="t('admin_label_description')"></textarea>
                     </div>
-
                     <div class="form-group">
-                        <label>Product Image *</label>
+                        <label>{{ t('admin_label_product_image') }}</label>
                         <input type="file" @change="handleFileUpload" accept="image/*" required>
-                        <small>Supported formats: JPEG, PNG, JPG, GIF (Max: 2MB)</small>
+                        <small>{{ t('admin_image_hint') }}</small>
                     </div>
-
                     <div v-if="imageFile" class="image-preview">
-                        <p><strong>Image Preview:</strong></p>
+                        <p><strong>{{ t('admin_image_preview') }}</strong></p>
                         <img :src="imagePreview" alt="Product Image Preview">
                         <p class="image-name">{{ imageFile.name }}</p>
                     </div>
-
                     <button type="submit" class="submit-btn" :disabled="isAdding">
-                        {{ isAdding ? 'Adding Product...' : '➕ Add Product' }}
+                        {{ isAdding ? t('admin_adding_product') : t('admin_add_product_btn') }}
                     </button>
                 </form>
             </div>
         </section>
 
-        <!-- Other Tabs (Orders, Products, OrderDetails - Keep existing) -->
         <!-- Notification -->
         <div v-if="notification.show" :class="['notification', notification.type]">
             {{ notification.message }}
@@ -802,7 +643,7 @@
 import { Chart, registerables } from 'chart.js';
 import ExportDatabasePdf from "@/Components/ExportDatabasePdf.vue";
 Chart.register(...registerables);
-
+import { useTranslation } from '../Composables/useTranslation';
 export default {
     components: {ExportDatabasePdf},
     props: {
@@ -903,6 +744,10 @@ export default {
             if (newTab === 'auctions') this.fetchAuctions();
             if (newTab === 'bids') this.fetchBids();
         }
+    },
+    setup() {
+        const { t } = useTranslation();
+        return { t };
     },
     computed: {
         filteredOrders() {

@@ -36,6 +36,7 @@ import Banner from "@/Components/Banner.vue";
 import SectionCom from "@/Components/SectionCom.vue";
 import RobotAssistant from "@/Components/Robot.vue";
 import AskedQuestions from "@/Components/AskedQuestions.vue";
+
 export default {
     name: 'Home',
     components: {
@@ -60,7 +61,7 @@ export default {
     },
     data() {
         return {
-            products: [], // Store products fetched from API
+            products: [],
             filters: {
                 price_min: 0,
                 price_max: 100000,
@@ -117,16 +118,16 @@ export default {
 
 .products {
     display: grid;
-    grid-template-columns: repeat(2, 1fr); /* Two equal columns */
+    grid-template-columns: repeat(2, 1fr);
     gap: 20px;
-    justify-content: center; /* Center product cards */
+    justify-content: center;
     max-width: 1000px;
-    margin: 0 auto; /* Center the grid */
+    margin: 0 auto;
 }
 
 @media (max-width: 1120px) {
     .products {
-        grid-template-columns: 1fr; /* One column on smaller screens */
+        grid-template-columns: 1fr;
     }
 }
 </style>

@@ -1,13 +1,7 @@
 <template>
     <section id="productdetails" v-if="item">
         <div class="single-pro-image">
-            <img
-                :src="item.img || ''"
-                id="MainImg"
-                alt="Auction item image"
-                class="clickable-img"
-                @click="openModal = true"
-            />
+            <img :src="item.img || ''" id="MainImg" alt="Auction item image" class="clickable-img" @click="openModal = true" />
         </div>
 
         <div class="single-pro-details">
@@ -15,56 +9,44 @@
             <h4 class="product-name">{{ item.name }}</h4>
             <h2 class="product-price">${{ item.starting_bid }}</h2>
 
-            <!-- Auction bid section -->
             <div class="quantity-add">
-                <h2>Place your bid</h2>
-                <input
-                    type="number"
-                    v-model="bidAmount"
-                    :min="minBid"
-                    step="0.1"
-                    @input="validateBidAmount"
-                    :disabled="!isAuctionActive"
-                />
+                <h2>{{ t('auction_place_bid') }}</h2>
+                <input type="number" v-model="bidAmount" :min="minBid" step="0.1" @input="validateBidAmount" :disabled="!isAuctionActive" />
                 <button class="add-btn" @click="placeBid(item.id)" :disabled="isBidding || !isAuctionActive">
-                    {{ isBidding ? 'Placing bid...' : 'Place Bid' }}
+                    {{ isBidding ? t('auction_placing') : t('auction_place_btn') }}
                 </button>
             </div>
 
-            <!-- Auction closed banner -->
             <div v-if="!isAuctionActive" class="auction-closed-banner">
-                {{ getAuctionStatus === 'Not started yet' ? '⏳ Bidding has not started yet' : '🔒 This auction has ended — bidding is closed' }}
+                {{ getAuctionStatus === t('auction_status_not_started') ? t('auction_not_started') : t('auction_ended') }}
             </div>
 
-            <!-- Auction details -->
             <div class="auction-info">
-                <p><strong>🕒 Starting bid:</strong> ${{ item.starting_bid }}</p>
-                <p><strong>📅 Start date:</strong> {{ formattedStartDate }}</p>
-                <p><strong>⏰ End date:</strong> {{ formattedEndDate }}</p>
-                <p><strong>💰 Minimum bid:</strong> ${{ minBid }}</p>
+                <p><strong>{{ t('auction_starting_bid') }}</strong> ${{ item.starting_bid }}</p>
+                <p><strong>{{ t('auction_start_date') }}</strong> {{ formattedStartDate }}</p>
+                <p><strong>{{ t('auction_end_date') }}</strong> {{ formattedEndDate }}</p>
+                <p><strong>{{ t('auction_min_bid') }}</strong> ${{ minBid }}</p>
             </div>
 
-            <h4>Product Details</h4>
+            <h4>{{ t('auction_product_details') }}</h4>
             <p class="description">{{ item.description }}</p>
 
-            <h4 class="section-title">Auction Specifications</h4>
+            <h4 class="section-title">{{ t('auction_specifications') }}</h4>
             <ul class="specs">
-                <li><strong>Category:</strong> {{ item.category }}</li>
-                <li><strong>Starting price:</strong> ${{ item.starting_bid }}</li>
-                <li><strong>Status:</strong> {{ getAuctionStatus }}</li>
-                <li><strong>Item ID:</strong> {{ item.id }}</li>
+                <li><strong>{{ t('auction_spec_category') }}</strong> {{ item.category }}</li>
+                <li><strong>{{ t('auction_spec_starting') }}</strong> ${{ item.starting_bid }}</li>
+                <li><strong>{{ t('auction_spec_status') }}</strong> {{ getAuctionStatus }}</li>
+                <li><strong>{{ t('auction_spec_id') }}</strong> {{ item.id }}</li>
             </ul>
         </div>
 
-        <!-- Image modal -->
         <div v-if="openModal" class="modal" @click="openModal = false">
             <img :src="item.image" alt="Large product view" class="modal-img" />
         </div>
     </section>
 
-    <p v-else>Loading auction details...</p>
+    <p v-else>{{ t('auction_loading') }}</p>
 
-    <!-- Notification -->
     <transition name="slide">
         <div v-if="showNotification" class="notification">
             ✅ {{ notificationMessage }}
@@ -72,10 +54,11 @@
     </transition>
 </template>
 
+
 <script>
 import axios from 'axios';
 import {computed, ref} from "vue";
-
+import { useTranslation } from '../Composables/useTranslation';
 export default {
     props: {
         item: {
@@ -86,6 +69,7 @@ export default {
     setup(props) {
         const startingBid = props.item?.starting_bid ?? 0;
 
+        const { t } = useTranslation();
         const bidAmount = ref(startingBid + 1);
         const showNotification = ref(false);
         const notificationMessage = ref('');
@@ -194,6 +178,7 @@ export default {
             getAuctionStatus,
             isAuctionActive,
             placeBid,
+            t,
         };
     },
 };
