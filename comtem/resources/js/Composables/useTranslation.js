@@ -426,6 +426,10 @@ const messages = {
         password_req_number: 'At least one number',
         password_req_symbol: 'At least one symbol (@$!%*?&)',
         or_separator: 'Or',
+
+        team: 'Team',
+        faq: 'FAQ',
+        footer_copyright: '©2025 COMTEM | MADE BY DAN | All Rights Reserved',
     },
     lv: {
         home: 'Sākums',
@@ -834,6 +838,10 @@ const messages = {
         password_req_number: 'Vismaz viens cipars',
         password_req_symbol: 'Vismaz viens simbols (@$!%*?&)',
         or_separator: 'Vai',
+
+        team: 'Komanda',
+        faq: 'BUJ',
+        footer_copyright: '©2025 COMTEM | MADE BY DAN | Visas tiesības aizsargātas',
     }
 };
 

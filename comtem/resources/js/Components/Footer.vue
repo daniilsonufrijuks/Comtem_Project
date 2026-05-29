@@ -1,5 +1,9 @@
+<script setup>
+import { useTranslation } from '@/Composables/useTranslation';
+const { t } = useTranslation();
+</script>
+
 <template>
-    <!-- Footer -->
     <footer class="footer">
         <div class="waves">
             <div class="wave" id="wave1"></div>
@@ -8,29 +12,27 @@
             <div class="wave" id="wave4"></div>
         </div>
         <ul class="menu">
-            <li class="menu__item"><a class="menu__link" href="/">Home</a></li>
-            <li class="menu__item"><a class="menu__link" href="/about">About</a></li>
+            <li class="menu__item"><a class="menu__link" href="/">{{ t('home') }}</a></li>
+            <li class="menu__item"><a class="menu__link" href="/about">{{ t('about') }}</a></li>
             <li class="menu__item"><a class="menu__link" href="https://github.com/daniilsonufrijuks">DAN</a></li>
-            <li class="menu__item"><a class="menu__link" href="#">Team</a></li>
-            <li class="menu__item"><a class="menu__link" href="/contacts">Contact</a></li>
-            <li class="menu__item"><a class="menu__link" href="/faq">FAQ</a></li>
+            <li class="menu__item"><a class="menu__link" href="#">{{ t('team') }}</a></li>
+            <li class="menu__item"><a class="menu__link" href="/contacts">{{ t('contacts') }}</a></li>
+            <li class="menu__item"><a class="menu__link" href="/faq">{{ t('faq') }}</a></li>
         </ul>
-        <p>&copy;2025 COMTEM | MADE BY DAN | All Rights Reserved</p>
+        <p>{{ t('footer_copyright') }}</p>
     </footer>
-    <!-- Footer -->
 </template>
-
 
 <style scoped>
 .footer {
     background: #420d65;
     padding: 20px 50px;
     text-align: center;
-    position: relative; /* Fix the footer to the bottom of the page */
-    bottom: 0; /* Position the footer at the bottom */
+    position: relative;
+    bottom: 0;
     left: 0;
-    width: 100%; /* Make sure it spans the entire width */
-    z-index: 1000; /* Keep it above other content */
+    width: 100%;
+    z-index: 1000;
     margin: 0;
 }
 
@@ -126,5 +128,4 @@
     }
 }
 </style>
-<script setup lang="ts">
-</script>
+

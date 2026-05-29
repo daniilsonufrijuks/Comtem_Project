@@ -185,7 +185,7 @@ export default {
     background-color: #f0f0f0;
 }
 
-// phones
+
 @media screen and (max-width: 480px) {
 
     .container_search {
