@@ -55,6 +55,9 @@
                                             <input type="text" v-model="editForm.address" class="form-control">
                                         </div>
                                     </div>
+                                    <Link :href="route('password.request')" class="forgot-pass">
+                                        {{ t('forgot_password') }}
+                                    </Link>
                                 </div>
 
                                 <div class="row m-t-20" v-if="isEditing">
@@ -221,9 +224,12 @@ import { loadStripe } from '@stripe/stripe-js';
 import BidsHistory from "@/Components/BidsHistory.vue";
 
 import { useTranslation } from '../Composables/useTranslation';
+import {Link} from "@inertiajs/vue3";
+import {route} from "ziggy-js";
 export default {
     name: 'Home',
     components: {
+        Link,
         BidsHistory,
         OrdersHistory,
         Roulette,
@@ -302,6 +308,7 @@ export default {
         }
     },
     methods: {
+        route,
         fetchProducts() {
             const params = new URLSearchParams({
                 price_min: this.filters.price_min ?? 0,
