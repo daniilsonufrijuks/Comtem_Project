@@ -368,7 +368,12 @@ Route::middleware(['auth:admin'])->group(function () {
     Route::get('/admin/auctions/{id}/bids', [AdminController::class, 'showBids']);
     Route::get('/admin/bids', [AdminController::class, 'indexBids']);
 
+
+
     Route::get('/admin/export-all-pdf', [AdminController::class, 'exportAllToPdf'])->name('admin.export.pdf');
+
+    Route::post('/products/import-row',  [AdminController::class, 'importProductRow']);
+    Route::post('/products/import-bulk', [AdminController::class, 'importProductsBulk']);
 });
 
 

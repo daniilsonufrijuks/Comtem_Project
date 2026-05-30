@@ -20,6 +20,7 @@
             <button @click="activeTab = 'addProduct'" :class="['tab-button', { active: activeTab === 'addProduct' }]">{{ t('admin_tab_add_product') }}</button>
             <button @click="activeTab = 'addUser'" :class="['tab-button', { active: activeTab === 'addUser' }]">{{ t('admin_tab_add_user') }}</button>
             <button @click="activeTab = 'addFamily'" :class="['tab-button', { active: activeTab === 'addFamily' }]">{{ t('admin_tab_add_family') }}</button>
+            <button @click="activeTab = 'importProducts'" :class="['tab-button', { active: activeTab === 'importProducts' }]">CSV</button>
         </div>
 
         <!-- Analytics Tab -->
@@ -632,6 +633,133 @@
             </div>
         </section>
 
+        <!-- Import Products Tab -->
+        <section v-if="activeTab === 'importProducts'" class="section">
+            <h2 class="section-title">Import Products from CSV</h2>
+
+            <!-- Download template -->
+            <div class="import-info-card">
+                <div class="import-info-icon">
+                    <i class="ti ti-file-spreadsheet"></i>
+                </div>
+                <div class="import-info-content">
+                    <h3>CSV Format</h3>
+                    <p>Your CSV must have these columns (in any order):</p>
+                    <code class="csv-columns">name, price, category, description</code>
+                    <button @click="downloadCsvTemplate" class="template-btn">
+                        <i class="ti ti-download"></i> Download Template
+                    </button>
+                </div>
+            </div>
+
+            <!-- Upload area -->
+            <div
+                class="csv-dropzone"
+                :class="{ 'dragover': csvDragover, 'has-file': csvFile }"
+                @dragover.prevent="csvDragover = true"
+                @dragleave.prevent="csvDragover = false"
+                @drop.prevent="handleCsvDrop"
+                @click="$refs.csvFileInput.click()"
+            >
+                <input
+                    ref="csvFileInput"
+                    type="file"
+                    accept=".csv"
+                    style="display: none"
+                    @change="handleCsvFileSelect"
+                />
+                <template v-if="!csvFile">
+                    <i class="ti ti-upload" style="font-size: 32px; color: var(--color-text-tertiary);"></i>
+                    <p class="dropzone-label">Drop your CSV here or <span class="dropzone-link">browse</span></p>
+                    <p class="dropzone-hint">Only .csv files accepted</p>
+                </template>
+                <template v-else>
+                    <i class="ti ti-file-check" style="font-size: 32px; color: #198754;"></i>
+                    <p class="dropzone-label">{{ csvFile.name }}</p>
+                    <p class="dropzone-hint">{{ csvPreviewRows.length }} products ready to import</p>
+                </template>
+            </div>
+
+            <!-- Preview table -->
+            <div v-if="csvPreviewRows.length > 0" class="csv-preview">
+                <div class="csv-preview-header">
+                    <h3>Preview <span class="preview-count">{{ csvPreviewRows.length }} rows</span></h3>
+                    <div class="csv-preview-actions">
+                        <button @click="clearCsvFile" class="cancel-btn" style="width: auto; padding: 8px 16px;">Clear</button>
+                        <button
+                            @click="importCsvProducts"
+                            class="submit-btn"
+                            style="width: auto; padding: 8px 20px;"
+                            :disabled="isImportingCsv"
+                        >
+                            <template v-if="isImportingCsv">
+                                Importing {{ csvImportProgress }}/{{ csvPreviewRows.length }}...
+                            </template>
+                            <template v-else>
+                                <i class="ti ti-cloud-upload"></i> Import {{ csvPreviewRows.length }} Products
+                            </template>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Import progress bar -->
+                <div v-if="isImportingCsv" class="import-progress">
+                    <div
+                        class="import-progress-bar"
+                        :style="{ width: (csvImportProgress / csvPreviewRows.length * 100) + '%' }"
+                    ></div>
+                </div>
+
+                <!-- Validation errors -->
+                <div v-if="csvValidationErrors.length > 0" class="csv-errors">
+                    <p class="csv-errors-title"><i class="ti ti-alert-triangle"></i> {{ csvValidationErrors.length }} rows have issues (will be skipped):</p>
+                    <ul>
+                        <li v-for="(err, i) in csvValidationErrors" :key="i">Row {{ err.row }}: {{ err.message }}</li>
+                    </ul>
+                </div>
+
+                <div class="scrollable-table">
+                    <table class="data-table">
+                        <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Name</th>
+                            <th>Price</th>
+                            <th>Category</th>
+                            <th>Description</th>
+                            <th>Status</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr
+                            v-for="(row, index) in csvPreviewRows"
+                            :key="index"
+                            :class="{ 'row-error': row._error, 'row-success': row._imported }"
+                        >
+                            <td>{{ index + 1 }}</td>
+                            <td>{{ row.name || '—' }}</td>
+                            <td>{{ row.price ? '$' + parseFloat(row.price).toFixed(2) : '—' }}</td>
+                            <td>{{ row.category || '—' }}</td>
+                            <td class="description-cell">{{ row.description || '—' }}</td>
+                            <td>
+                                <span v-if="row._imported" class="status-badge success">Imported</span>
+                                <span v-else-if="row._error" class="status-badge error">{{ row._error }}</span>
+                                <span v-else class="status-badge pending">Pending</span>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Import results summary -->
+            <div v-if="csvImportResult" class="import-result" :class="csvImportResult.type">
+                <i :class="csvImportResult.type === 'success' ? 'ti ti-circle-check' : 'ti ti-alert-circle'"></i>
+                <span>{{ csvImportResult.message }}</span>
+                <button @click="csvImportResult = null" class="icon-btn"><i class="ti ti-x"></i></button>
+            </div>
+        </section>
+
         <!-- Notification -->
         <div v-if="notification.show" :class="['notification', notification.type]">
             {{ notification.message }}
@@ -722,7 +850,15 @@ export default {
             userGrowthChart: null,
             exporting: false,
             exportStartDate: '',
-            exportEndDate: ''
+            exportEndDate: '',
+
+            csvFile: null,
+            csvPreviewRows: [],
+            csvValidationErrors: [],
+            csvDragover: false,
+            isImportingCsv: false,
+            csvImportProgress: 0,
+            csvImportResult: null,
         };
     },
     mounted() {
@@ -1738,6 +1874,160 @@ export default {
             this.editImageFile = null;
             this.editImagePreview = null;
         },
+
+
+
+        downloadCsvTemplate() {
+            const headers = 'name,price,category,description';
+            const example = 'Example Product,29.99,Electronics,A great product description here';
+            const csv = headers + '\n' + example;
+            const blob = new Blob([csv], { type: 'text/csv' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'products_import_template.csv';
+            a.click();
+            URL.revokeObjectURL(url);
+        },
+
+        handleCsvDrop(event) {
+            this.csvDragover = false;
+            const file = event.dataTransfer.files[0];
+            if (file && file.name.endsWith('.csv')) {
+                this.loadCsvFile(file);
+            } else {
+                this.showNotification('Please drop a valid .csv file', 'error');
+            }
+        },
+
+        handleCsvFileSelect(event) {
+            const file = event.target.files[0];
+            if (file) this.loadCsvFile(file);
+        },
+
+        loadCsvFile(file) {
+            this.csvFile = file;
+            this.csvValidationErrors = [];
+            this.csvImportResult = null;
+
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                const text = e.target.result;
+                const lines = text.trim().split('\n');
+                if (lines.length < 2) {
+                    this.showNotification('CSV file is empty or has no data rows', 'error');
+                    this.csvFile = null;
+                    return;
+                }
+
+                // Normalise header names (lowercase, trim whitespace)
+                const headers = lines[0].split(',').map(h => h.trim().toLowerCase().replace(/['"]/g, ''));
+                const required = ['name', 'price', 'category'];
+                const missing = required.filter(r => !headers.includes(r));
+                if (missing.length > 0) {
+                    this.showNotification('Missing required columns: ' + missing.join(', '), 'error');
+                    this.csvFile = null;
+                    return;
+                }
+
+                this.csvPreviewRows = lines.slice(1).map((line, i) => {
+                    // Handle quoted fields with commas inside them
+                    const values = this.parseCsvLine(line);
+                    const row = {};
+                    headers.forEach((h, idx) => {
+                        row[h] = (values[idx] || '').trim().replace(/^["']|["']$/g, '');
+                    });
+                    row._error = null;
+                    row._imported = false;
+
+                    // Validate row
+                    if (!row.name) {
+                        row._error = 'Missing name';
+                        this.csvValidationErrors.push({ row: i + 2, message: 'Missing name' });
+                    } else if (!row.price || isNaN(parseFloat(row.price))) {
+                        row._error = 'Invalid price';
+                        this.csvValidationErrors.push({ row: i + 2, message: 'Invalid price "' + row.price + '"' });
+                    } else if (!row.category) {
+                        row._error = 'Missing category';
+                        this.csvValidationErrors.push({ row: i + 2, message: 'Missing category' });
+                    }
+
+                    return row;
+                });
+            };
+            reader.readAsText(file);
+        },
+
+        parseCsvLine(line) {
+            const result = [];
+            let current = '';
+            let inQuotes = false;
+            for (let i = 0; i < line.length; i++) {
+                const ch = line[i];
+                if (ch === '"') {
+                    inQuotes = !inQuotes;
+                } else if (ch === ',' && !inQuotes) {
+                    result.push(current);
+                    current = '';
+                } else {
+                    current += ch;
+                }
+            }
+            result.push(current);
+            return result;
+        },
+
+        clearCsvFile() {
+            this.csvFile = null;
+            this.csvPreviewRows = [];
+            this.csvValidationErrors = [];
+            this.csvImportResult = null;
+            this.csvImportProgress = 0;
+            if (this.$refs.csvFileInput) this.$refs.csvFileInput.value = '';
+        },
+
+        async importCsvProducts() {
+            const validRows = this.csvPreviewRows.filter(r => !r._error);
+            if (validRows.length === 0) {
+                this.showNotification('No valid rows to import', 'error');
+                return;
+            }
+
+            this.isImportingCsv = true;
+            this.csvImportProgress = 0;
+            let successCount = 0;
+            let failCount = 0;
+
+            for (const row of validRows) {
+                try {
+                    await axios.post('/admin/products/import-row', {
+                        name: row.name,
+                        price: parseFloat(row.price),
+                        category: row.category,
+                        description: row.description || '',
+                    });
+                    row._imported = true;
+                    successCount++;
+                } catch (err) {
+                    row._error = 'Failed';
+                    failCount++;
+                }
+                this.csvImportProgress++;
+            }
+
+            this.isImportingCsv = false;
+            const type = failCount === 0 ? 'success' : (successCount === 0 ? 'error' : 'success');
+            this.csvImportResult = {
+                type,
+                message: `Done — ${successCount} imported${failCount > 0 ? ', ' + failCount + ' failed' : ''}.`
+            };
+
+            if (successCount > 0) {
+                this.showNotification(`${successCount} products imported!`, 'success');
+            }
+        },
+
+
 
     }
 };
@@ -2876,6 +3166,241 @@ export default {
 }
 
 
+
+.import-info-card {
+    display: flex;
+    gap: 20px;
+    align-items: flex-start;
+    background: #f0f7ff;
+    border: 1px solid #b8d9f8;
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 24px;
+}
+
+.import-info-icon {
+    font-size: 32px;
+    color: #1565c0;
+    flex-shrink: 0;
+}
+
+.import-info-content h3 {
+    margin: 0 0 6px 0;
+    font-size: 15px;
+    color: #1a1a1a;
+}
+
+.import-info-content p {
+    margin: 0 0 10px 0;
+    color: #555;
+    font-size: 14px;
+}
+
+.csv-columns {
+    display: block;
+    background: #e3eeff;
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-family: monospace;
+    font-size: 13px;
+    color: #1a3a6e;
+    margin-bottom: 12px;
+}
+
+.template-btn {
+    background: #1565c0;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: background 0.2s;
+}
+
+.template-btn:hover { background: #0d47a1; }
+
+.csv-dropzone {
+    border: 2px dashed #ccc;
+    border-radius: 12px;
+    padding: 48px 24px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s;
+    margin-bottom: 28px;
+    background: #fafafa;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+}
+
+.csv-dropzone.dragover {
+    border-color: #420d65;
+    background: rgba(66, 13, 101, 0.04);
+}
+
+.csv-dropzone.has-file {
+    border-color: #198754;
+    background: rgba(25, 135, 84, 0.04);
+}
+
+.dropzone-label {
+    font-size: 15px;
+    color: #333;
+    margin: 0;
+}
+
+.dropzone-link {
+    color: #420d65;
+    font-weight: 600;
+    text-decoration: underline;
+}
+
+.dropzone-hint {
+    font-size: 13px;
+    color: #888;
+    margin: 0;
+}
+
+.csv-preview {}
+
+.csv-preview-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.csv-preview-header h3 {
+    margin: 0;
+    font-size: 16px;
+    color: #333;
+}
+
+.preview-count {
+    display: inline-block;
+    background: #e9ecef;
+    padding: 2px 10px;
+    border-radius: 12px;
+    font-size: 13px;
+    color: #555;
+    font-weight: normal;
+    margin-left: 8px;
+}
+
+.csv-preview-actions {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.import-progress {
+    height: 6px;
+    background: #e9ecef;
+    border-radius: 3px;
+    overflow: hidden;
+    margin-bottom: 16px;
+}
+
+.import-progress-bar {
+    height: 100%;
+    background: #420d65;
+    border-radius: 3px;
+    transition: width 0.3s ease;
+}
+
+.csv-errors {
+    background: #fff3cd;
+    border: 1px solid #ffc107;
+    border-radius: 8px;
+    padding: 12px 16px;
+    margin-bottom: 16px;
+    font-size: 13px;
+}
+
+.csv-errors-title {
+    font-weight: 600;
+    color: #664d03;
+    margin: 0 0 8px 0;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.csv-errors ul {
+    margin: 0;
+    padding-left: 20px;
+    color: #664d03;
+}
+
+.csv-errors li { margin: 4px 0; }
+
+.description-cell {
+    max-width: 220px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.row-error td { background: #fff5f5; }
+.row-success td { background: #f0fff4; }
+
+.status-badge {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.status-badge.pending  { background: #e9ecef; color: #555; }
+.status-badge.success  { background: #d1fae5; color: #065f46; }
+.status-badge.error    { background: #fee2e2; color: #991b1b; }
+
+.import-result {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 18px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    margin-top: 20px;
+}
+
+.import-result.success {
+    background: #d1fae5;
+    color: #065f46;
+    border: 1px solid #6ee7b7;
+}
+
+.import-result.error {
+    background: #fee2e2;
+    color: #991b1b;
+    border: 1px solid #fca5a5;
+}
+
+.import-result .icon-btn {
+    margin-left: auto;
+    color: inherit;
+    opacity: 0.6;
+}
+
+@media (max-width: 768px) {
+    .import-info-card { flex-direction: column; gap: 12px; }
+    .csv-dropzone { padding: 32px 16px; }
+    .csv-preview-header { flex-direction: column; align-items: flex-start; }
+    .csv-preview-actions { width: 100%; }
+    .csv-preview-actions button { flex: 1; justify-content: center; }
+}
 
 /* Enhanced Mobile Responsiveness */
 

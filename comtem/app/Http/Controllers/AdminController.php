@@ -958,4 +958,83 @@ class AdminController extends Controller
     }
 
 
+
+
+    /**
+     * Import a single product row from a CSV (called per-row from Vue).
+     * Route: POST /admin/products/import-row
+     */
+    public function importProductRow(Request $request)
+    {
+        $request->validate([
+            'name'        => 'required|string|max:255',
+            'price'       => 'required|numeric|min:0',
+            'category'    => 'required|string|max:255',
+            'description' => 'nullable|string|max:5000',
+        ]);
+
+        try {
+            Products::create([
+                'name'        => trim($request->name),
+                'price'       => $request->price,
+                'category'    => trim($request->category),
+                'description' => trim($request->description ?? ''),
+                'image' => 'images/front/default.png',
+                'admin_id'    => auth()->id(),
+            ]);
+
+            return response()->json(['success' => true]);
+
+        } catch (\Exception $e) {
+            Log::error('CSV import row error: ' . $e->getMessage());
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
+    }
+
+
+    /**
+     * Import multiple products from a CSV in one request.
+     * Body: { rows: [ { name, price, category, description }, ... ] }
+     */
+    public function importProductsBulk(Request $request)
+    {
+        $request->validate([
+            'rows'              => 'required|array|min:1|max:1000',
+            'rows.*.name'       => 'required|string|max:255',
+            'rows.*.price'      => 'required|numeric|min:0',
+            'rows.*.category'   => 'required|string|max:255',
+            'rows.*.description'=> 'nullable|string|max:5000',
+        ]);
+
+        $adminId   = auth()->id();
+        $now       = now();
+        $imported  = 0;
+        $errors    = [];
+
+        foreach ($request->rows as $index => $row) {
+            try {
+                Products::create([
+                    'name'        => trim($row['name']),
+                    'price'       => $row['price'],
+                    'category'    => trim($row['category']),
+                    'description' => trim($row['description'] ?? ''),
+                    'image' => 'images/front/default.png',
+                    'admin_id'    => $adminId,
+                    'created_at'  => $now,
+                    'updated_at'  => $now,
+                ]);
+                $imported++;
+            } catch (\Exception $e) {
+                $errors[] = ['row' => $index + 1, 'error' => $e->getMessage()];
+                Log::error("CSV bulk import row {$index}: " . $e->getMessage());
+            }
+        }
+
+        return response()->json([
+            'imported' => $imported,
+            'failed'   => count($errors),
+            'errors'   => $errors,
+        ]);
+    }
+
 }
