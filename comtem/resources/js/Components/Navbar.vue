@@ -62,7 +62,7 @@ const goToUserPage = () => {
             </li>
             <li>
                 <button @click="toggleLocale" style="background:none;border:1px solid rgba(255,255,255,0.4);color:#fff;padding:3px 10px;border-radius:6px;cursor:pointer;font-size:0.85rem;font-weight:600;">
-                    {{ locale === 'en' ? 'LV' : 'EN' }}
+                    {{ locale === 'en' ? 'LV' : locale === 'lv' ? 'LT' : 'EN' }}
                 </button>
             </li>
         </ul>
@@ -112,7 +112,7 @@ const goToUserPage = () => {
                 </button>
                 <button class="footer-action" @click="toggleLocale">
                     <i class="fa fa-language nav-icon"></i>
-                    <span>{{ locale === 'en' ? 'Latviešu' : 'English' }}</span>
+                    <span>{{ locale === 'en' ? 'Latviešu' : locale === 'lv' ? 'Lietuvių' : 'English' }}</span>
                 </button>
             </div>
         </div>
