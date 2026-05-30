@@ -453,6 +453,7 @@ const messages = {
         cart_checkout_failed: 'Checkout failed: {error}',
 
         buy: 'Buy',
+        inspect: 'Inspect',
     },
     lv: {
         home: 'Sākums',
@@ -888,6 +889,7 @@ const messages = {
         cart_checkout_failed: 'Pasūtīšana neizdevās: {error}',
 
         buy: 'Nopirkt',
+        inspect: 'Paskatīties',
     }
 };
 

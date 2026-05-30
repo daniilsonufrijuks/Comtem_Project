@@ -15,7 +15,7 @@
             <p><strong>Starting Bid: $</strong> {{ item.starting_bid }}</p>
             <p><strong>Start date: {{ item.start_time}}</strong></p>
             <p><strong>End date: {{ item.end_time}}</strong></p>
-            <button  @click="goToItemPage(this.item.id)">Inspect</button>
+            <button  @click="goToItemPage(this.item.id)">{{t('inspect')}}</button>
         </div>
     </div>
 
@@ -24,13 +24,17 @@
 <script>
 import { useRouter } from 'vue-router';
 import {Inertia} from "@inertiajs/inertia";
-
+import { useTranslation } from '../Composables/useTranslation';
 export default {
     props: {
         item: {
             type: Object,
             required: true,
         },
+    },
+    setup() {
+        const { t } = useTranslation();
+        return { t };
     },
     methods: {
         goToItemPage(productId) {
