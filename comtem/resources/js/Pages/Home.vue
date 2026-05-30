@@ -73,14 +73,24 @@ export default {
     },
     methods: {
         // fetchProducts() {
-        //     fetch('/products/laptops') // Adjust API endpoint if necessary
-        //         .then((response) => response.json())
+        //     const params = new URLSearchParams({
+        //         price_min: this.filters.price_min ?? 0,
+        //         price_max: this.filters.price_max ?? 100000,
+        //     }).toString();
+        //
+        //     fetch(`/products/laptops?${params}`)
+        //         .then((response) => {
+        //             if (!response.ok) {
+        //                 throw new Error(`HTTP error! Status: ${response.status}`);
+        //             }
+        //             return response.json();
+        //         })
         //         .then((data) => {
-        //             console.log('Fetched products:', data);
+        //             console.log("Fetched products:", data);
         //             this.products = data;
         //         })
         //         .catch((error) => {
-        //             console.error('Error fetching products:', error);
+        //             console.error("Error fetching products:", error);
         //         });
         // },
         fetchProducts() {
@@ -89,19 +99,27 @@ export default {
                 price_max: this.filters.price_max ?? 100000,
             }).toString();
 
-            fetch(`/products/laptops?${params}`)
-                .then((response) => {
-                    if (!response.ok) {
-                        throw new Error(`HTTP error! Status: ${response.status}`);
+            // Fetch both PCs and Laptops in parallel
+            Promise.all([
+                fetch(`/products/pcs?${params}`),
+                fetch(`/products/laptops?${params}`),
+                fetch(`/products/phones?${params}`)
+
+            ])
+                .then(([pcsResponse, laptopsResponse, phonesResponse]) => {
+                    if (!pcsResponse.ok || !laptopsResponse.ok || !phonesResponse) {
+                        throw new Error('Error fetching products');
                     }
-                    return response.json();
+                    return Promise.all([pcsResponse.json(), laptopsResponse.json(), phonesResponse.json()]);
                 })
-                .then((data) => {
-                    console.log("Fetched products:", data);
-                    this.products = data;
+                .then(([pcs, laptops, phones]) => {
+                    console.log('Fetched PCs:', pcs);
+                    console.log('Fetched Laptops:', laptops);
+                    console.log('Fetched Phones:', phones);
+                    this.products = [...pcs, ...laptops, ...phones]; // Combine the results
                 })
                 .catch((error) => {
-                    console.error("Error fetching products:", error);
+                    console.error('Error fetching products:', error);
                 });
         },
     },
