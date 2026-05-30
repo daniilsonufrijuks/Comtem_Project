@@ -4,55 +4,46 @@
         <a class="product-card" href="/laptops">
             <img src="/images/front/asuslaptop.png" alt="Laptops">
             <p>LAPTOPS</p>
-            <span class="visit-btn">VISIT</span>
         </a>
 
         <a class="product-card" href="/pcs">
             <img src="/images/front/pc.png" alt="PC">
             <p>PC</p>
-            <span class="visit-btn">VISIT</span>
         </a>
 
         <a class="product-card" href="/components">
             <img src="/images/front/inteli5.png" alt="Components">
             <p>COMPONENTS</p>
-            <span class="visit-btn">VISIT</span>
         </a>
 
         <a class="product-card" href="/auction">
             <img src="/images/front/auction.png" alt="Auction">
             <p>AUCTION</p>
-            <span class="visit-btn">VISIT</span>
         </a>
 
         <a class="product-card" href="/phones">
             <img src="/images/front/phones.png" alt="Phones">
             <p>PHONES</p>
-            <span class="visit-btn">VISIT</span>
         </a>
 
         <a class="product-card" href="/peripherals">
             <img src="/images/front/keyboard.png" alt="Peripherals">
             <p>PERIPHERALS</p>
-            <span class="visit-btn">VISIT</span>
         </a>
 
         <a class="product-card" href="/furniture">
             <img src="/images/front/table.png" alt="Furniture">
             <p>FURNITURE</p>
-            <span class="visit-btn">VISIT</span>
         </a>
 
         <a class="product-card" href="/cables">
             <img src="/images/front/cables.png" alt="Cables">
             <p>CABLES</p>
-            <span class="visit-btn">VISIT</span>
         </a>
 
         <a class="product-card" href="/games">
             <img src="/images/front/games.png" alt="Game Zone">
             <p>GAME ZONE</p>
-            <span class="visit-btn">VISIT</span>
         </a>
     </div>
     <!-- Categories -->
