@@ -1,33 +1,70 @@
 <template>
-<!--    <div class="product-card">-->
-<!--        <img :src="product.image" class="product-img" alt="Product">-->
-
-<!--        <h5>{{ product.name }}</h5>-->
-<!--        <p class="description">{{ product.description }}</p>-->
-
-<!--        <p class="price">{{ product.price }} €</p>-->
-
-<!--        <button @click="goToProductPage(product.id)">Buy</button>-->
-<!--    </div>-->
     <a class="product-card" :href="`/product?id=${product.id}`">
         <img :src="product.image" class="product-img" alt="Product">
         <h5>{{ product.name }}</h5>
         <p class="description">{{ product.description }}</p>
         <p class="price">{{ product.price }} €</p>
-        <span class="buy-btn">Buy</span>
+        <span class="buy-btn view-btn">{{ t('buy') }}</span>
+        <span class="buy-btn cart-btn" @click.prevent.stop="addToCart(product)">
+            {{ t('product_add_to_cart') }}
+        </span>
     </a>
+    <div v-if="showNotification" class="notification">
+        {{ t('product_added') }}
+    </div>
 </template>
 
 <script>
 import { useRouter } from 'vue-router';
 import {Inertia} from "@inertiajs/inertia";
-
+import { useTranslation } from '../Composables/useTranslation';
+import store from "@/Cart/cart.js";
+import {useStore} from "vuex";
+import {ref} from "vue";
 export default {
     props: {
         product: {
             type: Object,
             required: true,
         },
+    },
+    setup() {
+        const { t } = useTranslation();
+
+        const store = useStore();
+        const quantity = ref(1);
+        const showNotification = ref(false);
+        const selectedVariation = ref(null);
+
+        const validateQuantity = () => {
+            let raw = quantity.value;
+            // Convert to number, then integer, then ensure >= 1
+            let intValue = parseInt(raw, 10);
+            if (isNaN(intValue) || intValue < 1) {
+                intValue = 1;
+            }
+            quantity.value = intValue;
+        };
+
+        const selectVariation = (variation) => {
+            selectedVariation.value = variation;
+        };
+
+
+        const addToCart = (product) => {
+            store.commit("ADD_TO_CART", {
+                ...product,
+                variation_id: null,
+                variation_name: null,
+                quantity: 1,
+                price: parseFloat(product.price),
+            });
+            showNotification.value = true;
+            setTimeout(() => (showNotification.value = false), 2500);
+        };
+
+
+        return { t, addToCart, validateQuantity, selectVariation, showNotification, };
     },
     methods: {
         // console.log(productId);
@@ -52,25 +89,8 @@ export default {
             window.location.href = `/product?id=${productId}`;
             //this.$router.push({ path: '/product', query: { id: productId } });
         },
-    },
 
-    // setup() {
-    //     const router = useRouter();
-    //
-    //     const goToProductPage = (product) => {
-    //         router.push({
-    //             path: '/product',
-    //             query: {
-    //                 name: product.name,
-    //                 description: product.description,
-    //                 price: product.price,
-    //                 img: product.img,
-    //             },
-    //         });
-    //     };
-    //
-    //     return { goToProductPage };
-    // },
+    },
 };
 </script>
 
@@ -150,6 +170,25 @@ export default {
 .product-card:hover .buy-btn {
     background: #0056b3;
 }
+
+.notification {
+    position: fixed;
+    bottom: 100px;
+    right: 20px;
+    background: #7a3a7b;
+    color: white;
+    padding: 12px 20px;
+    border-radius: 8px;
+    z-index: 1000;
+}
+
+.slide-enter-active, .slide-leave-active { transition: all 0.5s ease; }
+.slide-enter-from, .slide-leave-to { transform: translateX(120%); opacity: 0; }
+
+.view-btn { background: #555; margin-bottom: 6px; }
+.cart-btn { background: #007BFF; }
+.cart-btn:hover { background: #0056b3; }
+
 
 /* MOBILE */
 @media (max-width: 768px) {

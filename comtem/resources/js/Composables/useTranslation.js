@@ -451,6 +451,8 @@ const messages = {
         cart_stripe_error: 'Error redirecting to payment: {error}',
         cart_payment_failed: 'Payment failed: {error}',
         cart_checkout_failed: 'Checkout failed: {error}',
+
+        buy: 'Buy',
     },
     lv: {
         home: 'Sākums',
@@ -884,6 +886,8 @@ const messages = {
         cart_stripe_error: 'Kļūda, novirzot uz maksājumu: {error}',
         cart_payment_failed: 'Maksājums neizdevās: {error}',
         cart_checkout_failed: 'Pasūtīšana neizdevās: {error}',
+
+        buy: 'Nopirkt',
     }
 };
 
