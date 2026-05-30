@@ -3,7 +3,7 @@
     <Search />
     <div class="main-container">
         <div class="cart-container">
-            <h1 class="cart-title">Shopping Cart</h1>
+            <h1 class="cart-title">{{t('cart_title')}}</h1>
 
             <div v-if="cartItems.length > 0" class="cart-content">
                 <div class="cart-items-list">
