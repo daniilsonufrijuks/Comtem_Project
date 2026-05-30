@@ -372,8 +372,8 @@ Route::middleware(['auth:admin'])->group(function () {
 
     Route::get('/admin/export-all-pdf', [AdminController::class, 'exportAllToPdf'])->name('admin.export.pdf');
 
-    Route::post('/products/import-row',  [AdminController::class, 'importProductRow']);
-    Route::post('/products/import-bulk', [AdminController::class, 'importProductsBulk']);
+    Route::post('/admin/products/import-row',  [AdminController::class, 'importProductRow']);
+    Route::post('/admin/products/import-bulk', [AdminController::class, 'importProductsBulk']);
 });
 
 
