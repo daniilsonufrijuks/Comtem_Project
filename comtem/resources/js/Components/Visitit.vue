@@ -10,25 +10,25 @@ const { locale, t, toggleLocale } = useTranslation();
         <a class="product-card-top" href="https://www.asus.com/" target="_blank">
             <img src="/images/front/prod1.png" alt="Product 1">
             <p>{{t('partners_p1')}}</p>
-            <span class="go-btn">Go</span>
+            <span class="go-btn">{{t('inspect')}}</span>
         </a>
 
         <a class="product-card-top" href="https://www.bequiet.com/en" target="_blank">
             <img src="/images/front/prod2.png" alt="Product 2">
             <p>{{t('partners_p2')}}</p>
-            <span class="go-btn">Go</span>
+            <span class="go-btn">{{t('inspect')}}</span>
         </a>
 
         <a class="product-card-top" href="https://www.apple.com/" target="_blank">
             <img src="/images/front/prod3.png" alt="Product 3">
             <p>{{t('partners_p3')}}</p>
-            <span class="go-btn">Go</span>
+            <span class="go-btn">{{t('inspect')}}</span>
         </a>
 
         <a class="product-card-top" href="https://www.msi.com/index.php" target="_blank">
             <img src="/images/front/prod4.png" alt="Product 4">
             <p>{{t('partners_p4')}}</p>
-            <span class="go-btn">Go</span>
+            <span class="go-btn">{{t('inspect')}}</span>
         </a>
     </div>
     <!-- visit this -->
@@ -45,16 +45,6 @@ const { locale, t, toggleLocale } = useTranslation();
     gap: 20px;
     align-items: stretch;
 }
-
-/* .product-card-top {
-    background-color: #f9f9f9;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    width: 23%;
-    text-align: center;
-    padding: 15px;
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-} */
 
 .product-card-top {
     display: flex;
