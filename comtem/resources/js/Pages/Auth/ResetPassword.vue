@@ -1,19 +1,25 @@
 <script setup>
-import {route} from "ziggy-js";
 import { Head, Link, useForm } from '@inertiajs/vue3';
-
+import { route } from 'ziggy-js';
 import { useTranslation } from '@/Composables/useTranslation';
 
 const { t } = useTranslation();
 
-const form = useForm({
-    email: '',
-    password: '',
-    remember: false,
+const props = defineProps({
+    token: String,
+    email: String,
 });
+
+const form = useForm({
+    token: props.token,
+    email: props.email,
+    password: '',
+    password_confirmation: '',
+});
+
 const submit = () => {
-    form.post(route('login'), {
-        onFinish: () => form.reset('password'),
+    form.post(route('password.store'), {
+        onFinish: () => form.reset('password', 'password_confirmation'),
     });
 };
 </script>
@@ -25,35 +31,61 @@ const submit = () => {
         </Link>
         <div class="form login">
             <div class="form-content">
-                <header>{{ t('login_header') }}</header>
+                <header>{{ t('forgot_password_header') }}</header>
 
-                <div v-if="form.errors.email" class="error-message">
-                    {{ form.errors.email }}
+                <!-- Success / status message (if any) -->
+                <div v-if="$page.props.status" class="success-message">
+                    {{ $page.props.status }}
                 </div>
 
                 <form @submit.prevent="submit" autocomplete="off">
+                    <!-- Email (read-only, pre‑filled from the reset link) -->
                     <div class="field input-field">
-                        <input type="email" v-model="form.email" :placeholder="t('email_placeholder')" class="input" required autocomplete="off">
-                        <span v-if="form.errors.email" class="field-error">
-                            {{ form.errors.email }}
+                        <input
+                            type="email"
+                            v-model="form.email"
+                            class="input"
+                            readonly
+                            autocomplete="off"
+                        />
+                    </div>
+
+                    <!-- New password -->
+                    <div class="field input-field">
+                        <input
+                            type="password"
+                            v-model="form.password"
+                            :placeholder="t('password_placeholder')"
+                            class="password"
+                            required
+                            autocomplete="off"
+                        />
+                        <span v-if="form.errors.password" class="field-error">
+                            {{ form.errors.password }}
                         </span>
                     </div>
+
+                    <!-- Confirm new password -->
                     <div class="field input-field">
-                        <input type="password" v-model="form.password" :placeholder="t('password_placeholder')" class="password" required autocomplete="off">
-                        <i class='bx bx-hide eye-icon'></i>
+                        <input
+                            type="password"
+                            v-model="form.password_confirmation"
+                            :placeholder="t('password_placeholder')"
+                            class="password"
+                            required
+                            autocomplete="off"
+                        />
+                        <span v-if="form.errors.password_confirmation" class="field-error">
+                            {{ form.errors.password_confirmation }}
+                        </span>
                     </div>
-                    <Link :href="route('password.request')" class="forgot-pass">
-                        {{ t('forgot_password') }}
-                    </Link>
+
                     <div class="field button-field">
-                        <button type="submit"
-                                :disabled="form.processing"
-                        >{{ t('login_header') }}</button>
+                        <button type="submit" :disabled="form.processing">
+                            {{ t('reset_password_button') }}
+                        </button>
                     </div>
                 </form>
-                <div class="form-link">
-                    <span>{{ t('no_account') }} <a href="/registration" class="link signup-link">{{ t('signup_link') }}</a></span>
-                </div>
             </div>
         </div>
     </section>

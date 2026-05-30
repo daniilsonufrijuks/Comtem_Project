@@ -454,6 +454,12 @@ const messages = {
 
         buy: 'Buy',
         inspect: 'Inspect',
+
+        send_reset_link: 'Send Reset Link',
+        back_to_login: 'Back to login',
+
+        forgot_password_header: 'Update password',
+        reset_password_button: 'Reset password',
     },
     lv: {
         home: 'Sākums',
@@ -890,6 +896,12 @@ const messages = {
 
         buy: 'Nopirkt',
         inspect: 'Paskatīties',
+
+        send_reset_link: 'Atsūtīt Linku',
+
+        back_to_login: 'Atpakaļ uz pieteikšanos',
+        forgot_password_header: 'Paroles atjaunināšana',
+        reset_password_button: 'Atjaunināt paroli',
     }
 };
 
