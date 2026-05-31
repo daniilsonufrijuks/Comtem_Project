@@ -633,9 +633,10 @@
             </div>
         </section>
 
+
         <!-- Import Products Tab -->
         <section v-if="activeTab === 'importProducts'" class="section">
-            <h2 class="section-title">Import Products from CSV</h2>
+            <h2 class="section-title">{{ t('import_title') }}</h2>
 
             <!-- Download template -->
             <div class="import-info-card">
@@ -643,11 +644,11 @@
                     <i class="ti ti-file-spreadsheet"></i>
                 </div>
                 <div class="import-info-content">
-                    <h3>CSV Format</h3>
-                    <p>Your CSV must have these columns (in any order):</p>
+                    <h3>{{ t('import_csv_format') }}</h3>
+                    <p>{{ t('import_csv_desc') }}</p>
                     <code class="csv-columns">name, price, category, description</code>
                     <button @click="downloadCsvTemplate" class="template-btn">
-                        <i class="ti ti-download"></i> Download Template
+                        <i class="ti ti-download"></i> {{ t('import_download_template') }}
                     </button>
                 </div>
             </div>
@@ -670,22 +671,22 @@
                 />
                 <template v-if="!csvFile">
                     <i class="ti ti-upload" style="font-size: 32px; color: var(--color-text-tertiary);"></i>
-                    <p class="dropzone-label">Drop your CSV here or <span class="dropzone-link">browse</span></p>
-                    <p class="dropzone-hint">Only .csv files accepted</p>
+                    <p class="dropzone-label">{{ t('import_drop_label') }} <span class="dropzone-link">{{ t('import_drop_browse') }}</span></p>
+                    <p class="dropzone-hint">{{ t('import_drop_hint') }}</p>
                 </template>
                 <template v-else>
                     <i class="ti ti-file-check" style="font-size: 32px; color: #198754;"></i>
                     <p class="dropzone-label">{{ csvFile.name }}</p>
-                    <p class="dropzone-hint">{{ csvPreviewRows.length }} products ready to import</p>
+                    <p class="dropzone-hint">{{ csvPreviewRows.length }} {{ t('import_rows_ready') }}</p>
                 </template>
             </div>
 
             <!-- Preview table -->
             <div v-if="csvPreviewRows.length > 0" class="csv-preview">
                 <div class="csv-preview-header">
-                    <h3>Preview <span class="preview-count">{{ csvPreviewRows.length }} rows</span></h3>
+                    <h3>{{ t('import_preview_title') }} <span class="preview-count">{{ csvPreviewRows.length }} rows</span></h3>
                     <div class="csv-preview-actions">
-                        <button @click="clearCsvFile" class="cancel-btn" style="width: auto; padding: 8px 16px;">Clear</button>
+                        <button @click="clearCsvFile" class="cancel-btn" style="width: auto; padding: 8px 16px;">{{ t('import_clear') }}</button>
                         <button
                             @click="importCsvProducts"
                             class="submit-btn"
@@ -693,10 +694,10 @@
                             :disabled="isImportingCsv"
                         >
                             <template v-if="isImportingCsv">
-                                Importing {{ csvImportProgress }}/{{ csvPreviewRows.length }}...
+                                {{ t('import_importing') }} {{ csvImportProgress }}/{{ csvPreviewRows.length }}...
                             </template>
                             <template v-else>
-                                <i class="ti ti-cloud-upload"></i> Import {{ csvPreviewRows.length }} Products
+                                <i class="ti ti-cloud-upload"></i> {{ t('import_btn') }} {{ csvPreviewRows.length }} {{ t('import_products_suffix') }}
                             </template>
                         </button>
                     </div>
@@ -712,9 +713,14 @@
 
                 <!-- Validation errors -->
                 <div v-if="csvValidationErrors.length > 0" class="csv-errors">
-                    <p class="csv-errors-title"><i class="ti ti-alert-triangle"></i> {{ csvValidationErrors.length }} rows have issues (will be skipped):</p>
+                    <p class="csv-errors-title">
+                        <i class="ti ti-alert-triangle"></i>
+                        {{ csvValidationErrors.length }} {{ t('import_validation_issues') }}
+                    </p>
                     <ul>
-                        <li v-for="(err, i) in csvValidationErrors" :key="i">Row {{ err.row }}: {{ err.message }}</li>
+                        <li v-for="(err, i) in csvValidationErrors" :key="i">
+                            {{ t('import_row_prefix') }} {{ err.row }}: {{ err.message }}
+                        </li>
                     </ul>
                 </div>
 
@@ -723,11 +729,11 @@
                         <thead>
                         <tr>
                             <th>#</th>
-                            <th>Name</th>
-                            <th>Price</th>
-                            <th>Category</th>
-                            <th>Description</th>
-                            <th>Status</th>
+                            <th>{{ t('import_col_name') }}</th>
+                            <th>{{ t('import_col_price') }}</th>
+                            <th>{{ t('import_col_category') }}</th>
+                            <th>{{ t('import_col_description') }}</th>
+                            <th>{{ t('import_col_status') }}</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -742,9 +748,9 @@
                             <td>{{ row.category || '—' }}</td>
                             <td class="description-cell">{{ row.description || '—' }}</td>
                             <td>
-                                <span v-if="row._imported" class="status-badge success">Imported</span>
+                                <span v-if="row._imported" class="status-badge success">{{ t('import_status_imported') }}</span>
                                 <span v-else-if="row._error" class="status-badge error">{{ row._error }}</span>
-                                <span v-else class="status-badge pending">Pending</span>
+                                <span v-else class="status-badge pending">{{ t('import_status_pending') }}</span>
                             </td>
                         </tr>
                         </tbody>
