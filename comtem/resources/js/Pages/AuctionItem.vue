@@ -4,7 +4,7 @@
     <Search />
     <Slider/>
     <div class="main-container">
-        <Visitit />
+<!--        <Visitit />-->
         <!--        <Productsintro />-->
         <AuctionCard :item="selectedProduct"/>
         <Testimonial />
