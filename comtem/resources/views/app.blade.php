@@ -5,7 +5,7 @@
     <meta http-equiv="refresh" content="1000">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <meta name="author" content="Daniil Sonufrijuks">
+    <meta name="author" content="Daniils Onufrijuks">
     <meta name="description" content="Buy and sell laptops, PCs, and components through live auctions. AI-powered deals on new and used computer hardware.">
     <!-- Keywords -->
     <meta name="keywords" content="laptop auction, PC auction, computer components, buy laptop online, sell PC parts, used hardware, GPU auction, CPU deals, computer parts shop, AI pricing">
