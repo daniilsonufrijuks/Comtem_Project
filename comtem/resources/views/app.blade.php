@@ -2,11 +2,20 @@
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
     <meta charset="utf-8">
-    <meta name="author" content="daniilsonufrijuks">
-    <meta name="description" content="Laptop, PC, Components shop with auction and ai">
     <meta http-equiv="refresh" content="1000">
-    <meta name="keywords" content="auction, e-commerce, buy, sell, deals, online shopping, pc, laptop, components, parts, auction, ai, stores near me, hardware store near me, lv, en">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <meta name="author" content="Daniil Sonufrijuks">
+    <meta name="description" content="Buy and sell laptops, PCs, and components through live auctions. AI-powered deals on new and used computer hardware.">
+    <!-- Keywords -->
+    <meta name="keywords" content="laptop auction, PC auction, computer components, buy laptop online, sell PC parts, used hardware, GPU auction, CPU deals, computer parts shop, AI pricing">
+
+    <!-- Open Graph (Facebook, LinkedIn, Discord previews) -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Your Shop Name | Laptop, PC & Component Auctions">
+    <meta property="og:description" content="Buy and sell laptops, PCs, and components through live auctions. AI-powered deals on new and used computer hardware.">
+    <meta property="og:url" content="https://comtem.rvtdev.tech/">
+
 {{--    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />--}}
 
 
