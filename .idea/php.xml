@@ -187,10 +187,13 @@
       <path value="$PROJECT_DIR$/comtem/vendor/psr/cache" />
       <path value="$PROJECT_DIR$/comtem/vendor/google/cloud" />
       <path value="$PROJECT_DIR$/comtem/vendor/google/grpc-gcp" />
-      <path value="$PROJECT_DIR$/comtem/vendor/symfony/validator" />
-      <path value="$PROJECT_DIR$/comtem/vendor/symfony/mailjet-mailer" />
-      <path value="$PROJECT_DIR$/comtem/vendor/mailjet/laravel-mailjet" />
-      <path value="$PROJECT_DIR$/comtem/vendor/mailjet/mailjet-apiv3-php" />
+      <path value="$PROJECT_DIR$/comtem/vendor/dompdf/php-svg-lib" />
+      <path value="$PROJECT_DIR$/comtem/vendor/dompdf/php-font-lib" />
+      <path value="$PROJECT_DIR$/comtem/vendor/sabberworm/php-css-parser" />
+      <path value="$PROJECT_DIR$/comtem/vendor/masterminds/html5" />
+      <path value="$PROJECT_DIR$/comtem/vendor/thecodingmachine/safe" />
+      <path value="$PROJECT_DIR$/comtem/vendor/barryvdh/laravel-dompdf" />
+      <path value="$PROJECT_DIR$/comtem/vendor/dompdf/dompdf" />
     </include_path>
   </component>
   <component name="PhpProjectSharedConfiguration" php_language_level="8.2">

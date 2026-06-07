@@ -185,10 +185,13 @@
       <excludeFolder url="file://$MODULE_DIR$/comtem/vendor/grpc/grpc" />
       <excludeFolder url="file://$MODULE_DIR$/comtem/vendor/psr/cache" />
       <excludeFolder url="file://$MODULE_DIR$/comtem/vendor/rize/uri-template" />
-      <excludeFolder url="file://$MODULE_DIR$/comtem/vendor/mailjet/laravel-mailjet" />
-      <excludeFolder url="file://$MODULE_DIR$/comtem/vendor/mailjet/mailjet-apiv3-php" />
-      <excludeFolder url="file://$MODULE_DIR$/comtem/vendor/symfony/mailjet-mailer" />
-      <excludeFolder url="file://$MODULE_DIR$/comtem/vendor/symfony/validator" />
+      <excludeFolder url="file://$MODULE_DIR$/comtem/vendor/barryvdh/laravel-dompdf" />
+      <excludeFolder url="file://$MODULE_DIR$/comtem/vendor/dompdf/dompdf" />
+      <excludeFolder url="file://$MODULE_DIR$/comtem/vendor/dompdf/php-font-lib" />
+      <excludeFolder url="file://$MODULE_DIR$/comtem/vendor/dompdf/php-svg-lib" />
+      <excludeFolder url="file://$MODULE_DIR$/comtem/vendor/masterminds/html5" />
+      <excludeFolder url="file://$MODULE_DIR$/comtem/vendor/sabberworm/php-css-parser" />
+      <excludeFolder url="file://$MODULE_DIR$/comtem/vendor/thecodingmachine/safe" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
