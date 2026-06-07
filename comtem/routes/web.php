@@ -374,6 +374,12 @@ Route::middleware(['auth:admin'])->group(function () {
 
     Route::post('/admin/products/import-row',  [AdminController::class, 'importProductRow']);
     Route::post('/admin/products/import-bulk', [AdminController::class, 'importProductsBulk']);
+
+    // Blog / Books
+    Route::get('/admin/books',            [AdminController::class, 'indexBooks'])->name('admin.books.index');
+    Route::post('/admin/books',           [AdminController::class, 'storeBook'])->name('admin.books.store');
+    Route::put('/admin/books/{id}',      [AdminController::class, 'updateBook'])->name('admin.books.update');
+    Route::delete('/admin/books/{id}',    [AdminController::class, 'destroyBook'])->name('admin.books.destroy');
 });
 
 

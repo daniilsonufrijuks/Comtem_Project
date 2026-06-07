@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use App\Models\Auction;
 use App\Models\Bids;
+use App\Models\Books;
 use App\Models\Comment;
 use App\Models\Orders;
 use App\Models\Products;
@@ -1035,6 +1036,141 @@ class AdminController extends Controller
             'failed'   => count($errors),
             'errors'   => $errors,
         ]);
+    }
+
+    /** Return all blog posts (API) */
+    public function indexBooks(): \Illuminate\Http\JsonResponse
+    {
+        $books = Books::select(['id', 'name', 'description', 'file_path', 'img', 'admin_id', 'created_at', 'updated_at'])
+            ->latest()
+            ->get();
+
+        return response()->json($books);
+    }
+
+    /** Store a new blog post */
+    public function storeBook(Request $request): \Illuminate\Http\JsonResponse
+    {
+        $request->validate([
+            'name'        => 'required|string|max:255',
+            'description' => 'required|string',
+            'img'         => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:4096',
+            'file_path'   => 'nullable|file|mimes:pdf,doc,docx,txt|max:10240',
+        ]);
+
+        try {
+            $imgPath      = null;
+            $filePath     = null;
+
+            if ($request->hasFile('img')) {
+                $img     = $request->file('img');
+                $imgName = time() . '_' . $img->getClientOriginalName();
+                $img->move(public_path('images/books'), $imgName);
+                $imgPath = 'images/books/' . $imgName;
+            }
+
+            if ($request->hasFile('file_path')) {
+                $file     = $request->file('file_path');
+                $fileName = time() . '_' . $file->getClientOriginalName();
+                $file->move(public_path('files/books'), $fileName);
+                $filePath = 'files/books/' . $fileName;
+            }
+
+            $book = Books::create([
+                'name'        => $request->name,
+                'description' => $request->description,
+                'img'         => $imgPath      ?? 'images/books/default.png',
+                'file_path'   => $filePath     ?? '',
+                'admin_id'    => auth()->id(),
+            ]);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Blog post created successfully!',
+                'book'    => $book,
+            ]);
+
+        } catch (\Exception $e) {
+            Log::error('Error creating book: ' . $e->getMessage());
+            return response()->json(['error' => 'Failed to create blog post.'], 500);
+        }
+    }
+
+    /** Update an existing blog post */
+    public function updateBook(Request $request, $id): \Illuminate\Http\JsonResponse
+    {
+        $request->validate([
+            'name'        => 'required|string|max:255',
+            'description' => 'required|string',
+            'img'         => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:4096',
+            'file_path'   => 'nullable|file|mimes:pdf,doc,docx,txt|max:10240',
+        ]);
+
+        try {
+            $book = Books::findOrFail($id);
+
+            $updateData = [
+                'name'        => $request->name,
+                'description' => $request->description,
+            ];
+
+            if ($request->hasFile('img')) {
+                // Remove old image if it exists and is not the default
+                if ($book->img && $book->img !== 'images/books/default.png' && file_exists(public_path($book->img))) {
+                    unlink(public_path($book->img));
+                }
+                $img     = $request->file('img');
+                $imgName = time() . '_' . $img->getClientOriginalName();
+                $img->move(public_path('images/books'), $imgName);
+                $updateData['img'] = 'images/books/' . $imgName;
+            }
+
+            if ($request->hasFile('file_path')) {
+                if ($book->file_path && file_exists(public_path($book->file_path))) {
+                    unlink(public_path($book->file_path));
+                }
+                $file     = $request->file('file_path');
+                $fileName = time() . '_' . $file->getClientOriginalName();
+                $file->move(public_path('files/books'), $fileName);
+                $updateData['file_path'] = 'files/books/' . $fileName;
+            }
+
+            $book->update($updateData);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Blog post updated successfully!',
+                'book'    => $book->fresh(),
+            ]);
+
+        } catch (\Exception $e) {
+            Log::error('Error updating book: ' . $e->getMessage());
+            return response()->json(['error' => 'Failed to update blog post.'], 500);
+        }
+    }
+
+    /** Delete a blog post */
+    public function destroyBook($id): \Illuminate\Http\JsonResponse
+    {
+        try {
+            $book = Books::findOrFail($id);
+
+            // Clean up files
+            if ($book->img && $book->img !== 'images/books/default.png' && file_exists(public_path($book->img))) {
+                unlink(public_path($book->img));
+            }
+            if ($book->file_path && file_exists(public_path($book->file_path))) {
+                unlink(public_path($book->file_path));
+            }
+
+            $book->delete();
+
+            return response()->json(['success' => 'Blog post deleted successfully!']);
+
+        } catch (\Exception $e) {
+            Log::error('Error deleting book: ' . $e->getMessage());
+            return response()->json(['error' => 'Failed to delete blog post.'], 500);
+        }
     }
 
 }

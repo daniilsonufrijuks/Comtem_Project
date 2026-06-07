@@ -21,6 +21,7 @@
             <button @click="activeTab = 'addUser'" :class="['tab-button', { active: activeTab === 'addUser' }]">{{ t('admin_tab_add_user') }}</button>
             <button @click="activeTab = 'addFamily'" :class="['tab-button', { active: activeTab === 'addFamily' }]">{{ t('admin_tab_add_family') }}</button>
             <button @click="activeTab = 'importProducts'" :class="['tab-button', { active: activeTab === 'importProducts' }]">CSV</button>
+            <button @click="activeTab = 'blogs'" :class="['tab-button', { active: activeTab === 'blogs' }]">{{ t('admin_tab_blogs') }}</button>
         </div>
 
         <!-- Analytics Tab -->
@@ -766,6 +767,87 @@
             </div>
         </section>
 
+
+
+        <section v-if="activeTab === 'blogs'" class="section">
+            <h2 class="section-title">{{ t('admin_blogs_title') }}</h2>
+
+            <!-- ── Add / Edit form ──────────────────────────────────── -->
+            <div class="blog-form-card">
+                <h3>{{ editBook ? t('admin_blog_edit_post') : t('admin_blog_new_post') }}</h3>
+                <div class="blog-form">
+                    <div class="form-group">
+                        <label>{{ t('admin_blog_title_label') }}</label>
+                        <input v-model="bookForm.name" type="text" :placeholder="t('admin_blog_title_placeholder')" class="form-input" />
+                    </div>
+                    <div class="form-group">
+                        <label>{{ t('admin_blog_content_label') }}</label>
+                        <textarea v-model="bookForm.description" rows="5" :placeholder="t('admin_blog_content_placeholder')" class="form-input"></textarea>
+                    </div>
+                    <div class="blog-uploads">
+                        <div class="form-group">
+                            <label>{{ t('admin_blog_cover_image') }}</label>
+                            <input type="file" accept="image/*" @change="handleBookImg" ref="bookImgInput" class="file-input-hidden" id="bookImgInput" />
+                            <label for="bookImgInput" class="file-upload-label">
+                                <span v-if="!bookImgPreview">{{ t('admin_blog_choose_image') }}</span>
+                                <img v-else :src="bookImgPreview" class="upload-preview" alt="Preview" />
+                            </label>
+                            <small v-if="editBook && editBook.img && !bookImgFile" class="current-file-note">
+                                Current: <a :href="'/' + editBook.img" target="_blank">{{ t('admin_blog_current_view') }}</a>
+                            </small>
+                        </div>
+                        <div class="form-group">
+                            <label>{{ t('admin_blog_attachment') }}</label>
+                            <input type="file" accept=".pdf,.doc,.docx,.txt" @change="handleBookFile" ref="bookFileInput" class="file-input-hidden" id="bookFileInput" />
+                            <label for="bookFileInput" class="file-upload-label file-upload-label--doc">
+                                <span v-if="!bookFileObj">{{ t('admin_blog_choose_file') }}</span>
+                                <span v-else class="file-chosen">{{ bookFileObj.name }}</span>
+                            </label>
+                            <small v-if="editBook && editBook.file_path && !bookFileObj" class="current-file-note">
+                                Current: <a :href="'/' + editBook.file_path" target="_blank">{{ t('admin_blog_current_download') }}</a>
+                            </small>
+                        </div>
+                    </div>
+                    <div class="blog-form-actions">
+                        <button @click="submitBook" class="save-btn" :disabled="isSavingBook">
+                            {{ isSavingBook ? t('admin_blog_saving') : (editBook ? t('admin_blog_update_btn') : t('admin_blog_publish_btn')) }}
+                        </button>
+                        <button v-if="editBook" @click="cancelEditBook" class="cancel-btn">{{ t('admin_cancel') }}</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ── Search ───────────────────────────────────────────── -->
+            <div class="table-controls" style="margin-top: 28px;">
+                <input v-model="bookSearch" type="text" :placeholder="t('admin_blog_search')" class="search-input" />
+            </div>
+
+            <!-- ── Post list ────────────────────────────────────────── -->
+            <div v-if="loadingBooks" class="loading">{{ t('admin_blog_loading') }}</div>
+            <div v-else class="scrollable-container">
+                <div class="blog-grid">
+                    <div v-for="book in filteredBooks" :key="book.id" class="blog-card">
+                        <div class="blog-card__img">
+                            <img v-if="book.img" :src="'/' + book.img" :alt="book.name" />
+                            <div v-else class="blog-card__no-img">📝</div>
+                        </div>
+                        <div class="blog-card__body">
+                            <h4 class="blog-card__title">{{ book.name }}</h4>
+                            <p class="blog-card__desc">{{ book.description.substring(0, 120) }}{{ book.description.length > 120 ? '…' : '' }}</p>
+                            <div class="blog-card__meta">
+                                <span class="blog-date">{{ formatDate(book.created_at) }}</span>
+                                <a v-if="book.file_path" :href="'/' + book.file_path" target="_blank" class="blog-file-link">{{ t('admin_blog_attachment_label') }}</a>
+                            </div>
+                        </div>
+                        <div class="actions">
+                            <button @click="startEditBook(book)" class="edit-btn">{{ t('admin_edit') }}</button>
+                            <button @click="deleteBook(book.id)" class="delete-btn">{{ t('admin_delete') }}</button>
+                        </div>
+                    </div>
+                    <div v-if="filteredBooks.length === 0" class="empty-state">{{ t('admin_blog_no_posts') }}</div>
+                </div>
+            </div>
+        </section>
         <!-- Notification -->
         <div v-if="notification.show" :class="['notification', notification.type]">
             {{ notification.message }}
@@ -865,6 +947,16 @@ export default {
             isImportingCsv: false,
             csvImportProgress: 0,
             csvImportResult: null,
+
+            books: [],
+            loadingBooks: false,
+            bookSearch: '',
+            editBook: null,
+            bookForm: { name: '', description: '' },
+            bookImgFile: null,
+            bookImgPreview: null,
+            bookFileObj: null,
+            isSavingBook: false,
         };
     },
     mounted() {
@@ -885,6 +977,7 @@ export default {
             }
             if (newTab === 'auctions') this.fetchAuctions();
             if (newTab === 'bids') this.fetchBids();
+            if (newTab === 'blogs') this.fetchBooks();
         }
     },
     setup() {
@@ -962,7 +1055,16 @@ export default {
                 filtered = filtered.filter(b => b.item_id === this.bidAuctionFilter);
             }
             return filtered;
-        }
+        },
+
+        filteredBooks() {
+            if (!this.bookSearch) return this.books;
+            const s = this.bookSearch.toLowerCase();
+            return this.books.filter(b =>
+                b.name.toLowerCase().includes(s) ||
+                b.description.toLowerCase().includes(s)
+            );
+        },
     },
     methods: {
         async fetchOrderItems() {
@@ -2033,7 +2135,96 @@ export default {
             }
         },
 
+        async fetchBooks() {
+            this.loadingBooks = true;
+            try {
+                const res = await axios.get('/admin/books');
+                this.books = res.data;
+            } catch (e) {
+                this.showNotification(this.t('admin_blog_error_load'), 'error');
+            } finally {
+                this.loadingBooks = false;
+            }
+        },
 
+        handleBookImg(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+            this.bookImgFile = file;
+            const reader = new FileReader();
+            reader.onload = ev => (this.bookImgPreview = ev.target.result);
+            reader.readAsDataURL(file);
+        },
+
+        handleBookFile(e) {
+            const file = e.target.files[0];
+            if (file) this.bookFileObj = file;
+        },
+
+        startEditBook(book) {
+            this.editBook  = { ...book };
+            this.bookForm  = { name: book.name, description: book.description };
+            this.bookImgFile  = null;
+            this.bookImgPreview = null;
+            this.bookFileObj  = null;
+            if (this.$refs.bookImgInput)  this.$refs.bookImgInput.value  = '';
+            if (this.$refs.bookFileInput) this.$refs.bookFileInput.value = '';
+            this.$nextTick(() => {
+                document.querySelector('.blog-form-card')?.scrollIntoView({ behavior: 'smooth' });
+            });
+        },
+
+        cancelEditBook() {
+            this.editBook = null;
+            this.bookForm = { name: '', description: '' };
+            this.bookImgFile = null;
+            this.bookImgPreview = null;
+            this.bookFileObj = null;
+            if (this.$refs.bookImgInput)  this.$refs.bookImgInput.value  = '';
+            if (this.$refs.bookFileInput) this.$refs.bookFileInput.value = '';
+        },
+
+        async submitBook() {
+            if (!this.bookForm.name.trim() || !this.bookForm.description.trim()) {
+                this.showNotification(this.t('admin_blog_error_required'), 'error');
+                return;
+            }
+
+            this.isSavingBook = true;
+            const fd = new FormData();
+            fd.append('name',        this.bookForm.name);
+            fd.append('description', this.bookForm.description);
+            if (this.bookImgFile)  fd.append('img',       this.bookImgFile);
+            if (this.bookFileObj)  fd.append('file_path', this.bookFileObj);
+
+            try {
+                if (this.editBook) {
+                    fd.append('_method', 'PUT');
+                    await axios.post(`/admin/books/${this.editBook.id}`, fd);
+                    this.showNotification(this.t('admin_blog_updated'), 'success');
+                } else {
+                    await axios.post('/admin/books', fd);
+                    this.showNotification(this.t('admin_blog_created'), 'success');
+                }
+                this.cancelEditBook();
+                this.fetchBooks();
+            } catch (e) {
+                this.showNotification(this.t('admin_blog_error_save'), 'error');
+            } finally {
+                this.isSavingBook = false;
+            }
+        },
+
+        async deleteBook(id) {
+            if (!confirm(this.t('admin_blog_delete_confirm'))) return;
+            try {
+                await axios.delete(`/admin/books/${id}`);
+                this.showNotification(this.t('admin_blog_deleted'), 'success');
+                this.fetchBooks();
+            } catch (e) {
+                this.showNotification(this.t('admin_blog_error_delete'), 'error');
+            }
+        },
 
     }
 };
@@ -3158,8 +3349,6 @@ export default {
 }
 
 
-
-
 @keyframes slideIn {
     from {
         transform: translateX(100%);
@@ -3398,6 +3587,147 @@ export default {
     margin-left: auto;
     color: inherit;
     opacity: 0.6;
+}
+
+.blog-form-card {
+    background: #f8f9ff;
+    border: 1px solid #e0e0f0;
+    border-radius: 12px;
+    padding: 24px;
+    margin-bottom: 28px;
+}
+.blog-form-card h3 {
+    margin: 0 0 20px 0;
+    font-size: 18px;
+    color: #420d65;
+}
+.blog-form {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+.blog-uploads {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+}
+.file-input-hidden { display: none; }
+.file-upload-label {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 80px;
+    border: 2px dashed #c0b0d8;
+    border-radius: 8px;
+    cursor: pointer;
+    color: #666;
+    font-size: 14px;
+    padding: 12px;
+    transition: all 0.2s;
+    background: white;
+}
+.file-upload-label:hover {
+    border-color: #420d65;
+    background: rgba(66, 13, 101, 0.04);
+}
+.upload-preview {
+    max-width: 120px;
+    max-height: 70px;
+    object-fit: cover;
+    border-radius: 6px;
+}
+.file-chosen {
+    font-size: 12px;
+    color: #420d65;
+    font-weight: 600;
+    word-break: break-all;
+    text-align: center;
+}
+.current-file-note {
+    display: block;
+    margin-top: 4px;
+    font-size: 11px;
+    color: #888;
+}
+.current-file-note a { color: #420d65; }
+.blog-form-actions {
+    display: flex;
+    gap: 12px;
+    margin-top: 4px;
+}
+.blog-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 20px;
+}
+.blog-card {
+    background: white;
+    border: 1px solid #eaeaea;
+    border-radius: 12px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    display: flex;
+    flex-direction: column;
+}
+.blog-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 24px rgba(66, 13, 101, 0.12);
+}
+.blog-card__img {
+    width: 100%;
+    height: 160px;
+    overflow: hidden;
+    background: #f0edf5;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.blog-card__img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.4s ease;
+}
+.blog-card:hover .blog-card__img img { transform: scale(1.04); }
+.blog-card__no-img { font-size: 48px; opacity: 0.3; }
+.blog-card__body { padding: 16px; flex: 1; }
+.blog-card__title {
+    margin: 0 0 8px 0;
+    font-size: 16px;
+    font-weight: 700;
+    color: #1a1a1a;
+    line-height: 1.3;
+}
+.blog-card__desc {
+    margin: 0 0 12px 0;
+    font-size: 13px;
+    color: #666;
+    line-height: 1.5;
+}
+.blog-card__meta {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+.blog-date { font-size: 11px; color: #aaa; }
+.blog-file-link {
+    font-size: 11px;
+    color: #420d65;
+    text-decoration: none;
+    font-weight: 600;
+    padding: 2px 8px;
+    background: rgba(66, 13, 101, 0.08);
+    border-radius: 10px;
+    transition: background 0.2s;
+}
+.blog-file-link:hover { background: rgba(66, 13, 101, 0.16); }
+
+@media (max-width: 768px) {
+    .blog-uploads { grid-template-columns: 1fr; }
+    .blog-grid { grid-template-columns: 1fr; }
+    .blog-form-actions { flex-direction: column; }
+    .blog-form-actions button { width: 100%; }
 }
 
 @media (max-width: 768px) {
